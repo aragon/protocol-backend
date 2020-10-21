@@ -1,5 +1,5 @@
-import Network from '@aragonone/court-backend-server/build/web3/Network'
-import { bn } from '@aragonone/court-backend-shared/helpers/numbers'
+import Network from '@aragon/protocol-backend-server/build/web3/Network'
+import { bn } from '@aragon/protocol-backend-shared/helpers/numbers'
 
 async function draftTermIdFor(state) {
   const court = await Network.getCourt()

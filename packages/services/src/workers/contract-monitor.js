@@ -1,6 +1,6 @@
 import Etherscan from '../models/Etherscan'
-import { DAYS } from '@aragonone/court-backend-shared/helpers/times'
-import getWalletFromPk from '@aragonone/court-backend-shared/helpers/get-wallet-from-pk'
+import { DAYS } from '@aragon/protocol-backend-shared/helpers/times'
+import getWalletFromPk from '@aragon/protocol-backend-shared/helpers/get-wallet-from-pk'
 import abi from 'web3-eth-abi'
 
 const TRANSACTION_TYPES = [

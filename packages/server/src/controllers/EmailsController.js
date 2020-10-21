@@ -1,6 +1,6 @@
 import { User } from '../models/objection'
-import emailClient from '@aragonone/court-backend-shared/helpers/email-client'
-import sleep from '@aragonone/court-backend-shared/helpers/sleep'
+import emailClient from '@aragon/protocol-backend-shared/helpers/email-client'
+import sleep from '@aragon/protocol-backend-shared/helpers/sleep'
 
 export default {
   async send(req, res) {

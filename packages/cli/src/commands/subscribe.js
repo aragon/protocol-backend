@@ -1,4 +1,4 @@
-const logger = require('@aragonone/court-backend-shared/helpers/logger')('subscribe')
+const logger = require('@aragon/protocol-backend-shared/helpers/logger')('subscribe')
 
 const command = 'subscribe'
 const describe = 'Subscribe Arbitrable instance to the Court'

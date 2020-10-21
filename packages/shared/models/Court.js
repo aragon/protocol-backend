@@ -36,9 +36,9 @@ module.exports = class {
 
   async registry() {
     if (!this._registry) {
-      const address = await this.instance.getJurorsRegistry()
-      const JurorsRegistry = await this.environment.getArtifact('JurorsRegistry', '@aragon/court')
-      this._registry = await JurorsRegistry.at(address)
+      const address = await this.instance.getGuardiansRegistry()
+      const GuardiansRegistry = await this.environment.getArtifact('GuardiansRegistry', '@aragon/court')
+      this._registry = await GuardiansRegistry.at(address)
     }
     return this._registry
   }
@@ -98,8 +98,8 @@ module.exports = class {
 
     return {
       feeToken,
-      fees: { jurorFee: fees[0], draftFee: fees[1], settleFee: fees[2] },
-      roundParams: { firstRoundJurorsNumber: roundParams[0], appealStepFactor: roundParams[1], maxRegularAppealRounds: roundParams[2] },
+      fees: { guardianFee: fees[0], draftFee: fees[1], settleFee: fees[2] },
+      roundParams: { firstRoundGuardiansNumber: roundParams[0], appealStepFactor: roundParams[1], maxRegularAppealRounds: roundParams[2] },
       roundDurations: { evidenceTerms: rounds[0], commitTerms: rounds[1], revealTerms: rounds[2], appealTerms: rounds[3], appealConfirmationTerms: rounds[4] },
       appealCollateralParams: { appealCollateralFactor: appealCollateralParams[0], appealConfirmCollateralFactor: appealCollateralParams[1] },
       pcts: { penaltyPct: pcts[0], finalRoundReduction: pcts[1] },
@@ -134,13 +134,13 @@ module.exports = class {
     return state === ROUND_STATE_ENDED
   }
 
-  async getJurors(disputeId, roundNumber) {
+  async getGuardians(disputeId, roundNumber) {
     const result = await this.environment.query(`{ 
       dispute (id: "${disputeId}") {
         id
-        rounds (where: { number: "${roundNumber}" }) { jurors { juror { id } }}
+        rounds (where: { number: "${roundNumber}" }) { guardians { guardian { id } }}
       }}`)
-    return result.dispute.rounds[0].jurors.map(juror => juror.juror.id)
+    return result.dispute.rounds[0].guardians.map(guardian => guardian.guardian.id)
   }
 
   async existsVote(voteId) {
@@ -162,8 +162,8 @@ module.exports = class {
   }
 
   async getCommitment(voteId, voter) {
-    const result = await this.environment.query(`{ jurorDrafts (where: { round:"${voteId}", juror: "${voter}" }) { commitment }}`)
-    return (!result || !result.jurorDrafts || result.jurorDrafts.length === 0) ? undefined : result.jurorDrafts[0].commitment
+    const result = await this.environment.query(`{ guardianDrafts (where: { round:"${voteId}", guardian: "${voter}" }) { commitment }}`)
+    return (!result || !result.guardianDrafts || result.guardianDrafts.length === 0) ? undefined : result.guardianDrafts[0].commitment
   }
 
   async getOutcome(voteId, voter) {
@@ -187,13 +187,13 @@ module.exports = class {
     return Math.min(heartbeats, needed)
   }
 
-  async stake(juror, amount, data = '0x') {
+  async stake(guardian, amount, data = '0x') {
     const anj = await this.anj()
     const decimals = await anj.decimals()
     const registry = await this.registry()
     await this._approve(anj, bigExp(amount, decimals), registry.address)
-    logger.info(`Staking ANJ ${amount} for ${juror}...`)
-    return registry.stakeFor(juror, bigExp(amount, decimals), data)
+    logger.info(`Staking ANJ ${amount} for ${guardian}...`)
+    return registry.stakeFor(guardian, bigExp(amount, decimals), data)
   }
 
   async unstake(amount, data = '0x') {
@@ -238,7 +238,7 @@ module.exports = class {
 
     logger.info(`Approving ${amount} fees for donation...`)
     await this._approve(token, amount, subscriptions.address)
-    logger.info(`Donating ${amount} fees for court jurors...`)
+    logger.info(`Donating ${amount} fees for court guardians...`)
     return subscriptions.donate(amount)
   }
 
@@ -303,8 +303,8 @@ module.exports = class {
     logger.info(`Drafting dispute #${disputeId} ...`)
     const { hash } = await disputeManager.draft(disputeId)
     const { logs: rawLogs } = await this.environment.getTransaction(hash)
-    const logs = decodeEventsOfType({ receipt: { rawLogs }}, disputeManager.interface.abi, DISPUTE_MANAGER_EVENTS.JUROR_DRAFTED)
-    return getEvents({ logs }, DISPUTE_MANAGER_EVENTS.JUROR_DRAFTED).map(event => event.args.juror)
+    const logs = decodeEventsOfType({ receipt: { rawLogs }}, disputeManager.interface.abi, DISPUTE_MANAGER_EVENTS.GUARDIAN_DRAFTED)
+    return getEvents({ logs }, DISPUTE_MANAGER_EVENTS.GUARDIAN_DRAFTED).map(event => event.args.guardian)
   }
 
   async commit(disputeId, outcome, password) {
@@ -314,15 +314,15 @@ module.exports = class {
     return voting.commit(voteId, hashVote(outcome, soliditySha3(password)))
   }
 
-  async reveal(disputeId, juror, outcome, password) {
+  async reveal(disputeId, guardian, outcome, password) {
     const voteId = await this.getLastRoundVoteId(disputeId)
-    return this.revealFor(voteId, juror, outcome, soliditySha3(password))
+    return this.revealFor(voteId, guardian, outcome, soliditySha3(password))
   }
 
-  async revealFor(voteId, juror, outcome, salt) {
-    logger.info(`Revealing vote for juror ${juror} on vote ID ${voteId}...`)
+  async revealFor(voteId, guardian, outcome, salt) {
+    logger.info(`Revealing vote for guardian ${guardian} on vote ID ${voteId}...`)
     const voting = await this.voting()
-    return voting.reveal(voteId, juror, outcome, salt)
+    return voting.reveal(voteId, guardian, outcome, salt)
   }
 
   async appeal(disputeId, outcome) {
@@ -364,15 +364,15 @@ module.exports = class {
     }
   }
 
-  async settleJuror(disputeId, juror) {
+  async settleGuardian(disputeId, guardian) {
     const disputeManager = await this.disputeManager()
     const { lastRoundId } = await disputeManager.getDispute(disputeId)
 
     for (let roundId = 0; roundId <= lastRoundId; roundId++) {
-      const { weight } = await disputeManager.getJuror(disputeId, roundId, juror)
+      const { weight } = await disputeManager.getGuardian(disputeId, roundId, guardian)
       if (weight.gt(bn(0))) {
-        logger.info(`Settling rewards of juror ${juror} for dispute #${disputeId} and round #${roundId}...`)
-        await disputeManager.settleReward(disputeId, roundId, juror)
+        logger.info(`Settling rewards of guardian ${guardian} for dispute #${disputeId} and round #${roundId}...`)
+        await disputeManager.settleReward(disputeId, roundId, guardian)
       }
     }
   }
@@ -393,24 +393,24 @@ module.exports = class {
 
     // Settle rounds
     for (let roundNumber = 0; roundNumber <= lastRoundId; roundNumber++) {
-      const { jurorsNumber, settledPenalties } = await disputeManager.getRound(disputeId, roundNumber)
+      const { guardiansNumber, settledPenalties } = await disputeManager.getRound(disputeId, roundNumber)
 
       // settle penalties
       if (!settledPenalties) {
         logger.info(`Settling penalties for dispute #${disputeId} round #${roundNumber}`)
-        await disputeManager.settlePenalties(disputeId, roundNumber, jurorsNumber)
+        await disputeManager.settlePenalties(disputeId, roundNumber, guardiansNumber)
         logger.success(`Settled penalties for dispute #${disputeId} round #${roundNumber}`)
       }
 
-      // settle juror rewards
+      // settle guardian rewards
       const voteId = encodeVoteId(disputeId, roundNumber)
-      const jurors = await this.getJurors(disputeId, roundNumber)
-      for (const juror of jurors) {
-        const votedOutcome = await voting.getVoterOutcome(voteId, juror)
+      const guardians = await this.getGuardians(disputeId, roundNumber)
+      for (const guardian of guardians) {
+        const votedOutcome = await voting.getVoterOutcome(voteId, guardian)
         if (votedOutcome === finalRuling) {
-          logger.info(`Settling rewards of juror ${juror} for dispute #${disputeId} and round #${roundNumber}...`)
-          await disputeManager.settleReward(disputeId, roundNumber, juror)
-          logger.success(`Settled rewards of juror ${juror} for dispute #${disputeId} and round #${roundNumber}...`)
+          logger.info(`Settling rewards of guardian ${guardian} for dispute #${disputeId} and round #${roundNumber}...`)
+          await disputeManager.settleReward(disputeId, roundNumber, guardian)
+          logger.success(`Settled rewards of guardian ${guardian} for dispute #${disputeId} and round #${roundNumber}...`)
         }
       }
 

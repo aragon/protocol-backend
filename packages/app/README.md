@@ -6,10 +6,10 @@ This is a React app that aims to serve a UI to read data from an Aragon Court in
 
 You can find the following deployed instances
 
-1. [Mainnet](https://court-backend-app.eth.aragon.network/)
-1. [Rinkeby](https://court-backend-app-rinkeby.eth.aragon.network/)
-1. [Staging](https://court-backend-app-staging.eth.aragon.network/)
-1. [Ropsten](https://court-backend-app-ropsten.eth.aragon.network/)
+1. [Mainnet](https://protocol-app.backend.aragon.org/)
+1. [Rinkeby](https://protocol-app-rinkeby.backend.aragon.org/)
+1. [Staging](https://protocol-app-staging.backend.aragon.org/)
+1. [Ropsten](https://protocol-app-ropsten.backend.aragon.org/)
 
 ### Setup
 

@@ -34,7 +34,7 @@ app.use(errorHandler(app))
 
 // Start main server
 const serverPort = process.env.SERVER_PORT || 8000
-app.listen(serverPort, error => {
+const server = app.listen(serverPort, error => {
   if (error) return console.error(error)
   signalIsUp()
   console.log(`Server listening on port ${serverPort}`)
@@ -45,3 +45,6 @@ const metricsPort = process.env.SERVER_METRICS_PORT || 9091
 createServer({ port: metricsPort }).then(() =>
   console.log(`Metrics server started on port ${metricsPort}`)
 )
+
+// for running tests
+export { server }

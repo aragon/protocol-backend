@@ -20,14 +20,23 @@ const wallet2 = new ethers.Wallet(TEST_PRIVATE_KEY2)
 
 describe('Client user interaction', () => {
 
+  let server
   // agent is used to persist authentication cookie across multiple tests
-  const agent = chai.request.agent(`http://localhost:${serverPort}`)
-  const agent2 = chai.request.agent(`http://localhost:${serverPort}`)
+  let agent
+  let agent2
+  before(async () => {
+    server = require('../../src/index').server
+    agent = chai.request.agent(`http://localhost:${serverPort}`)
+    agent2 = chai.request.agent(`http://localhost:${serverPort}`)
+  })
+
+  // cleanup
   after(async () => {
     agent.close()
     agent2.close()
     await dbCleanup(TEST_ADDR)
     await dbCleanup(TEST_ADDR2)
+    server.close()
   })
 
   it('should welcome user to the api', async () => {

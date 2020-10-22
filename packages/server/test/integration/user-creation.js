@@ -12,11 +12,19 @@ const TEST_EMAIL = 'user@create.test'
 
 describe('User creation', () => {
 
+  let server
   // agent is used to persist authentication cookie across multiple tests
-  const agent = chai.request.agent(`http://localhost:${serverPort}`)
+  let agent
+  before(async () => {
+    server = require('../../src/index').server
+    agent = chai.request.agent(`http://localhost:${serverPort}`)
+  })
+
+  // cleanup
   after(async () => {
     agent.close()
     await dbCleanup(TEST_ADDR)
+    server.close()
   })
 
   it('should welcome user to the api', async () => {

@@ -10,7 +10,7 @@ require('dotenv').config() // Load env vars from .env file
  *   - NETWORK: Network to connect to: rpc, rinkeby, mainnet, ...
  *   - PRIVATE_KEY: Private key of the account used
  *   - RPC: RPC endpoint, like "https://host:port/..."
- *   - COURT_ADDRESS: Address of the target Court contract to interact with
+ *   - COURT_ADDRESS: Address of the target Protocol contract to interact with
  *   - GAS_PRICE: Default gas price value
  *   - GAS: Default gas limit value
  *   - WEB3_POLLING_INTERVAL: Milliseconds interval for blocks polling

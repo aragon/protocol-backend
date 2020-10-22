@@ -5,8 +5,7 @@
   "author": "Aragon One",
   "license": "(GPL-3.0-or-later OR AGPL-3.0-or-later)",
   "dependencies": {
-    "@aragon/court": "1.2.0-rc.0",
-    "@aragon/minime": "1.0.0",
+    "@aragon/protocol-evm": "1.0.0-beta.0",
     "@aragon/contract-helpers-test": "^0.1.0",
     "@aragon/truffle-config-v5": "^1.0.1",
     "@aragonone/erc20-faucet": "^1.0.0",

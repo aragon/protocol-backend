@@ -15,7 +15,7 @@ const handlerAsync = async (environment, { recipient, token: symbol, amount }) =
   const to = recipient || await court.environment.getSender()
 
   let token
-  if (symbol.toLowerCase() === 'anj') token = await court.anj()
+  if (symbol.toLowerCase() === 'anj') token = await court.token()
   if (symbol.toLowerCase() === 'fee') token = await court.feeToken()
   if (!token) throw new Error(`Minting ${symbol} is not supported yet`)
 

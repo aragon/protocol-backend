@@ -8,11 +8,11 @@ Currently, there is no published version of it. However, you can use it locally.
 - [`mint`](./src/commands/mint.js): Mint ANJ or Fee tokens for a certain address
 - [`heartbeat`](./src/commands/hearbeat.js): Transition Court terms
 - [`config`](./src/commands/config.js): Change Court config
-- [`stake`](./src/commands/stake.js): Stake ANJ tokens for a juror
+- [`stake`](./src/commands/stake.js): Stake ANJ tokens for a guardian
 - [`unstake`](./src/commands/unstake.js): Unstake ANJ tokens
 - [`activate`](./src/commands/activate.js): Activate ANJ to the Court
 - [`deactivate`](./src/commands/deactivate.js): Deactivate ANJ from the Court
-- [`donate`](./src/commands/donate.js): Donate funds to Court jurors
+- [`donate`](./src/commands/donate.js): Donate funds to Court guardians
 - [`arbitrable`](./src/commands/arbitrable.js): Create new Arbitrable instance for the Court
 - [`subscribe`](./src/commands/subscribe.js): Subscribe Arbitrable instance to the Court
 - [`dispute`](./src/commands/dispute.js): Create dispute submitting evidence
@@ -22,7 +22,7 @@ Currently, there is no published version of it. However, you can use it locally.
 - [`appeal`](./src/commands/appeal.js): Appeal dispute in favour of a certain outcome
 - [`confirm-appeal`](./src/commands/confirm-appeal.js): Confirm an existing appeal for a dispute
 - [`settle-round`](./src/commands/settle-round.js): Settle penalties and appeals for a dispute
-- [`settle-juror`](./src/commands/settle-juror.js): Settle juror for a dispute
+- [`settle-guardian`](./src/commands/settle-guardian.js): Settle guardian for a dispute
 - [`execute`](./src/commands/execute.js): Execute ruling for a dispute
 
 ### Setup

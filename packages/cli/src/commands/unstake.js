@@ -1,7 +1,7 @@
 const logger = require('@aragon/protocol-backend-shared/helpers/logger')('unstake')
 
 const command = 'unstake'
-const describe = 'Unstake ANJ tokens for a juror'
+const describe = 'Unstake ANJ tokens for a guardian'
 
 const builder = {
   amount: { alias: 'a', describe: 'Number of ANJ tokens to unstake', type: 'string', demand: true },

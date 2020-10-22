@@ -30,7 +30,7 @@ const Local = {
   },
 
   _id(key) {
-    return `court-backend-${Network.getNetworkName()}-server-${key}`
+    return `protocol-backend-${Network.getNetworkName()}-server-${key}`
   },
 }
 

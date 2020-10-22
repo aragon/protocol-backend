@@ -1,6 +1,6 @@
 import * as ActionTypes from '../actions/types'
 
-const initialState = { module: null, subscribers: [], periods: [], period: {} }
+const initialState = { module: null, periods: [], period: {} }
 
 const PaymentsBookReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -10,8 +10,6 @@ const PaymentsBookReducer = (state = initialState, action) => {
       return Object.assign({}, state, { period: action.period })
     case ActionTypes.RECEIVE_PAYMENT_PERIODS:
       return Object.assign({}, state, { periods: action.list })
-    case ActionTypes.RECEIVE_SUBSCRIBERS:
-      return Object.assign({}, state, { subscribers: action.list })
     default:
       return state
   }

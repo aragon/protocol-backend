@@ -27,7 +27,7 @@ async function setup() {
   execSync(`node ./bin/index.js heartbeat -n ${network}`)
 
   // mint, stake and activate tokens for every guardian
-  execSync(`node ./bin/index.js mint -t anj -a 100000000 -r ${sender} -n ${network}`)
+  execSync(`node ./bin/index.js mint -t ant -a 100000000 -r ${sender} -n ${network}`)
   for (let i = 0; i < guardians.length; i++) {
     const guardian = guardians[i]
     const amount = (i + 1) * 10000

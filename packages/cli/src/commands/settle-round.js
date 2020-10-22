@@ -8,8 +8,8 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { dispute }) => {
-  const court = await environment.getCourt()
-  await court.settleRound(dispute)
+  const protocol = await environment.getCourt()
+  await protocol.settleRound(dispute)
   logger.success(`Settled rounds of dispute #${dispute}`)
 }
 

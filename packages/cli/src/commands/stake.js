@@ -10,8 +10,8 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { guardian, amount, data }) => {
-  const court = await environment.getCourt()
-  await court.stake(guardian, amount, data)
+  const protocol = await environment.getCourt()
+  await protocol.stake(guardian, amount, data)
   logger.success(`Staked ${amount} for ${guardian}`)
 }
 

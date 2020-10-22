@@ -10,10 +10,10 @@ const builder = {
   password: { alias: 'p', describe: 'Password used to commit the vote', type: 'string', demand: true },
 }
 
-const handlerAsync = async (environment, { from, guardian, dispute, outcome, password }) => {
-  const court = await environment.getCourt()
-  const onBehalfOf = guardian || await court.environment.getSender()
-  await court.reveal(dispute, onBehalfOf, outcome, password)
+const handlerAsync = async (environment, { guardian, dispute, outcome, password }) => {
+  const protocol = await environment.getCourt()
+  const onBehalfOf = guardian || await protocol.environment.getSender()
+  await protocol.reveal(dispute, onBehalfOf, outcome, password)
   logger.success(`Vote revealed for dispute #${dispute} for guardian ${onBehalfOf}`)
 }
 

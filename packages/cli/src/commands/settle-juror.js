@@ -9,8 +9,8 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { dispute, guardian }) => {
-  const court = await environment.getCourt()
-  await court.settleguardian(dispute, guardian)
+  const protocol = await environment.getCourt()
+  await protocol.settleGuardian(dispute, guardian)
   logger.success(`Settled guardian ${guardian} for dispute #${dispute}`)
 }
 

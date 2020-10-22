@@ -9,8 +9,8 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { dispute, outcome }) => {
-  const court = await environment.getCourt()
-  await court.appeal(dispute, outcome)
+  const protocol = await environment.getCourt()
+  await protocol.appeal(dispute, outcome)
   logger.success(`Appealed dispute #${dispute}`)
 }
 

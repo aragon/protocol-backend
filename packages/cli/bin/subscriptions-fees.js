@@ -21,8 +21,8 @@ async function setup() {
   const environment = new Environment(network)
   const court = await environment.getCourt()
 
-  const result = await environment.query(`{ jurors (first: 1000) { id } }`)
-  logger.info(`Checking ${result.jurors.length} jurors`)
+  const result = await environment.query(`{ guardians (first: 1000) { id } }`)
+  logger.info(`Checking ${result.guardians.length} guardians`)
 
   const { balanceCheckpoint } = await court.getPeriod(period)
   logger.info(`Using balance checkpoint: ${balanceCheckpoint}`)
@@ -31,24 +31,24 @@ async function setup() {
   const registry = await court.registry()
   const subscriptions = await court.subscriptions()
 
-  for (const { id } of result.jurors) {
-    const juror = toChecksumAddress(id)
-    const { jurorShare } = await subscriptions.getJurorShare(juror, period)
-    const activeBalance = await registry.activeBalanceOfAt(juror, balanceCheckpoint)
+  for (const { id } of result.guardians) {
+    const guardian = toChecksumAddress(id)
+    const { guardianShare } = await subscriptions.getguardianShare(guardian, period)
+    const activeBalance = await registry.activeBalanceOfAt(guardian, balanceCheckpoint)
 
-    if (jurorShare.eq(bn(0))) {
-      logger.info(`Juror ${juror} is not eligible for fees`)
-      notEligibles.push({ juror, activeBalance: activeBalance.toString() })
-      if (!activeBalance.eq(bn(0))) logger.warn(`Juror ${juror} is not eligible but has ${activeBalance.toString()} active at term ${balanceCheckpoint}`)
+    if (guardianShare.eq(bn(0))) {
+      logger.info(`guardian ${guardian} is not eligible for fees`)
+      notEligibles.push({ guardian, activeBalance: activeBalance.toString() })
+      if (!activeBalance.eq(bn(0))) logger.warn(`guardian ${guardian} is not eligible but has ${activeBalance.toString()} active at term ${balanceCheckpoint}`)
     }
     else {
-      logger.info(`Juror ${juror} is eligible for fees`)
-      const activeBalance = await registry.activeBalanceOfAt(juror, balanceCheckpoint)
-      eligibles.push({ juror, activeBalance: activeBalance.toString() })
+      logger.info(`guardian ${guardian} is eligible for fees`)
+      const activeBalance = await registry.activeBalanceOfAt(guardian, balanceCheckpoint)
+      eligibles.push({ guardian, activeBalance: activeBalance.toString() })
     }
   }
 
-  logger.success(`There are ${eligibles.length} jurors eligible for fees: \n- ${eligibles.map(e => e.juror).join('\n- ')}`)
+  logger.success(`There are ${eligibles.length} guardians eligible for fees: \n- ${eligibles.map(e => e.guardian).join('\n- ')}`)
 
   const outputPath = path.resolve(process.cwd(), `./subscription-fees.${network}.json`)
   const data = JSON.stringify({ eligibles, notEligibles }, null, 2)

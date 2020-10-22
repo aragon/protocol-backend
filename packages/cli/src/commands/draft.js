@@ -9,8 +9,8 @@ const builder = {
 
 const handlerAsync = async (environment, { dispute }) => {
   const court = await environment.getCourt()
-  const jurors = await court.draft(dispute)
-  logger.success(`Drafted dispute #${dispute} with jurors ${jurors.join(', ')}`)
+  const guardians = await court.draft(dispute)
+  logger.success(`Drafted dispute #${dispute} with guardians ${guardians.join(', ')}`)
 }
 
 module.exports = {

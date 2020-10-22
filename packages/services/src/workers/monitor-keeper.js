@@ -21,7 +21,7 @@ export default async function (ctx) {
 }
 
 async function monitorTransactions(logger, etherscan, keeper, network) {
-  const court = await Network.getCourt()
+  const court = await Network.getProtocol()
   const courtAddresses = await getWhitelistedAddresses(court)
   const lastInspectedBlockNumber = (await KeeperSuspiciousTransaction.lastInspectedBlockNumber()) + 1
   logger.info(`Checking transactions for keeper address ${keeper} from block ${lastInspectedBlockNumber}`)

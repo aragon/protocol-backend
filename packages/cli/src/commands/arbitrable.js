@@ -8,7 +8,7 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { owner }) => {
-  const protocol = await environment.getCourt()
+  const protocol = await environment.getProtocol()
   const arbitrable = await protocol.deployArbitrable(owner)
   logger.success(`Created Arbitrable instance ${arbitrable.address}`)
   console.log(arbitrable.address)

@@ -8,7 +8,7 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { transitions }) => {
-  const protocol = await environment.getCourt()
+  const protocol = await environment.getProtocol()
   const heartbeats = await protocol.heartbeat(transitions)
   logger.success(`Transitioned ${heartbeats} Protocol terms`)
 }

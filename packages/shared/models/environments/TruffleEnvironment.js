@@ -10,13 +10,13 @@ class TruffleEnvironment extends Environment {
     this.sender = sender
   }
 
-  async getCourt(address = undefined) {
-    if (address) return super.getCourt(address)
-    if (process.env.COURT) return super.getCourt(process.env.COURT)
+  async getProtocol(address = undefined) {
+    if (address) return super.getProtocol(address)
+    if (process.env.PROTOCOL_ADDRESS) return super.getProtocol(process.env.PROTOCOL_ADDRESS)
     const config = require('../../truffle-config')
     const { protocol } = config.networks[this.network] || { protocol: undefined }
     if (!protocol) throw Error(`Missing protocol address for network ${this.network}`)
-    return super.getCourt(protocol)
+    return super.getProtocol(protocol)
   }
 
   async _getProvider() {

@@ -8,7 +8,7 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { dispute }) => {
-  const protocol = await environment.getCourt()
+  const protocol = await environment.getProtocol()
   const guardians = await protocol.draft(dispute)
   logger.success(`Drafted dispute #${dispute} with guardians ${guardians.join(', ')}`)
 }

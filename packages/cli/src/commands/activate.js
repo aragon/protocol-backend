@@ -9,7 +9,7 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { from, guardian, amount }) => {
-  const protocol = await environment.getCourt()
+  const protocol = await environment.getProtocol()
 
   if (!guardian || guardian === from) {
     await protocol.activate(amount)

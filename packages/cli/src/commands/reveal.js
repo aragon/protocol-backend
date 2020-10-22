@@ -11,7 +11,7 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { guardian, dispute, outcome, password }) => {
-  const protocol = await environment.getCourt()
+  const protocol = await environment.getProtocol()
   const onBehalfOf = guardian || await protocol.environment.getSender()
   await protocol.reveal(dispute, onBehalfOf, outcome, password)
   logger.success(`Vote revealed for dispute #${dispute} for guardian ${onBehalfOf}`)

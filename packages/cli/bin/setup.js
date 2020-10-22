@@ -18,7 +18,7 @@ const { network, guardians: guardiansNumber, disputes } = yargs
 
 async function setup() {
   const environment = new Environment(network)
-  const protocol = await environment.getCourt()
+  const protocol = await environment.getProtocol()
   const allAccounts = await environment.getAccounts()
   const sender = allAccounts[0]
   const guardians = allAccounts.slice(1, Math.min(parseInt(guardiansNumber) + 1, allAccounts.length))

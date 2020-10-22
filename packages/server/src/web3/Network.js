@@ -5,8 +5,8 @@ const Network = {
     return new Environment()
   },
 
-  async getCourt() {
-    return this.environment.getCourt()
+  async getProtocol() {
+    return this.environment.getProtocol()
   },
 
   async query(query) {

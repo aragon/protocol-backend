@@ -9,7 +9,7 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { amount, data }) => {
-  const protocol = await environment.getCourt()
+  const protocol = await environment.getProtocol()
   await protocol.unstake(amount, data)
   logger.success(`Unstaked ${amount} tokens`)
 }

@@ -12,7 +12,7 @@ export default async function (ctx) {
     .orderBy('createdAt', 'DESC')
 
   logger.info(`${reveals.length} reveals pending`)
-  const court = await Network.getCourt()
+  const court = await Network.getProtocol()
   for (const instance of reveals) await reveal(logger, court, instance)
 }
 

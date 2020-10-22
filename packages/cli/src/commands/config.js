@@ -13,7 +13,7 @@ const builder = {
 const handlerAsync = async (environment, { params: configFilename, term: fromTermId }) => {
   const config = require(path.resolve(process.cwd(), configFilename))
 
-  const protocol = await environment.getCourt()
+  const protocol = await environment.getProtocol()
 
   if (!fromTermId) {
     fromTermId = await protocol.currentTermId()

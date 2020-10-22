@@ -46,7 +46,7 @@ describe('Reveals worker', () => {
       context('when it can be revealed', () => {
         context('when the reveal does not fail', () => {
           beforeEach('mock court and reveal', async () => {
-            Network.getCourt = () => ({
+            Network.getProtocol = () => ({
               getRevealStatus: () => ({ canReveal: true, expired: false }),
               revealFor: () => true,
               getOutcome: () => reveal.outcome
@@ -88,7 +88,7 @@ describe('Reveals worker', () => {
               getOutcome: () => reveal.outcome,
             }
 
-            Network.getCourt = () => Court
+            Network.getProtocol = () => Court
             await revealWorker(ctx)
           })
 
@@ -120,7 +120,7 @@ describe('Reveals worker', () => {
 
         context('when the reveal fails three times', () => {
           beforeEach('mock court and reveal', async () => {
-            Network.getCourt = () => ({
+            Network.getProtocol = () => ({
               getRevealStatus: () => ({ canReveal: true, expired: false }),
               revealFor: () => { throw 'error' }
             })
@@ -162,7 +162,7 @@ describe('Reveals worker', () => {
             getRevealStatus: () => ({ canReveal: false, expired: false }),
           }
 
-          Network.getCourt = () => Court
+          Network.getProtocol = () => Court
           await revealWorker(ctx)
         })
 
@@ -199,7 +199,7 @@ describe('Reveals worker', () => {
           getRevealStatus: () => ({ canReveal: false, expired: true })
         }
 
-        Network.getCourt = () => Court
+        Network.getProtocol = () => Court
         await revealWorker(ctx)
       })
 
@@ -242,7 +242,7 @@ describe('Reveals worker', () => {
 
     context('when all the reveals can be revealed', () => {
       beforeEach('mock court and reveal', async () => {
-        Network.getCourt = () => {
+        Network.getProtocol = () => {
           return ({
             getRevealStatus: () => ({ canReveal: true, expired: false }),
             revealFor: () => true,
@@ -280,7 +280,7 @@ describe('Reveals worker', () => {
       const REVEALING_DISPUTE = '15'
 
       beforeEach('mock court and reveal', async () => {
-        Network.getCourt = () => {
+        Network.getProtocol = () => {
           return ({
             getRevealStatus: disputeId => ({ canReveal: disputeId == REVEALING_DISPUTE, expired: false }),
             revealFor: () => true,
@@ -326,7 +326,7 @@ describe('Reveals worker', () => {
       const EXPIRED_DISPUTE = '14'
 
       beforeEach('mock court and reveal', async () => {
-        Network.getCourt = () => {
+        Network.getProtocol = () => {
           return ({
             getRevealStatus: disputeId => ({ canReveal: disputeId !== EXPIRED_DISPUTE, expired: disputeId === EXPIRED_DISPUTE }),
             revealFor: () => true,

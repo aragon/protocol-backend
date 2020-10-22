@@ -10,21 +10,21 @@ require('dotenv').config() // Load env vars from .env file
  *   - NETWORK: Network to connect to: rpc, rinkeby, mainnet, ...
  *   - PRIVATE_KEY: Private key of the account used
  *   - RPC: RPC endpoint, like "https://host:port/..."
- *   - COURT_ADDRESS: Address of the target Protocol contract to interact with
+ *   - PROTOCOL_ADDRESS: Address of the target Protocol contract to interact with
  *   - GAS_PRICE: Default gas price value
  *   - GAS: Default gas limit value
  *   - WEB3_POLLING_INTERVAL: Milliseconds interval for blocks polling
  */
 
-const { NETWORK, COURT_ADDRESS, RPC, PRIVATE_KEY, GAS, GAS_PRICE, WEB3_POLLING_INTERVAL } = process.env
+const { NETWORK, PROTOCOL_ADDRESS, RPC, PRIVATE_KEY, GAS, GAS_PRICE, WEB3_POLLING_INTERVAL } = process.env
 
 class LocalEnvironment extends Environment {
   constructor() {
     super(NETWORK)
   }
 
-  async getCourt(address = undefined) {
-    return super.getCourt(COURT_ADDRESS)
+  async getProtocol(address = undefined) {
+    return super.getProtocol(PROTOCOL_ADDRESS)
   }
 
   async _getProvider() {

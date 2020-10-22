@@ -11,7 +11,7 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { token, amount, payer, data }) => {
-  const protocol = await environment.getCourt()
+  const protocol = await environment.getProtocol()
   await protocol.pay(token, amount, payer, data)
   logger.success(`Paid ${amount} of tokens ${token} for ${payer} (${data})`)
 }

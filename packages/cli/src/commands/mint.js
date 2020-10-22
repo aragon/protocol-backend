@@ -11,7 +11,7 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { recipient, token: symbol, amount }) => {
-  const protocol = await environment.getCourt()
+  const protocol = await environment.getProtocol()
   const to = recipient || await protocol.environment.getSender()
 
   let token

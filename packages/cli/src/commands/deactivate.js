@@ -8,7 +8,7 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { amount }) => {
-  const protocol = await environment.getCourt()
+  const protocol = await environment.getProtocol()
   await protocol.deactivate(amount)
   logger.success(`Requested ${amount} tokens for deactivation`)
 }

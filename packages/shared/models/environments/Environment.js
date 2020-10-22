@@ -19,7 +19,7 @@ class Environment {
     return request(subgraph, query)
   }
 
-  async getCourt(address) {
+  async getProtocol(address) {
     const AragonProtocol = await this.getArtifact('AragonProtocol', '@aragon/protocol-evm')
     const protocol = await AragonProtocol.at(address)
     return new Protocol(protocol, this)

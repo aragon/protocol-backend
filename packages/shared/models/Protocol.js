@@ -1,14 +1,13 @@
-const logger = require('../helpers/logger')('Court')
+const { sha3, fromWei, utf8ToHex, soliditySha3 } = require('web3-utils')
+const { DISPUTE_MANAGER_EVENTS } = require('@aragon/protocol-evm/test/helpers/utils/events')
+const { DISPUTE_MANAGER_ERRORS } = require('@aragon/protocol-evm/test/helpers/utils/errors')
+const { ZERO_ADDRESS, getEventArgument, getEvents, decodeEvents } = require('@aragon/contract-helpers-test')
+
+const logger = require('../helpers/logger')('Protocol')
 const { bn, bigExp } = require('../helpers/numbers')
-const { decodeEventsOfType } = require('@aragon/court/test/helpers/lib/decodeEvent')
 const { encodeVoteId, hashVote } = require('../helpers/voting')
-const { DISPUTE_MANAGER_EVENTS } = require('@aragon/court/test/helpers/utils/events')
-const { DISPUTE_MANAGER_ERRORS } = require('@aragon/court/test/helpers/utils/errors')
-const { getEventArgument, getEvents } = require('@aragon/test-helpers/events')
-const { sha3, fromWei, utf8ToHex, soliditySha3, padLeft, toHex } = require('web3-utils')
 
 const ROUND_STATE_ENDED = 5
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 module.exports = class {
   constructor(instance, environment) {
@@ -16,21 +15,21 @@ module.exports = class {
     this.environment = environment
   }
 
-  async anj() {
-    if (!this._anj) {
+  async token() {
+    if (!this._token) {
       const registry = await this.registry()
       const address = await registry.token()
-      const MiniMeToken = await this.environment.getArtifact('MiniMeToken', '@aragon/minime')
-      this._anj = await MiniMeToken.at(address)
+      const ERC20 = await this.environment.getArtifact('ERC20', '@aragon/protocol-evm')
+      this._token = await ERC20.at(address)
     }
-    return this._anj
+    return this._token
   }
 
   async feeToken() {
     if (!this._feeToken) {
       const { feeToken } = await this.getConfigAt()
-      const MiniMeToken = await this.environment.getArtifact('MiniMeToken', '@aragon/minime')
-      this._feeToken = await MiniMeToken.at(feeToken)
+      const ERC20 = await this.environment.getArtifact('ERC20', '@aragon/protocol-evm')
+      this._feeToken = await ERC20.at(feeToken)
     }
     return this._feeToken
   }
@@ -38,7 +37,7 @@ module.exports = class {
   async registry() {
     if (!this._registry) {
       const address = await this.instance.getGuardiansRegistry()
-      const GuardiansRegistry = await this.environment.getArtifact('GuardiansRegistry', '@aragon/court')
+      const GuardiansRegistry = await this.environment.getArtifact('GuardiansRegistry', '@aragon/protocol-evm')
       this._registry = await GuardiansRegistry.at(address)
     }
     return this._registry
@@ -47,7 +46,7 @@ module.exports = class {
   async disputeManager() {
     if (!this._disputeManager) {
       const address = await this.instance.getDisputeManager()
-      const DisputeManager = await this.environment.getArtifact('DisputeManager', '@aragon/court')
+      const DisputeManager = await this.environment.getArtifact('DisputeManager', '@aragon/protocol-evm')
       this._disputeManager = await DisputeManager.at(address)
     }
     return this._disputeManager
@@ -56,19 +55,19 @@ module.exports = class {
   async voting() {
     if (!this._voting) {
       const address = await this.instance.getVoting()
-      const Voting = await this.environment.getArtifact('CRVoting', '@aragon/court')
+      const Voting = await this.environment.getArtifact('CRVoting', '@aragon/protocol-evm')
       this._voting = await Voting.at(address)
     }
     return this._voting
   }
 
-  async subscriptions() {
-    if (!this._subscriptions) {
-      const address = await this.instance.getSubscriptions()
-      const Subscriptions = await this.environment.getArtifact('CourtSubscriptions', '@aragon/court')
-      this._subscriptions = await Subscriptions.at(address)
+  async paymentsBook() {
+    if (!this._paymentsBook) {
+      const { addr } = await this.instance.getPaymentsBook()
+      const PaymentsBook = await this.environment.getArtifact('PaymentsBook', '@aragon/protocol-evm')
+      this._paymentsBook = await PaymentsBook.at(addr)
     }
-    return this._subscriptions
+    return this._paymentsBook
   }
 
   async termDuration() {
@@ -172,47 +171,10 @@ module.exports = class {
     return voting.getVoterOutcome(voteId, voter)
   }
 
-  async getPeriod(periodId) {
-    const subscriptions = await this.subscriptions()
-    const provider = await this.environment.getProvider()
-
-    // The period records are stored at the 7th index of the subscriptions contract storage
-    const periodsRecordsSlot = padLeft(7, 64)
-    // Parse period ID en hexadecimal and pad 64
-    const periodIdHex = padLeft(toHex(periodId), 64)
-    // The periods records variable is a mapping indexed by period IDs
-    const periodsSlot = soliditySha3(periodIdHex + periodsRecordsSlot.slice(2))
-    // The checkpoint and fee token are packed in the first element of the period struct, thus don't need to add any offset
-    const checkpointAndFeeTokenSlot = periodsSlot
-    // The fee amount is the second element of the struct, thus we add 1 to the period slot
-    const feeAmountSlot = bn(periodsSlot).add(bn(1)).toHexString()
-    // The total active balance is the third element of the struct, thus we add 2 to the period slot
-    const totalActiveBalanceSlot = bn(periodsSlot).add(bn(2)).toHexString()
-    // The collected fees is the fourth element of the struct, thus we add 3 to the period slot
-    const collectedFeesSlot = bn(periodsSlot).add(bn(3)).toHexString()
-
-
-    // The first part of the checkpoint and fee token slot is for the fee token
-    const checkpointAndFeeToken = await provider.getStorageAt(subscriptions.address, checkpointAndFeeTokenSlot)
-    const feeToken = `0x${checkpointAndFeeToken.substr(10, 40)}`
-
-    // The balance checkpoint is stored using a uint64 and its stored at the end of the slot
-    const rawBalanceCheckpoint = checkpointAndFeeToken.substr(50)
-    const balanceCheckpoint = bn(`0x${rawBalanceCheckpoint}`).toString()
-
-    // Parse the fee amount
-    const rawFeeAmount = await provider.getStorageAt(subscriptions.address, feeAmountSlot)
-    const feeAmount = bn(rawFeeAmount).toString()
-
-    // Parse the total active balance
-    const rawTotalActiveBalance = await provider.getStorageAt(subscriptions.address, totalActiveBalanceSlot)
-    const totalActiveBalance = bn(rawTotalActiveBalance).toString()
-
-    // Parse the collected fees
-    const rawCollectedFees = await provider.getStorageAt(subscriptions.address, collectedFeesSlot)
-    const collectedFees = bn(rawCollectedFees).toString()
-
-    return { balanceCheckpoint, feeToken, feeAmount, totalActiveBalance, collectedFees }
+  async getPeriodBalanceDetails(periodId) {
+    const paymentsBook = await this.paymentsBook()
+    const { balanceCheckpoint, totalActiveBalance } = await paymentsBook.getPeriodBalanceDetails(periodId)
+    return { balanceCheckpoint, totalActiveBalance }
   }
 
   async heartbeat(transitions = undefined) {
@@ -226,112 +188,91 @@ module.exports = class {
   }
 
   async stake(guardian, amount, data = '0x') {
-    const anj = await this.anj()
-    const decimals = await anj.decimals()
+    const token = await this.token()
+    const decimals = await token.decimals()
     const registry = await this.registry()
-    await this._approve(anj, bigExp(amount, decimals), registry.address)
-    logger.info(`Staking ANJ ${amount} for ${guardian}...`)
+    const symbol = await token.symbol()
+    await this._approve(token, bigExp(amount, decimals), registry.address)
+    logger.info(`Staking ${amount} ${symbol} for ${guardian}...`)
     return registry.stakeFor(guardian, bigExp(amount, decimals), data)
   }
 
   async unstake(amount, data = '0x') {
-    const anj = await this.anj()
-    const decimals = await anj.decimals()
+    const token = await this.token()
+    const decimals = await token.decimals()
     const registry = await this.registry()
-    logger.info(`Unstaking ANJ ${amount} for ${await this.environment.getSender()}...`)
+    const symbol = await token.symbol()
+    logger.info(`Unstaking ${amount} ${symbol} for ${await this.environment.getSender()}...`)
     return registry.unstake(bigExp(amount, decimals), data)
   }
 
   async activate(amount) {
-    const anj = await this.anj()
-    const decimals = await anj.decimals()
+    const token = await this.token()
+    const decimals = await token.decimals()
     const registry = await this.registry()
-    logger.info(`Activating ANJ ${amount} for ${await this.environment.getSender()}...`)
+    const symbol = await token.symbol()
+    logger.info(`Activating ${amount} ${symbol} for ${await this.environment.getSender()}...`)
     return registry.activate(bigExp(amount, decimals))
   }
 
   async activateFor(address, amount) {
-    const anj = await this.anj()
-    const decimals = await anj.decimals()
+    const token = await this.token()
+    const decimals = await token.decimals()
     const registry = await this.registry()
-    await this._approve(anj, bigExp(amount, decimals), registry.address)
+    const symbol = await token.symbol()
+    await this._approve(token, bigExp(amount, decimals), registry.address)
     const ACTIVATE_DATA = sha3('activate(uint256)').slice(0, 10)
-    logger.info(`Activating ANJ ${amount} for ${address}...`)
+    logger.info(`Activating ${amount} ${symbol} for ${address}...`)
     return registry.stakeFor(address, bigExp(amount, decimals), ACTIVATE_DATA)
   }
 
   async deactivate(amount) {
-    const anj = await this.anj()
-    const decimals = await anj.decimals()
+    const token = await this.token()
+    const decimals = await token.decimals()
     const registry = await this.registry()
-    logger.info(`Requesting ANJ ${amount} from ${await this.environment.getSender()} for deactivation...`)
+    logger.info(`Requesting ${amount} from ${await this.environment.getSender()} for deactivation...`)
     return registry.deactivate(bigExp(amount, decimals))
   }
 
-  async donate(amount) {
-    const subscriptions = await this.subscriptions()
-    const feeToken = await subscriptions.currentFeeToken()
-    const ERC20 = await this.environment.getArtifact('ERC20', '@aragon/court')
-    const token = await ERC20.at(feeToken)
+  async pay(tokenAddress, amount, payer, data) {
+    const paymentsBook = await this.paymentsBook()
+    const ERC20 = await this.environment.getArtifact('ERC20', '@aragon/protocol-evm')
+    const token = await ERC20.at(tokenAddress)
+    const symbol = await token.symbol()
 
-    logger.info(`Approving ${amount} fees for donation...`)
-    await this._approve(token, amount, subscriptions.address)
-    logger.info(`Donating ${amount} fees for court guardians...`)
-    return subscriptions.donate(amount)
+    logger.info(`Approving ${amount} ${symbol} for payment...`)
+    await this._approve(token, amount, paymentsBook.address)
+    logger.info(`Paying ${amount} ${symbol} to Aragon Protocol...`)
+    return paymentsBook.pay(tokenAddress, amount, payer, data)
   }
 
-  async deployArbitrable(owner = undefined) {
-    if (!owner) owner = await this.environment.getSender()
-    logger.info(`Creating new Arbitrable instance with owner ${owner}...`)
-    const Arbitrable = await this.environment.getArtifact('PrecedenceCampaignArbitrable', '@aragonone/precedence-campaign-arbitrable')
-    return Arbitrable.new(owner, this.instance.address)
-  }
-
-  async subscribe(address, periods = 1) {
-    const subscriptions = await this.subscriptions()
-    const { feeToken, amountToPay } = await subscriptions.getPayFeesDetails(address, periods)
-
-    const ERC20 = await this.environment.getArtifact('ERC20', '@aragon/court')
-    const token = await ERC20.at(feeToken)
-
-    logger.info(`Approving fees for ${periods} periods to ${subscriptions.address}, total amount ${fromWei(amountToPay.toString())}...`)
-    await this._approve(token, amountToPay, subscriptions.address)
-    logger.info(`Paying fees for ${periods} periods to ${subscriptions.address}...`)
-    return subscriptions.payFees(address, periods)
+  async deployArbitrable() {
+    logger.info(`Creating new Arbitrable instance...`)
+    const Arbitrable = await this.environment.getArtifact('ArbitrableMock', '@aragon/protocol-evm')
+    return Arbitrable.new(this.instance.address)
   }
 
   async createDispute(subject, rulings = 2, metadata = '', evidence = [], submitters = [], closeEvidencePeriod = false) {
     logger.info(`Creating new dispute for subject ${subject} ...`)
-    const Arbitrable = await this.environment.getArtifact('PrecedenceCampaignArbitrable', '@aragonone/precedence-campaign-arbitrable')
+    const Arbitrable = await this.environment.getArtifact('ArbitrableMock', '@aragon/protocol-evm')
     const arbitrable = await Arbitrable.at(subject)
+    const receipt = await arbitrable.createDispute(rulings, utf8ToHex(metadata))
 
-    const shouldCreateAndSubmit = evidence.length === 2 && submitters.length === 2
-    const { hash } = shouldCreateAndSubmit
-      ? (await arbitrable.createAndSubmit(rulings, utf8ToHex(metadata), submitters[0], submitters[1], utf8ToHex(evidence[0]), utf8ToHex(evidence[1])))
-      : (await arbitrable.createDispute(rulings, utf8ToHex(metadata)))
-
-    const DisputeManager = await this.environment.getArtifact('DisputeManager', '@aragon/court')
-    const { logs: rawLogs } = await this.environment.getTransaction(hash)
-    const logs = decodeEventsOfType({ receipt: { rawLogs }}, DisputeManager.abi, DISPUTE_MANAGER_EVENTS.NEW_DISPUTE)
+    const DisputeManager = await this.environment.getArtifact('DisputeManager', '@aragon/protocol-evm')
+    const logs = decodeEvents(receipt, DisputeManager.abi, DISPUTE_MANAGER_EVENTS.NEW_DISPUTE)
     const disputeId = getEventArgument({ logs }, DISPUTE_MANAGER_EVENTS.NEW_DISPUTE, 'disputeId')
 
-    if (!shouldCreateAndSubmit) {
-      for (const data of evidence) {
-        const index = evidence.indexOf(data)
-        const submitter = submitters[index]
-        if (submitter) {
-          logger.info(`Submitting evidence ${data} for dispute #${disputeId} for submitter ${submitter}...`)
-          await arbitrable.submitEvidenceFor(disputeId, submitter, utf8ToHex(data), false)
-        } else {
-          logger.info(`Submitting evidence ${data} for dispute #${disputeId} for sender ...`)
-          await arbitrable.submitEvidence(disputeId, utf8ToHex(data), false)
-        }
+    for (const data of evidence) {
+      const index = evidence.indexOf(data)
+      const submitter = submitters[index]
+      const finished = closeEvidencePeriod && index === evidence.length - 1
+      if (submitter) {
+        logger.info(`Submitting evidence ${data} for dispute #${disputeId} for submitter ${submitter}...`)
+        await arbitrable.submitEvidence(disputeId, submitter, utf8ToHex(data), finished)
+      } else {
+        logger.info(`Submitting evidence ${data} for dispute #${disputeId} for sender ...`)
+        await arbitrable.submitEvidence(disputeId, utf8ToHex(data), finished)
       }
-    }
-
-    if (closeEvidencePeriod) {
-      logger.info(`Closing evidence period for dispute #${disputeId} ...`)
-      await arbitrable.closeEvidencePeriod(disputeId)
     }
 
     return disputeId
@@ -340,9 +281,8 @@ module.exports = class {
   async draft(disputeId) {
     const disputeManager = await this.disputeManager()
     logger.info(`Drafting dispute #${disputeId} ...`)
-    const { hash } = await disputeManager.draft(disputeId)
-    const { logs: rawLogs } = await this.environment.getTransaction(hash)
-    const logs = decodeEventsOfType({ receipt: { rawLogs }}, disputeManager.interface.abi, DISPUTE_MANAGER_EVENTS.GUARDIAN_DRAFTED)
+    const receipt = await disputeManager.draft(disputeId)
+    const logs = decodeEvents(receipt, disputeManager.interface.abi, DISPUTE_MANAGER_EVENTS.GUARDIAN_DRAFTED)
     return getEvents({ logs }, DISPUTE_MANAGER_EVENTS.GUARDIAN_DRAFTED).map(event => event.args.guardian)
   }
 

@@ -52,7 +52,7 @@ export default class ANJTransfersList extends React.Component {
 
   _onChange() {
     if(this.refs.anjTransfersList) {
-      const { transfers } = Store.getState().anj
+      const { transfers } = Store.getState().token
       this.setState({ transfers })
     }
   }

@@ -1,4 +1,4 @@
-# Court Backend shared
+# Aragon Protocol Backend shared
 
 This repo provides a set of JavaScript components shared by all of the repos contained in this mono-repo.
 
@@ -12,14 +12,14 @@ This JS class is in charge of providing JS wrappers for smart contracts (a.k.a. 
 It provides two flavors of artifacts, one [`dynamic`](./models/artifacts/DynamicArtifacts.js) and another one [`static`](./models/artifacts/StaticArtifacts.js), following the same interface. 
 The difference is that the dynamic one will load the contract schemas lazily, while the static one will load all of them before hand.     
 
-#### Court
+#### Protocol
 
-This JS class is intended to be a JS wrapper exposing all the functionality required to interact with an Aragon Court instance. It basically encapsulates all the complexity behind its different smart contracts, exposing a single interface.
-This class is used by all the projects of the Aragon Court back-office to interact with a court instance.  
+This JS class is intended to be a JS wrapper exposing all the functionality required to interact with an Aragon Protocol instance. It basically encapsulates all the complexity behind its different smart contracts, exposing a single interface.
+This class is used by all the projects of the Aragon Protocol backoffice to interact with a protocol instance.  
 
 #### Environments
 
-This JS class is in charge of providing all the web3 commonly used components in a web3 application like: a web3 instance, a web3 provider, an artifacts object, the default sender, and some other particular entities like a court instance, a court subgraph, among others.
+This JS class is in charge of providing all the web3 commonly used components in a web3 application like: a web3 instance, a web3 provider, an artifacts object, the default sender, and some other particular entities like a protocol instance, a protocol subgraph, among others.
 It also provides two different flavors of environments, one for [`browser`](./models/environments/BrowserEnvironment.js) and another one based on [`Truffle configs`](./models/environments/TruffleEnvironment.js). 
 The first one is only used by the back-office frontend app where all the components mentioned above are built based on a browser web3 provider like `Metamask`, while the second one is used by all the other back-office projects (`cli`, `server`, and `services`) where all these components are derived from a Truffle config file. 
 
@@ -33,4 +33,4 @@ It provides the following helper functions:
 - [`numbers`](./helpers/numbers.js): BigNumber-related helper functions
 - [`sleep`](./helpers/sleep.js): Sleep function to wait a number of seconds 
 - [`times`](./helpers/times.js): Time constants for using with `Date()`
-- [`voting`](./helpers/voting.js): Utils related to the CR Voting module of Aragon Court
+- [`voting`](./helpers/voting.js): Utils related to the CR Voting module of Aragon Protocol

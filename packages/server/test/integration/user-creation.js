@@ -2,6 +2,7 @@ import chai from 'chai'
 import chaiHttp from 'chai-http'
 import HttpStatus from 'http-status-codes'
 
+import app from '../../src/app'
 import dbCleanup from '../helpers/dbCleanup'
 const serverPort = process.env.SERVER_PORT || 8000
 const { expect } = chai
@@ -9,14 +10,13 @@ chai.use(chaiHttp)
 const TEST_ADDR = '0x6e26ADFa527BcC8B6aEf88716486cBdb4f7914e1'
 const TEST_EMAIL = 'user@create.test'
 
-
 describe('User creation', () => {
 
   let server
   // agent is used to persist authentication cookie across multiple tests
   let agent
   before(async () => {
-    server = require('../../src/index').server
+    server = app.listen(serverPort)
     agent = chai.request.agent(`http://localhost:${serverPort}`)
   })
 

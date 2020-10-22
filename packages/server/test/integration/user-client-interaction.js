@@ -3,6 +3,7 @@ import chaiHttp from 'chai-http'
 import HttpStatus from 'http-status-codes'
 import { ethers } from 'ethers'
 
+import app from '../../src/app'
 import { User } from '../../src/models/objection'
 import dbCleanup from '../helpers/dbCleanup'
 const serverPort = process.env.SERVER_PORT || 8000
@@ -25,7 +26,7 @@ describe('Client user interaction', () => {
   let agent
   let agent2
   before(async () => {
-    server = require('../../src/index').server
+    server = app.listen(serverPort)
     agent = chai.request.agent(`http://localhost:${serverPort}`)
     agent2 = chai.request.agent(`http://localhost:${serverPort}`)
   })

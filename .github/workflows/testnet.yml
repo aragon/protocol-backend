@@ -11,14 +11,14 @@ on:
     - 'emails/**'
 env:
   # This is a base repository and we use ${GITHUB_SHA} to set the version of the container
-  REPO: docker.pkg.github.com/aragonone/court-backend/testnet
+  REPO: aragon/protocol-backend
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{secrets.GITHUB_TOKEN}}
+    - run: docker login -u ${{secrets.DOCKERHUB_USER}} -p ${{secrets.DOCKERHUB_TOKEN}}
     - run: .github/scripts/docker-build.sh $REPO ${GITHUB_SHA}
 
   test:
@@ -26,7 +26,7 @@ jobs:
     needs: build
     steps:
     - uses: actions/checkout@v2
-    - run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{secrets.GITHUB_TOKEN}}
+    - run: docker login -u ${{secrets.DOCKERHUB_USER}} -p ${{secrets.DOCKERHUB_TOKEN}}
     - run: .github/scripts/test/run.sh $REPO:${GITHUB_SHA}
 
   release:
@@ -35,7 +35,7 @@ jobs:
     needs: test
     steps:
     - uses: actions/checkout@v2
-    - run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{secrets.GITHUB_TOKEN}}
+    - run: docker login -u ${{secrets.DOCKERHUB_USER}} -p ${{secrets.DOCKERHUB_TOKEN}}
     - run: .github/scripts/docker-release.sh $REPO:${GITHUB_SHA} $REPO:latest
 
   deploy:
@@ -45,13 +45,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: .github/scripts/kubectl-config.sh ${{secrets.KUBE_CA}} ${{secrets.KUBE_SERVER}} ${{secrets.KUBE_TOKEN}}
-    - run: .github/scripts/kubectl-set-image.sh court-backend-rinkeby $REPO:${GITHUB_SHA}
-    - run: .github/scripts/kubectl-set-image.sh court-backend-staging $REPO:${GITHUB_SHA}
-    - run: .github/scripts/kubectl-set-image.sh court-backend-ropsten $REPO:${GITHUB_SHA}
-    - run: .github/scripts/kubectl-wait-ready.sh court-backend-rinkeby
-    - run: .github/scripts/kubectl-wait-ready.sh court-backend-staging
-    - run: .github/scripts/kubectl-wait-ready.sh court-backend-ropsten
+    - run: .github/scripts/kubectl-set-image.sh protocol-backend-rinkeby $REPO:${GITHUB_SHA}
+    - run: .github/scripts/kubectl-set-image.sh protocol-backend-staging $REPO:${GITHUB_SHA}
+    - run: .github/scripts/kubectl-set-image.sh protocol-backend-ropsten $REPO:${GITHUB_SHA}
+    - run: .github/scripts/kubectl-wait-ready.sh protocol-backend-rinkeby
+    - run: .github/scripts/kubectl-wait-ready.sh protocol-backend-staging
+    - run: .github/scripts/kubectl-wait-ready.sh protocol-backend-ropsten
     # wait 10 sec for k8s to reroute ingress and check app endpoint
-    - run: sleep 10 && curl --fail https://court-backend-app-rinkeby.eth.aragon.network
-    - run: curl --fail https://court-backend-app-staging.eth.aragon.network
-    - run: curl --fail https://court-backend-app-ropsten.eth.aragon.network
+    - run: sleep 10 && curl --fail https://protocol-app-rinkeby.backend.aragon.org
+    - run: curl --fail https://protocol-app-staging.backend.aragon.org
+    - run: curl --fail https://protocol-app-ropsten.backend.aragon.org

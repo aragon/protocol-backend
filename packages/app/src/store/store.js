@@ -5,7 +5,7 @@ import faucet from '../reducers/faucet'
 import fetching from '../reducers/fetching'
 import anj from '../reducers/anj'
 import court from '../reducers/court'
-import jurors from '../reducers/jurors'
+import guardians from '../reducers/guardians'
 import drafts from '../reducers/drafts'
 import disputes from '../reducers/disputes'
 import subscriptions from '../reducers/subscriptions'
@@ -20,7 +20,7 @@ const mainReducer = combineReducers({
   fetching,
   anj,
   court,
-  jurors,
+  guardians,
   drafts,
   disputes,
   subscriptions,

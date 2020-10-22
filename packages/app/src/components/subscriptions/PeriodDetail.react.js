@@ -25,7 +25,7 @@ export default class PeriodDetail extends React.Component {
               <p>Balance checkpoint: {period.balanceCheckpoint}</p>
               <p>Total active balance: {period.totalActiveBalance}</p>
               <p>Collected fees: {fromWei(period.collectedFees)}</p>
-              <p>Claims: {this.state.period.jurorClaims.length === 0 && 'None'}</p>
+              <p>Claims: {this.state.period.guardianClaims.length === 0 && 'None'}</p>
               <ul>{this._buildClaimsList()}</ul>
             </div>
           }
@@ -34,11 +34,11 @@ export default class PeriodDetail extends React.Component {
   }
 
   _buildClaimsList() {
-    return this.state.period.jurorClaims.map((claim, index) =>
+    return this.state.period.guardianClaims.map((claim, index) =>
       <li key={index}>
         Claim #{claim.id}
         <ul>
-          <li>Submitter: {claim.juror.id}</li>
+          <li>Submitter: {claim.guardian.id}</li>
           <li>Amount: {fromWei(claim.amount)}</li>
         </ul>
       </li>

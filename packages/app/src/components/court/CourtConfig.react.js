@@ -36,7 +36,7 @@ export default class CourtConfig extends React.Component {
       neededTransitions,
       anjToken,
       feeToken,
-      jurorFee,
+      guardianFee,
       draftFee,
       settleFee,
       evidenceTerms,
@@ -46,7 +46,7 @@ export default class CourtConfig extends React.Component {
       appealConfirmationTerms,
       penaltyPct,
       finalRoundReduction,
-      firstRoundJurorsNumber,
+      firstRoundGuardiansNumber,
       appealStepFactor,
       maxRegularAppealRounds,
       finalRoundLockTerms,
@@ -78,7 +78,7 @@ export default class CourtConfig extends React.Component {
 
         <h3>Disputes</h3>
         <p>Fee token: {feeToken.id}</p>
-        <p>Juror fee: {fromWei(jurorFee.toString())}</p>
+        <p>Guardian fee: {fromWei(guardianFee.toString())}</p>
         <p>Draft fee: {fromWei(draftFee.toString())}</p>
         <p>Settle fee: {fromWei(settleFee.toString())}</p>
         <p>Evidence terms: {evidenceTerms}</p>
@@ -88,7 +88,7 @@ export default class CourtConfig extends React.Component {
         <p>Appeal confirmation terms: {appealConfirmationTerms}</p>
         <p>Penalty permyriad: ‱ {penaltyPct} (1/10,000)</p>
         <p>Final round reduction: ‱ {finalRoundReduction} (1/10,000)</p>
-        <p>First round jurors number: {firstRoundJurorsNumber}</p>
+        <p>First round guardians number: {firstRoundGuardiansNumber}</p>
         <p>Appeal step factor: {appealStepFactor}</p>
         <p>Max regular appeal rounds: {maxRegularAppealRounds}</p>
         <p>Final round lock terms: {finalRoundLockTerms}</p>

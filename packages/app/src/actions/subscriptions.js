@@ -15,9 +15,9 @@ const SubscriptionsActions = {
             balanceCheckpoint
             totalActiveBalance
             accumulatedGovernorFees
-            jurorClaims {
+            guardianClaims {
               id
-              juror { id }
+              guardian { id }
               amount
             }
           }

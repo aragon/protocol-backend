@@ -78,9 +78,9 @@ export default class DisputeDetail extends React.Component {
           <li>Winning outcome: {round.vote ? round.vote.winningOutcome : '...'}</li>
           <li>Delayed terms: {round.delayedTerms}</li>
           <li>Draft term ID: {round.draftTermId}</li>
-          <li>Jurors number: {round.jurorsNumber}</li>
-          <li>Selected jurors: {round.selectedJurors}</li>
-          <li>Coherent jurors: {round.coherentJurors}</li>
+          <li>Guardians number: {round.guardiansNumber}</li>
+          <li>Selected guardians: {round.selectedGuardians}</li>
+          <li>Coherent guardians: {round.coherentGuardians}</li>
           <li>Settled penalties: {round.settledPenalties ? 'Yes' : 'No'}</li>
           <li>Collected tokens: {fromWei(round.collectedTokens)}</li>
           <li>Created at: {toDate(round.createdAt)}</li>
@@ -96,12 +96,12 @@ export default class DisputeDetail extends React.Component {
               </ul>
             )}
           </li>
-          <li>Jurors:
-            {round.jurors.length === 0 ? ' None' : (
+          <li>Guardians:
+            {round.guardians.length === 0 ? ' None' : (
               <ul>
-                {round.jurors.map((juror, index) =>
+                {round.guardians.map((guardian, index) =>
                   <li key={index}>
-                    <Link to={`/jurors/${juror.juror.id}/detail`}>{juror.juror.id}</Link>
+                    <Link to={`/guardians/${guardian.guardian.id}/detail`}>{guardian.guardian.id}</Link>
                   </li>
                 )}
               </ul>

@@ -3,9 +3,9 @@ import Store from '../../store/store'
 import { Link } from 'react-router-dom'
 import { toDate } from '../../helpers/toDate'
 import { summarize } from '../../helpers/summarize'
-import JurorsActions from '../../actions/jurors'
+import GuardiansActions from '../../actions/guardians'
 
-export default class JurorDraftsList extends React.Component {
+export default class GuardianDraftsList extends React.Component {
   constructor(props){
     super(props)
     this.state = { address: this.props.match.params.address, drafts: null }
@@ -13,14 +13,14 @@ export default class JurorDraftsList extends React.Component {
 
   componentDidMount() {
     Store.subscribe(() => this._onChange())
-    Store.dispatch(JurorsActions.findDrafts(this.state.address))
+    Store.dispatch(GuardiansActions.findDrafts(this.state.address))
   }
 
   render() {
     const { address, drafts } = this.state
     return (
-      <div ref="jurorDraftsList">
-        <h3>Drafts of Juror {address}</h3>
+      <div ref="guardianDraftsList">
+        <h3>Drafts of Guardian {address}</h3>
         { (!drafts) ? <em>Loading...</em> : drafts.length === 0 ?
           <em>None</em> :
           <table>
@@ -67,9 +67,9 @@ export default class JurorDraftsList extends React.Component {
   }
 
   _onChange() {
-    if(this.refs.jurorDraftsList) {
-      const { jurorDrafts } = Store.getState().jurors
-      this.setState({ drafts: jurorDrafts })
+    if(this.refs.guardianDraftsList) {
+      const { guardianDrafts } = Store.getState().guardians
+      this.setState({ drafts: guardianDrafts })
     }
   }
 }

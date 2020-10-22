@@ -3,9 +3,9 @@ import Store from '../../store/store'
 import { fromWei } from 'web3-utils'
 import { toDate } from '../../helpers/toDate'
 import { summarize } from '../../helpers/summarize'
-import JurorsActions from '../../actions/jurors'
+import GuardiansActions from '../../actions/guardians'
 
-export default class JurorAccountingList extends React.Component {
+export default class GuardianAccountingList extends React.Component {
   constructor(props){
     super(props)
     this.state = { address: this.props.match.params.address, accounting: null }
@@ -13,14 +13,14 @@ export default class JurorAccountingList extends React.Component {
 
   componentDidMount() {
     Store.subscribe(() => this._onChange())
-    Store.dispatch(JurorsActions.findAccounting(this.state.address))
+    Store.dispatch(GuardiansActions.findAccounting(this.state.address))
   }
 
   render() {
     const { address, accounting } = this.state
     return (
-      <div ref="jurorAccountingList">
-        <h3>Accounting of Juror {address}</h3>
+      <div ref="guardianAccountingList">
+        <h3>Accounting of Guardian {address}</h3>
         { (!accounting) ? <em>Loading...</em> : accounting.length === 0 ?
           <em>None</em> :
           <table>
@@ -55,9 +55,9 @@ export default class JurorAccountingList extends React.Component {
   }
 
   _onChange() {
-    if(this.refs.jurorAccountingList) {
-      const { jurorAccounting } = Store.getState().jurors
-      this.setState({ accounting: jurorAccounting })
+    if(this.refs.guardianAccountingList) {
+      const { guardianAccounting } = Store.getState().guardians
+      this.setState({ accounting: guardianAccounting })
     }
   }
 }

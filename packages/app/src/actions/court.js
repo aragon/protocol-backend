@@ -33,7 +33,7 @@ const CourtActions = {
               name
               decimals 
             }
-            jurorFee
+            guardianFee
             draftFee
             settleFee
             evidenceTerms
@@ -43,7 +43,7 @@ const CourtActions = {
             appealConfirmationTerms
             penaltyPct
             finalRoundReduction
-            firstRoundJurorsNumber
+            firstRoundGuardiansNumber
             appealStepFactor
             maxRegularAppealRounds
             finalRoundLockTerms

@@ -5,13 +5,13 @@ Currently, there is no published version of it. However, you can use it locally.
 
 ### Commands
 
-- [`mint`](./src/commands/mint.js): Mint ANJ or Fee tokens for a certain address
+- [`mint`](./src/commands/mint.js): Mint tokens for a certain address
 - [`heartbeat`](./src/commands/hearbeat.js): Transition Court terms
 - [`config`](./src/commands/config.js): Change Court config
-- [`stake`](./src/commands/stake.js): Stake ANJ tokens for a guardian
-- [`unstake`](./src/commands/unstake.js): Unstake ANJ tokens
-- [`activate`](./src/commands/activate.js): Activate ANJ to the Court
-- [`deactivate`](./src/commands/deactivate.js): Deactivate ANJ from the Court
+- [`stake`](./src/commands/stake.js): Stake tokens for a guardian
+- [`unstake`](./src/commands/unstake.js): Unstake tokens
+- [`activate`](./src/commands/activate.js): Activate tokens into the Court
+- [`deactivate`](./src/commands/deactivate.js): Deactivate tokens from the Court
 - [`donate`](./src/commands/donate.js): Donate funds to Court guardians
 - [`arbitrable`](./src/commands/arbitrable.js): Create new Arbitrable instance for the Court
 - [`subscribe`](./src/commands/subscribe.js): Subscribe Arbitrable instance to the Court

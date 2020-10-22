@@ -57,7 +57,7 @@ export default class ANJBalancesList extends React.Component {
 
   _onChange() {
     if(this.refs.anjBalancesList) {
-      const { balances } = Store.getState().anj
+      const { balances } = Store.getState().token
       this.setState({ balances })
     }
   }

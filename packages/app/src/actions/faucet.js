@@ -47,7 +47,7 @@ const FaucetActions = {
     return async function(dispatch) {
       try {
         const court = await Network.getCourt(courtAddress)
-        const anj = await court.anj()
+        const anj = await court.token()
         const symbol = await anj.symbol()
         const anjBalance = await faucet.getTotalSupply(anj.address)
         const { period, amount } = await faucet.getQuota(anj.address)

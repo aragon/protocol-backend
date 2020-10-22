@@ -64,7 +64,7 @@ const AccountActions = {
     return async function(dispatch) {
       try {
         const court = await Network.getCourt(courtAddress)
-        const anj = await court.anj()
+        const anj = await court.token()
         const symbol = await anj.symbol()
         const anjBalance = await anj.balanceOf(account)
         const balance = fromWei(anjBalance.toString())

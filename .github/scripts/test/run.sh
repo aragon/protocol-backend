@@ -5,7 +5,8 @@ cp .env.sample $DIR/.env
 cd $DIR
 export SERVER_IMAGE="$1"
 docker-compose up -d
-docker-compose exec -T court_server /bin/sh -c "npx wait-on http://localhost:\$SERVER_METRICS_PORT --timeout 20000"
-docker-compose exec -T court_server npm run test:server
-docker-compose exec -T court_server npm run test:services
+docker-compose exec -T test yarn db:setup
+docker-compose exec -T test yarn test:server
+docker-compose exec -T test yarn workspace @aragon/protocol-backend-server build
+docker-compose exec -T test yarn test:services
 docker-compose down

@@ -7,6 +7,7 @@
     "lerna": "^3.14.1"
   },
   "scripts": {
+    "db:setup": "lerna run db:setup --scope '*/*-server' --stream",
     "start:app": "lerna run --scope=@aragon/protocol-backend-app --concurrency=1 --stream start",
     "start:server": "lerna run --scope=@aragon/protocol-backend-server --concurrency=1 --stream start",
     "start:server:dev": "lerna run --scope=@aragon/protocol-backend-server --concurrency=1 --stream start:dev",

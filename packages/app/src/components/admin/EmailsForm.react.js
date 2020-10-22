@@ -10,7 +10,7 @@ export default class EmailsForm extends React.Component {
         id: 'title',
         label: 'Title',
         required: true,
-        default: 'New on Aragon Court',
+        default: 'New on Aragon Protocol',
       },
       {
         id: 'bannerHtml',
@@ -87,7 +87,7 @@ export default class EmailsForm extends React.Component {
   }
 
   getFieldInput(field) {
-    if (field.type == 'textarea') {
+    if (field.type === 'textarea') {
       return <textarea ref={field.id} id={field.id} value={this.state[field.id]} onChange={this.updateField} required={field.required} />
     } else {
       return <input ref={field.id} id={field.id} type="text" value={this.state[field.id]} onChange={this.updateField} required={field.required} />

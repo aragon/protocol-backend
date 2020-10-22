@@ -83,7 +83,7 @@ const GuardiansActions = {
       try {
         const result = await Network.query(`{
           guardian (id: "${id}") {
-            anjMovements (orderBy: createdAt, orderDirection: desc) {
+            stakingMovements (orderBy: createdAt, orderDirection: desc) {
               id
               type
               amount
@@ -92,7 +92,7 @@ const GuardiansActions = {
             }
           }
         }`)
-        dispatch(GuardiansActions.receiveGuardianStaking(result.guardian.anjMovements))
+        dispatch(GuardiansActions.receiveGuardianStaking(result.guardian.stakingMovements))
       } catch(error) {
         dispatch(ErrorActions.show(error))
       }

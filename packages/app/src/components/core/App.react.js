@@ -11,8 +11,8 @@ import AdminsList from '../admin/AdminsList.react'
 import UsersList from '../admin/UsersList.react'
 import RevealsList from '../admin/RevealsList.react'
 import EmailsForm from '../admin/EmailsForm.react'
-import PeriodsList from '../subscriptions/PeriodsList.react'
-import PeriodDetail from '../subscriptions/PeriodDetail.react'
+import PeriodsList from '../payments/PeriodsList.react'
+import PeriodDetail from '../payments/PeriodDetail.react'
 import GuardiansList from '../guardians/GuardiansList.react'
 import GuardianDetail from '../guardians/GuardianDetail.react'
 import GuardianDraftsList from '../guardians/GuardianDraftsList.react'
@@ -21,8 +21,6 @@ import GuardianAccountingList from '../guardians/GuardianAccountingList.react'
 import DraftsList from '../drafts/DraftsList.react'
 import DisputesList from '../disputes/DisputesList.react'
 import DisputeDetail from '../disputes/DisputeDetail.react'
-import ANJBalancesList from '../anj/ANJBalancesList.react'
-import ANJTransfersList from '../anj/ANJTransfersList.react'
 import AdminActions from '../../actions/admin'
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom'
 
@@ -56,8 +54,6 @@ class App extends React.Component {
             <Route path="/drafts/" component={DraftsList}/>
             <Route path="/periods/" component={PeriodsList}/>
             <Route path="/period/:id" component={PeriodDetail}/>
-            <Route path="/anj-balances/" exact component={ANJBalancesList}/>
-            <Route path="/anj-transfers/:address" component={ANJTransfersList}/>
 
             <Route path="/admin" exact render={
               props => admin.id

@@ -5,7 +5,7 @@ const describe = 'Activate tokens to the Protocol'
 
 const builder = {
   amount: { alias: 'a', describe: 'Number of tokens to activate', type: 'string', demand: true },
-  guardian: { alias: 'j', describe: 'Optional address of the guardian activating the tokens for. If missing tokens will be activated for the sender.', type: 'string' },
+  guardian: { alias: 'g', describe: 'Optional address of the guardian activating the tokens for', type: 'string' },
 }
 
 const handlerAsync = async (environment, { from, guardian, amount }) => {

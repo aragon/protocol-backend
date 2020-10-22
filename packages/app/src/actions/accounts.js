@@ -1,6 +1,6 @@
 import Network from '../web3/Network'
 import ErrorActions from './errors'
-import CourtActions from './court'
+import ProtocolActions from './protocol'
 import * as ActionTypes from '../actions/types'
 import { fromWei } from 'web3-utils'
 
@@ -13,16 +13,15 @@ const AccountActions = {
 
         if (enabled) {
           const account = await Network.getAccount()
-          const courtAddress = await CourtActions.findCourt()
+          const protocolAddress = await ProtocolActions.findProtocolAddress()
           dispatch(AccountActions.receive(account))
           dispatch(AccountActions.updateEthBalance(account))
 
-          if (await Network.isCourtAt(courtAddress)) {
-            dispatch(AccountActions.updateAntBalance(account))
-            dispatch(AccountActions.updateAnjBalance(account, courtAddress))
-            dispatch(AccountActions.updateFeeBalance(account, courtAddress))
+          if (await Network.isProtocolAt(protocolAddress)) {
+            dispatch(AccountActions.updateAntBalance(account, protocolAddress))
+            dispatch(AccountActions.updateFeeBalance(account, protocolAddress))
           } else {
-            dispatch(ErrorActions.show(new Error(`Could not find Court at ${courtAddress}, please make sure you're in the right network`)))
+            dispatch(ErrorActions.show(new Error(`Could not find Protocol at ${protocolAddress}, please make sure you're in the right network`)))
           }
         }
       } catch(error) {
@@ -43,43 +42,26 @@ const AccountActions = {
     }
   },
 
-  updateAntBalance(account) {
+  updateAntBalance(account, protocolAddress) {
     return async function(dispatch) {
       try {
-        const ant = await Network.getANT()
-        if (!ant) console.error('Could not find an ANT instance for the current network')
-        else {
-          const symbol = await ant.symbol()
-          const antBalance = await ant.balanceOf(account)
-          const balance = fromWei(antBalance.toString())
-          dispatch(AccountActions.receiveAntBalance({ symbol, balance, address: ant.address }))
-        }
+        const protocol = await Network.getProtocol(protocolAddress)
+        const ant = await protocol.token()
+        const symbol = await ant.symbol()
+        const antBalance = await ant.balanceOf(account)
+        const balance = fromWei(antBalance.toString())
+        dispatch(AccountActions.receiveAntBalance({ symbol, balance, address: ant.address }))
       } catch (error) {
         dispatch(ErrorActions.show(error))
       }
     }
   },
 
-  updateAnjBalance(account, courtAddress) {
+  updateFeeBalance(account, protocolAddress) {
     return async function(dispatch) {
       try {
-        const court = await Network.getCourt(courtAddress)
-        const anj = await court.token()
-        const symbol = await anj.symbol()
-        const anjBalance = await anj.balanceOf(account)
-        const balance = fromWei(anjBalance.toString())
-        dispatch(AccountActions.receiveAnjBalance({ symbol, balance, address: anj.address }))
-      } catch (error) {
-        dispatch(ErrorActions.show(error))
-      }
-    }
-  },
-
-  updateFeeBalance(account, courtAddress) {
-    return async function(dispatch) {
-      try {
-        const court = await Network.getCourt(courtAddress)
-        const feeToken = await court.feeToken()
+        const protocol = await Network.getProtocol(protocolAddress)
+        const feeToken = await protocol.feeToken()
         const symbol = await feeToken.symbol()
         const feeBalance = await feeToken.balanceOf(account)
         const balance = fromWei(feeBalance.toString())
@@ -104,10 +86,6 @@ const AccountActions = {
 
   receiveAntBalance({ symbol, balance, address }) {
     return { type: ActionTypes.RECEIVE_ANT_BALANCE, symbol, balance, address }
-  },
-
-  receiveAnjBalance({ symbol, balance, address }) {
-    return { type: ActionTypes.RECEIVE_ANJ_BALANCE, symbol, balance, address }
   },
 
   receiveFeeBalance({ symbol, balance, address }) {

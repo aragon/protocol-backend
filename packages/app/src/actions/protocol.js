@@ -4,34 +4,34 @@ import * as ActionTypes from '../actions/types'
 
 const HEARTBEAT_MAX_TRANSITIONS = 20
 
-const CourtActions = {
-  async findCourt() {
-    const result = await Network.query('{ courtConfigs { id } }')
-    if (result.courtConfigs.length === 0) throw Error('Missing Aragon Court deployment')
-    if (result.courtConfigs.length > 1) throw Error('Found more than Aragon Court deployment')
-    return result.courtConfigs[0].id
+const ProtocolActions = {
+  async findProtocolAddress() {
+    const result = await Network.query('{ protocols { id } }')
+    if (result.protocols.length === 0) throw Error('Missing Aragon Protocol deployment')
+    if (result.protocols.length > 1) throw Error('Found more than Aragon Protocol deployment')
+    return result.protocols[0].id
   },
 
-  findConfig() {
+  findProtocol() {
     return async function(dispatch) {
       try {
-        const courtAddress = await CourtActions.findCourt()
+        const protocolAddress = await ProtocolActions.findProtocolAddress()
         const result = await Network.query(`{
-          courtConfig(id: "${courtAddress}") {
+          protocol(id: "${protocolAddress}") {
             id
             termDuration
             currentTerm
+            token {
+              id
+              symbol
+              name
+              decimals 
+            }
             feeToken {
               id 
               symbol
               name
               decimals
-            }
-            anjToken {
-              id
-              symbol
-              name
-              decimals 
             }
             guardianFee
             draftFee
@@ -53,21 +53,16 @@ const CourtActions = {
             fundsGovernor
             configGovernor
             modulesGovernor
-            subscriptions {
+            paymentsBook {
               id
               currentPeriod
-              feeAmount
-              feeToken
               periodDuration
-              prePaymentPeriods
-              resumePrePaidPeriods
-              latePaymentPenaltyPct
               governorSharePct
             }
             modules {
               id
-              address
               type
+              moduleId
             }
           }
         }`)
@@ -75,16 +70,16 @@ const CourtActions = {
         let neededTransitions = '(cannot fetch info)'
 
         if (await Network.isEnabled()) {
-          if (await Network.isCourtAt(courtAddress)) {
-            const court = await Network.getCourt(courtAddress)
-            neededTransitions = await court.neededTransitions()
+          if (await Network.isProtocolAt(protocolAddress)) {
+            const protocol = await Network.getProtocol(protocolAddress)
+            neededTransitions = await protocol.neededTransitions()
           } else {
-            dispatch(ErrorActions.show(new Error(`Could not find Court at ${courtAddress}, please make sure you're in the right network`)))
+            dispatch(ErrorActions.show(new Error(`Could not find Aragon Protocol at ${protocolAddress}, please make sure you're in the right network`)))
           }
         }
 
-        const config = { ...result.courtConfig, neededTransitions, address: courtAddress }
-        dispatch(CourtActions.receiveConfig(config))
+        const protocol = { ...result.protocol, neededTransitions, address: protocolAddress }
+        dispatch(ProtocolActions.receiveProtocol(protocol))
       } catch(error) {
         dispatch(ErrorActions.show(error))
       }
@@ -94,18 +89,18 @@ const CourtActions = {
   heartbeat() {
     return async function(dispatch) {
       try {
-        const court = await Network.getCourt()
-        await court.heartbeat(HEARTBEAT_MAX_TRANSITIONS)
-        dispatch(CourtActions.findConfig())
+        const protocol = await Network.getProtocol()
+        await protocol.heartbeat(HEARTBEAT_MAX_TRANSITIONS)
+        dispatch(ProtocolActions.findProtocol())
       } catch (error) {
         dispatch(ErrorActions.show(error))
       }
     }
   },
 
-  receiveConfig(config) {
-    return { type: ActionTypes.RECEIVE_COURT_CONFIG, config }
+  receiveProtocol(protocol) {
+    return { type: ActionTypes.RECEIVE_PROTOCOL, protocol }
   },
 }
 
-export default CourtActions
+export default ProtocolActions

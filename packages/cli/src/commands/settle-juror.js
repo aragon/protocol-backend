@@ -5,7 +5,7 @@ const describe = 'Settle guardian for a dispute'
 
 const builder = {
   dispute: { alias: 'd', describe: 'Dispute identification number', type: 'string', demand: true },
-  guardian: { alias: 'j', describe: 'Address of the guardian to be settled', type: 'string', demand: true }
+  guardian: { alias: 'g', describe: 'Address of the guardian to be settled', type: 'string', demand: true }
 }
 
 const handlerAsync = async (environment, { dispute, guardian }) => {

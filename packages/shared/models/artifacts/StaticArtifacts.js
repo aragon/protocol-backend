@@ -5,6 +5,7 @@ const BUILDS = {
     'ERC20Faucet': require('@aragonone/erc20-faucet/build/contracts/ERC20Faucet'),
   },
   '@aragon/protocol-evm': {
+    'ERC20Mock': require('@aragon/protocol-evm/artifacts/ERC20Mock'),
     'AragonProtocol': require('@aragon/protocol-evm/artifacts/AragonProtocol'),
     'DisputeManager': require('@aragon/protocol-evm/artifacts/DisputeManager'),
     'GuardiansRegistry': require('@aragon/protocol-evm/artifacts/GuardiansRegistry'),

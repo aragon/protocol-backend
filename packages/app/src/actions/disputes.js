@@ -57,16 +57,6 @@ const DisputeActions = {
                 createdAt
               }
             }
-            disputable {
-              id
-              agreement
-              title
-              actionId
-              challengeId
-              address
-              disputableActionId
-              organization
-            }
           }
         }`)
         dispatch(DisputeActions.receiveDispute(result.dispute))
@@ -91,10 +81,6 @@ const DisputeActions = {
             createdAt
             subject {
               id
-            }
-            disputable {
-              title
-              address
             }
           }
         }`)

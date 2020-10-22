@@ -10,7 +10,7 @@ class Environment {
   }
 
   getSubgraph() {
-    const base = this.network === 'rpc' ? SUBGRAPH_LOCAL : SUBGRAPH_REMOTE
+    const base = this.network === 'ganache' ? SUBGRAPH_LOCAL : SUBGRAPH_REMOTE
     return `${base}/subgraphs/name/aragon/aragon-protocol-${this.network}`
   }
 

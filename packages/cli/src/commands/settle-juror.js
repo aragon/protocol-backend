@@ -1,17 +1,17 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('settle-juror')
+const logger = require('@aragon/protocol-backend-shared/helpers/logger')('settle-guardian')
 
-const command = 'settle-juror'
-const describe = 'Settle juror for a dispute'
+const command = 'settle-guardian'
+const describe = 'Settle guardian for a dispute'
 
 const builder = {
   dispute: { alias: 'd', describe: 'Dispute identification number', type: 'string', demand: true },
-  juror: { alias: 'j', describe: 'Address of the juror to be settled', type: 'string', demand: true }
+  guardian: { alias: 'j', describe: 'Address of the guardian to be settled', type: 'string', demand: true }
 }
 
-const handlerAsync = async (environment, { dispute, juror }) => {
+const handlerAsync = async (environment, { dispute, guardian }) => {
   const court = await environment.getCourt()
-  await court.settleJuror(dispute, juror)
-  logger.success(`Settled juror ${juror} for dispute #${dispute}`)
+  await court.settleguardian(dispute, guardian)
+  logger.success(`Settled guardian ${guardian} for dispute #${dispute}`)
 }
 
 module.exports = {

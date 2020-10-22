@@ -22,7 +22,7 @@
     "rpc:appeal": "node ./bin/index.js appeal -n rpc --verbose",
     "rpc:confirm-appeal": "node ./bin/index.js confirm-appeal -n rpc --verbose",
     "rpc:settle-round": "node ./bin/index.js settle-round -n rpc --verbose",
-    "rpc:settle-juror": "node ./bin/index.js settle-juror -n rpc --verbose",
+    "rpc:settle-guardian": "node ./bin/index.js settle-guardian -n rpc --verbose",
     "rpc:execute": "node ./bin/index.js execute -n rpc --verbose",
     "rpc:setup": "node ./bin/setup.js -n rpc",
     "rpc:airdrop": "node ./bin/airdrop.js -n rpc"

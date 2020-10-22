@@ -12,7 +12,7 @@ const logger = Logger('airdrop')
 const { network, input, from, output: outputDir } = yargs
   .help()
   .option('network', { alias: 'n', describe: 'Network name', type: 'string', demand: true })
-  .option('input', { alias: 'i', describe: 'Input csv file with the list of jurors with their respective amount of ANJ (without decimals!) to be airdrop', type: 'string', demand: true })
+  .option('input', { alias: 'i', describe: 'Input csv file with the list of guardians with their respective amount of ANJ (without decimals!) to be airdrop', type: 'string', demand: true })
   .option('output', { alias: 'o', describe: 'Dir where the the output file will be stored', type: 'string', default: './', demand: true })
   .option('from', { alias: 'f', describe: 'Sender address', type: 'string' })
   .strict()
@@ -34,14 +34,14 @@ function readInput() {
 }
 
 async function airdrop() {
-  const jurors = readInput()
+  const guardians = readInput()
   const environment = new Environment(network, from)
   const court = await environment.getCourt()
   const output = []
 
-  for (const juror of jurors) {
-    if (juror.address && juror.amount) {
-      const { address, amount } = juror
+  for (const guardian of guardians) {
+    if (guardian.address && guardian.amount) {
+      const { address, amount } = guardian
       try {
         const receipt = await court.activateFor(address, amount)
         logger.success(`Activated ANJ ${amount} for ${address} successfully`)

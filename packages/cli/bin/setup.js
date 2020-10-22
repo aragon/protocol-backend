@@ -8,10 +8,10 @@ const Environment = require('@aragon/protocol-backend-shared/models/environments
 Logger.setDefaults(false, false)
 const logger = Logger('setup')
 
-const { network, jurors: jurorsNumber, disputes } = yargs
+const { network, guardians: guardiansNumber, disputes } = yargs
   .help()
   .option('network', { alias: 'n', describe: 'Network name', type: 'string', demand: true })
-  .option('jurors', { alias: 'j', describe: 'Number of jurors to activate', type: 'string', default: 5 })
+  .option('guardians', { alias: 'j', describe: 'Number of guardians to activate', type: 'string', default: 5 })
   .option('disputes', { alias: 'd', describe: 'Number of disputes to create', type: 'string', default: 5 })
   .strict()
   .argv
@@ -21,18 +21,18 @@ async function setup() {
   const court = await environment.getCourt()
   const allAccounts = await environment.getAccounts()
   const sender = allAccounts[0]
-  const jurors = allAccounts.slice(1, Math.min(parseInt(jurorsNumber) + 1, allAccounts.length))
+  const guardians = allAccounts.slice(1, Math.min(parseInt(guardiansNumber) + 1, allAccounts.length))
 
   // update term if necessary
   execSync(`node ./bin/index.js heartbeat -n ${network}`)
 
-  // mint, stake and activate tokens for every juror
+  // mint, stake and activate tokens for every guardian
   execSync(`node ./bin/index.js mint -t anj -a 100000000 -r ${sender} -n ${network}`)
-  for (let i = 0; i < jurors.length; i++) {
-    const juror = jurors[i]
+  for (let i = 0; i < guardians.length; i++) {
+    const guardian = guardians[i]
     const amount = (i + 1) * 10000
-    execSync(`node ./bin/index.js stake -a ${amount} -j ${juror} -n ${network}`)
-    execSync(`node ./bin/index.js activate -a ${amount} -f ${juror} -n ${network}`)
+    execSync(`node ./bin/index.js stake -a ${amount} -j ${guardian} -n ${network}`)
+    execSync(`node ./bin/index.js activate -a ${amount} -f ${guardian} -n ${network}`)
   }
 
   // check court has started

@@ -18,7 +18,7 @@ const { network, guardians: guardiansNumber, disputes } = yargs
 
 async function setup() {
   const environment = new Environment(network)
-  const court = await environment.getCourt()
+  const protocol = await environment.getCourt()
   const allAccounts = await environment.getAccounts()
   const sender = allAccounts[0]
   const guardians = allAccounts.slice(1, Math.min(parseInt(guardiansNumber) + 1, allAccounts.length))
@@ -35,28 +35,17 @@ async function setup() {
     execSync(`node ./bin/index.js activate -a ${amount} -f ${guardian} -n ${network}`)
   }
 
-  // check court has started
-  const currentTermId = await court.currentTermId()
-  const neededTransitions = await court.neededTransitions()
+  // check protocol has started
+  const currentTermId = await protocol.currentTermId()
+  const neededTransitions = await protocol.neededTransitions()
   if (currentTermId.eq(bn(0)) && neededTransitions.eq(bn(0))) {
-    logger.warn('Court has not started yet, please make sure Court is at term 1 to create disputes and run the script again.')
+    logger.warn('Protocol has not started yet, please make sure Protocol is at term 1 to create disputes and run the script again.')
   } else {
-
-    // subscribe arbitrables
-    const arbitrables = []
-    for (let i = 0; i < disputes; i++) {
-      execSync(`node ./bin/index.js mint -t fee -a 100000 -f ${sender} -n ${network}`)
-      const output = execSync(`node ./bin/index.js -n ${network} arbitrable`)
-      const arbitrable = output.toString().match(/0x[a-fA-F0-9]{40}/g)
-      arbitrables.push(arbitrable)
-      execSync(`node ./bin/index.js subscribe -a ${arbitrable} -n ${network}`)
-    }
-
     // create disputes
     for (let i = 0; i < disputes; i++) {
       const arbitrable = arbitrables[i]
       execSync(`node ./bin/index.js mint -t fee -a 5000 -r ${arbitrable} -n ${network}`)
-      execSync(`node ./bin/index.js dispute -a ${arbitrable} -m 'Testing dispute #${i}' -e 'http://github.com/aragon/aragon-court' -c -n ${network}`)
+      execSync(`node ./bin/index.js dispute -a ${arbitrable} -m 'Testing dispute #${i}' -e 'http://github.com/aragon/aragon-protocol' -c -n ${network}`)
     }
   }
 }

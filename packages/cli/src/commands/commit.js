@@ -10,8 +10,8 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { dispute, outcome, password }) => {
-  const court = await environment.getCourt()
-  await court.commit(dispute, outcome, password)
+  const protocol = await environment.getCourt()
+  await protocol.commit(dispute, outcome, password)
   logger.success(`Committed vote for dispute #${dispute}`)
 }
 

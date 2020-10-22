@@ -11,12 +11,12 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { recipient, token: symbol, amount }) => {
-  const court = await environment.getCourt()
-  const to = recipient || await court.environment.getSender()
+  const protocol = await environment.getCourt()
+  const to = recipient || await protocol.environment.getSender()
 
   let token
-  if (symbol.toLowerCase() === 'ant') token = await court.token()
-  if (symbol.toLowerCase() === 'fee') token = await court.feeToken()
+  if (symbol.toLowerCase() === 'ant') token = await protocol.token()
+  if (symbol.toLowerCase() === 'fee') token = await protocol.feeToken()
   if (!token) throw new Error(`Minting ${symbol} is not supported yet`)
 
   logger.info(`Minting ${symbol} ${amount} to ${to}...`)

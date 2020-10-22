@@ -27,7 +27,7 @@ export default class DraftsList extends React.Component {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Juror</th>
+                <th>Guardian</th>
                 <th>Dispute ID</th>
                 <th>Round #</th>
                 <th>Weight</th>
@@ -51,7 +51,7 @@ export default class DraftsList extends React.Component {
       return (
         <tr key={index}>
           <td>{summarize(draft.id)}</td>
-          <td>{draft.juror.id}</td>
+          <td>{draft.guardian.id}</td>
           <td>
             <Link to={`/dispute/${draft.round.dispute.id}`}>
               <b>#{draft.round.dispute.id}</b>

@@ -30,20 +30,20 @@ const DisputeActions = {
               state
               number
               draftTermId
-              jurorsNumber
+              guardiansNumber
               settledPenalties
-              jurorFees
+              guardianFees
               delayedTerms
-              selectedJurors
-              coherentJurors
+              selectedGuardians
+              coherentGuardians
               collectedTokens
               createdAt
               vote {
                 id
                 winningOutcome
               }
-              jurors {
-                juror {
+              guardians {
+                guardian {
                   id
                 }
               }

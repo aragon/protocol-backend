@@ -25,7 +25,7 @@ export default class RevealsList extends React.Component {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Juror</th>
+                <th>Guardian</th>
                 <th>Dispute ID</th>
                 <th>Round #</th>
                 <th>Vote ID</th>
@@ -49,7 +49,7 @@ export default class RevealsList extends React.Component {
       return (
         <tr key={index}>
           <td>{reveal.id}</td>
-          <td>{reveal.juror}</td>
+          <td>{reveal.guardian}</td>
           <td>{reveal.disputeId}</td>
           <td>{reveal.roundNumber}</td>
           <td>{reveal.voteId}</td>

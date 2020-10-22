@@ -1,7 +1,5 @@
 const { sha3, fromWei, utf8ToHex, soliditySha3 } = require('web3-utils')
-const { DISPUTE_MANAGER_EVENTS } = require('@aragon/protocol-evm/test/helpers/utils/events')
-const { DISPUTE_MANAGER_ERRORS } = require('@aragon/protocol-evm/test/helpers/utils/errors')
-const { ZERO_ADDRESS, getEventArgument, getEvents, decodeEvents } = require('@aragon/contract-helpers-test')
+const { ZERO_ADDRESS, getEventArgument, getEvents } = require('@aragon/contract-helpers-test')
 
 const logger = require('../helpers/logger')('Protocol')
 const { bn, bigExp } = require('../helpers/numbers')
@@ -19,7 +17,7 @@ module.exports = class {
     if (!this._token) {
       const registry = await this.registry()
       const address = await registry.token()
-      const ERC20 = await this.environment.getArtifact('ERC20', '@aragon/protocol-evm')
+      const ERC20 = await this.environment.getArtifact('ERC20Mock', '@aragon/protocol-evm')
       this._token = await ERC20.at(address)
     }
     return this._token
@@ -28,7 +26,7 @@ module.exports = class {
   async feeToken() {
     if (!this._feeToken) {
       const { feeToken } = await this.getConfigAt()
-      const ERC20 = await this.environment.getArtifact('ERC20', '@aragon/protocol-evm')
+      const ERC20 = await this.environment.getArtifact('ERC20Mock', '@aragon/protocol-evm')
       this._feeToken = await ERC20.at(feeToken)
     }
     return this._feeToken
@@ -36,7 +34,7 @@ module.exports = class {
 
   async registry() {
     if (!this._registry) {
-      const address = await this.instance.getGuardiansRegistry()
+      const { addr: address } = await this.instance.getGuardiansRegistry()
       const GuardiansRegistry = await this.environment.getArtifact('GuardiansRegistry', '@aragon/protocol-evm')
       this._registry = await GuardiansRegistry.at(address)
     }
@@ -45,7 +43,7 @@ module.exports = class {
 
   async disputeManager() {
     if (!this._disputeManager) {
-      const address = await this.instance.getDisputeManager()
+      const { addr: address } = await this.instance.getDisputeManager()
       const DisputeManager = await this.environment.getArtifact('DisputeManager', '@aragon/protocol-evm')
       this._disputeManager = await DisputeManager.at(address)
     }
@@ -54,7 +52,7 @@ module.exports = class {
 
   async voting() {
     if (!this._voting) {
-      const address = await this.instance.getVoting()
+      const { addr: address } = await this.instance.getVoting()
       const Voting = await this.environment.getArtifact('CRVoting', '@aragon/protocol-evm')
       this._voting = await Voting.at(address)
     }
@@ -63,9 +61,9 @@ module.exports = class {
 
   async paymentsBook() {
     if (!this._paymentsBook) {
-      const { addr } = await this.instance.getPaymentsBook()
+      const { addr: address } = await this.instance.getPaymentsBook()
       const PaymentsBook = await this.environment.getArtifact('PaymentsBook', '@aragon/protocol-evm')
-      this._paymentsBook = await PaymentsBook.at(addr)
+      this._paymentsBook = await PaymentsBook.at(address)
     }
     return this._paymentsBook
   }
@@ -236,7 +234,7 @@ module.exports = class {
 
   async pay(tokenAddress, amount, payer, data) {
     const paymentsBook = await this.paymentsBook()
-    const ERC20 = await this.environment.getArtifact('ERC20', '@aragon/protocol-evm')
+    const ERC20 = await this.environment.getArtifact('ERC20Mock', '@aragon/protocol-evm')
     const token = await ERC20.at(tokenAddress)
     const symbol = await token.symbol()
 
@@ -248,19 +246,23 @@ module.exports = class {
 
   async deployArbitrable() {
     logger.info(`Creating new Arbitrable instance...`)
-    const Arbitrable = await this.environment.getArtifact('ArbitrableMock', '@aragon/protocol-evm')
+    const Arbitrable = await this.environment.getArtifact('Arbitrable', '@aragon/protocol-evm')
     return Arbitrable.new(this.instance.address)
   }
 
   async createDispute(subject, rulings = 2, metadata = '', evidence = [], submitters = [], closeEvidencePeriod = false) {
-    logger.info(`Creating new dispute for subject ${subject} ...`)
-    const Arbitrable = await this.environment.getArtifact('ArbitrableMock', '@aragon/protocol-evm')
-    const arbitrable = await Arbitrable.at(subject)
-    const receipt = await arbitrable.createDispute(rulings, utf8ToHex(metadata))
+    logger.info(`Transferring tokens to Arbitrable instance ${subject}...`)
+    const feeToken = await this.feeToken()
+    const disputeManager = await this.disputeManager()
+    const { totalFees } = await disputeManager.getDisputeFees()
+    await feeToken.transfer(subject, totalFees)
 
-    const DisputeManager = await this.environment.getArtifact('DisputeManager', '@aragon/protocol-evm')
-    const logs = decodeEvents(receipt, DisputeManager.abi, DISPUTE_MANAGER_EVENTS.NEW_DISPUTE)
-    const disputeId = getEventArgument({ logs }, DISPUTE_MANAGER_EVENTS.NEW_DISPUTE, 'disputeId')
+    logger.info(`Creating new dispute for subject ${subject} ...`)
+    const Arbitrable = await this.environment.getArtifact('Arbitrable', '@aragon/protocol-evm')
+    const arbitrable = await Arbitrable.at(subject)
+    const { hash } = await arbitrable.createDispute(rulings, utf8ToHex(metadata))
+    const receipt = await this.environment.getTransaction(hash)
+    const disputeId = getEventArgument(receipt, 'NewDispute', 'disputeId', { decodeForAbi: disputeManager.interface.abi })
 
     for (const data of evidence) {
       const index = evidence.indexOf(data)
@@ -268,7 +270,7 @@ module.exports = class {
       const finished = closeEvidencePeriod && index === evidence.length - 1
       if (submitter) {
         logger.info(`Submitting evidence ${data} for dispute #${disputeId} for submitter ${submitter}...`)
-        await arbitrable.submitEvidence(disputeId, submitter, utf8ToHex(data), finished)
+        await arbitrable.submitEvidenceFor(disputeId, submitter, utf8ToHex(data), finished)
       } else {
         logger.info(`Submitting evidence ${data} for dispute #${disputeId} for sender ...`)
         await arbitrable.submitEvidence(disputeId, utf8ToHex(data), finished)
@@ -281,9 +283,9 @@ module.exports = class {
   async draft(disputeId) {
     const disputeManager = await this.disputeManager()
     logger.info(`Drafting dispute #${disputeId} ...`)
-    const receipt = await disputeManager.draft(disputeId)
-    const logs = decodeEvents(receipt, disputeManager.interface.abi, DISPUTE_MANAGER_EVENTS.GUARDIAN_DRAFTED)
-    return getEvents({ logs }, DISPUTE_MANAGER_EVENTS.GUARDIAN_DRAFTED).map(event => event.args.guardian)
+    const { hash } = await disputeManager.draft(disputeId)
+    const receipt = await this.environment.getTransaction(hash)
+    return getEvents(receipt, 'GuardianDrafted', { decodeForAbi: disputeManager.interface.abi }).map(event => event.args.guardian)
   }
 
   async commit(disputeId, outcome, password) {
@@ -401,7 +403,7 @@ module.exports = class {
           await disputeManager.settleAppealDeposit(disputeId, roundNumber)
           logger.success(`Settled penalties for dispute #${disputeId} round #${roundNumber}`)
         } catch (error) {
-          if (!error.message.includes(DISPUTE_MANAGER_ERRORS.APPEAL_ALREADY_SETTLED)) throw error
+          if (!error.message.includes('DM_APPEAL_ALREADY_SETTLED')) throw error
         }
       }
     }

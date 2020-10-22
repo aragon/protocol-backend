@@ -37,10 +37,10 @@ export default class GuardiansList extends React.Component {
                 <tr>
                   <th>ID</th>
                   <th>Address</th>
-                  <th>Active ANJ</th>
-                  <th>Locked ANJ</th>
-                  <th>Staked ANJ</th>
-                  <th>Deactivating ANJ</th>
+                  <th>Active balance</th>
+                  <th>Locked balance</th>
+                  <th>Staked balance</th>
+                  <th>Deactivating balance</th>
                   <th>Created at</th>
                   <th>Actions</th>
                 </tr>

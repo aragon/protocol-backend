@@ -24,10 +24,10 @@ export default class GuardianDetail extends React.Component {
           { !guardian.id ? 'Loading...' :
             <div>
               <p>Id: {guardian.treeId}</p>
-              <p>Active ANJ: {fromWei(guardian.activeBalance)}</p>
-              <p>Locked ANJ: {fromWei(guardian.lockedBalance)}</p>
-              <p>Staked ANJ: {fromWei(guardian.availableBalance)}</p>
-              <p>Deactivating ANJ: {fromWei(guardian.deactivationBalance)}</p>
+              <p>Active balance: {fromWei(guardian.activeBalance)}</p>
+              <p>Locked balance: {fromWei(guardian.lockedBalance)}</p>
+              <p>Staked balance: {fromWei(guardian.availableBalance)}</p>
+              <p>Deactivating balance: {fromWei(guardian.deactivationBalance)}</p>
               <p>Withdrawals lock term ID: {guardian.withdrawalsLockTermId}</p>
               <p>Created at: {toDate(guardian.createdAt)}</p>
               <p>See <Link to={`/guardians/${address}/drafts`}>drafts</Link></p>

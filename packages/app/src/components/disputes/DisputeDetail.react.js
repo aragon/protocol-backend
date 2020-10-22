@@ -24,8 +24,8 @@ export default class DisputeDetail extends React.Component {
         <h3>Dispute #{id}</h3>
           { !dispute.subject ? 'Loading...' :
             <div>
-              <p>Subject: {dispute.subject.id}</p>
-              { dispute.disputable ? this._renderAgreementMetadata(dispute) : <p>Metadata: {dispute.metadata}</p> }
+              <p>Subject: {dispute.subject}</p>
+              <p>Metadata: {dispute.metadata}</p>
               <p>Term ID: {dispute.createTermId}</p>
               <p>Possible rulings: {dispute.possibleRulings}</p>
               <p>State: {dispute.state}</p>
@@ -39,20 +39,6 @@ export default class DisputeDetail extends React.Component {
           }
       </div>
     )
-  }
-
-  _renderAgreementMetadata(dispute) {
-    const { disputable } = dispute
-    return <div>
-      <p>ID: {disputable.id}</p>
-      <p>Agreement: {disputable.agreement}</p>
-      <p>Disputable: {disputable.address}</p>
-      <p>Action ID: {disputable.actionId}</p>
-      <p>Challenge ID: {disputable.challengeId}</p>
-      <p>Disputable action ID: {disputable.disputableActionId}</p>
-      <p>Organization: {disputable.organization}</p>
-      <p>Raw metadata: {dispute.rawMetadata}</p>
-    </div>
   }
 
   _buildEvidenceList() {

@@ -1,6 +1,6 @@
-# Aragon Court backoffice app
+# Aragon Protocol backoffice app
 
-This is a React app that aims to serve a UI to read data from an Aragon Court instance.
+This is a React app that aims to serve a UI to read data from an Aragon Protocol instance.
 
 ### Instances
 
@@ -22,4 +22,4 @@ docker-compose up -d
 
 ### Keys
 
-This repo web3 configuration relies on a browser provider like Metamask. However, it doesn't require a browser connection to read data since it is mostly consumes Aragon Court's subgraph.
+This repo web3 configuration relies on a browser provider like Metamask. However, it doesn't require a browser connection to read data since it is mostly consumes Aragon Protocol's subgraph.

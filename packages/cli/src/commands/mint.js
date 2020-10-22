@@ -6,7 +6,7 @@ const describe = 'Mint tokens for a certain address'
 
 const builder = {
   token: { alias: 't', describe: 'Token symbol', type: 'string', demand: true },
-  amount: { alias: 'a', describe: 'Amount to mint (without decimals)', type: 'string', demand: true },
+  amount: { alias: 'a', describe: 'Amount to mint', type: 'string', demand: true },
   recipient: { alias: 'r', describe: 'Recipient address (will use default address if missing)', type: 'string' },
 }
 

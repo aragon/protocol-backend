@@ -30,20 +30,20 @@ const DisputeActions = {
               state
               number
               draftTermId
-              jurorsNumber
+              guardiansNumber
               settledPenalties
-              jurorFees
+              guardianFees
               delayedTerms
-              selectedJurors
-              coherentJurors
+              selectedGuardians
+              coherentGuardians
               collectedTokens
               createdAt
               vote {
                 id
                 winningOutcome
               }
-              jurors {
-                juror {
+              guardians {
+                guardian {
                   id
                 }
               }
@@ -56,16 +56,6 @@ const DisputeActions = {
                 settled
                 createdAt
               }
-            }
-            disputable {
-              id
-              agreement
-              title
-              actionId
-              challengeId
-              address
-              disputableActionId
-              organization
             }
           }
         }`)
@@ -91,10 +81,6 @@ const DisputeActions = {
             createdAt
             subject {
               id
-            }
-            disputable {
-              title
-              address
             }
           }
         }`)

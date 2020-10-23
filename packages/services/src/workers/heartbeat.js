@@ -7,7 +7,7 @@ const MAX_TRANSITIONS_PER_CALL = 20
 
 export default async function (ctx) {
   const { logger } = ctx
-  const court = await Network.getCourt()
+  const court = await Network.getProtocol()
   await heartbeat(logger, court)
 }
 

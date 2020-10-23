@@ -1,16 +1,16 @@
 const logger = require('@aragon/protocol-backend-shared/helpers/logger')('heartbeat')
 
 const command = 'heartbeat'
-const describe = 'Call court hearbeat'
+const describe = 'Call protocol hearbeat'
 
 const builder = {
   transitions: { alias: 't', describe: 'Max number of transitions', type: 'string' }
 }
 
 const handlerAsync = async (environment, { transitions }) => {
-  const court = await environment.getCourt()
-  const heartbeats = await court.heartbeat(transitions)
-  logger.success(`Transitioned ${heartbeats} Court terms`)
+  const protocol = await environment.getProtocol()
+  const heartbeats = await protocol.heartbeat(transitions)
+  logger.success(`Transitioned ${heartbeats} Protocol terms`)
 }
 
 module.exports = {

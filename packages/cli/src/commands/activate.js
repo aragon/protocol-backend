@@ -1,23 +1,23 @@
 const logger = require('@aragon/protocol-backend-shared/helpers/logger')('activate')
 
 const command = 'activate'
-const describe = 'Activate ANJ to the Court'
+const describe = 'Activate tokens to the Protocol'
 
 const builder = {
-  amount: { alias: 'a', describe: 'Number of ANJ tokens to activate', type: 'string', demand: true },
-  juror: { alias: 'j', describe: 'Optional address of the juror activating the tokens for. If missing tokens will be activated for the sender.', type: 'string' },
+  amount: { alias: 'a', describe: 'Number of tokens to activate', type: 'string', demand: true },
+  guardian: { alias: 'g', describe: 'Optional address of the guardian activating the tokens for', type: 'string' },
 }
 
-const handlerAsync = async (environment, { from, juror, amount }) => {
-  const court = await environment.getCourt()
+const handlerAsync = async (environment, { from, guardian, amount }) => {
+  const protocol = await environment.getProtocol()
 
-  if (!juror || juror === from) {
-    await court.activate(amount)
-    logger.success(`Activated ANJ ${amount}`)
+  if (!guardian || guardian === from) {
+    await protocol.activate(amount)
+    logger.success(`Activated ${amount}`)
   }
   else {
-    await court.activateFor(juror, amount)
-    logger.success(`Activated ANJ ${amount} for ${juror}`)
+    await protocol.activateFor(guardian, amount)
+    logger.success(`Activated ${amount} for ${guardian}`)
   }
 }
 

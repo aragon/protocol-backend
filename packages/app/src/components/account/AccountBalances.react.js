@@ -6,7 +6,7 @@ import AccountActions from '../../actions/accounts'
 export default class AccountBalances extends React.Component {
   constructor(props){
     super(props)
-    this.state = { enabled: undefined, address: '', eth: {}, anj: {}, ant: {}, fee: {} }
+    this.state = { enabled: undefined, address: '', eth: {}, ant: {}, fee: {} }
   }
 
   componentDidMount() {
@@ -26,7 +26,7 @@ export default class AccountBalances extends React.Component {
   }
 
   _renderAccount() {
-    const { address, eth, anj, ant, fee } = this.state
+    const { address, eth, ant, fee } = this.state
     return (
       <div>
         { !address ? 'Loading...' :
@@ -35,7 +35,6 @@ export default class AccountBalances extends React.Component {
               <p>Address: {address}</p>
               <p>{eth.symbol} balance: {eth.balance}</p>
               { ant.symbol ? <p>{ant.symbol} balance: {ant.balance}</p> : '' }
-              { anj.symbol ? <p>{anj.symbol} balance: {anj.balance}</p> : '' }
               { fee.symbol ? <p>{fee.symbol} balance: {fee.balance}</p> : '' }
             </div>
             <Faucet/>

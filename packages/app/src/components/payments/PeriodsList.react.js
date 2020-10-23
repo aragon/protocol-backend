@@ -1,8 +1,8 @@
 import React from 'react'
 import Store from '../../store/store'
 import { Link } from 'react-router-dom'
-import { fromWei } from 'web3-utils'
-import SubscriptionsActions from '../../actions/subscriptions'
+import PaymentsBookActions from '../../actions/payments'
+import payments from "../../reducers/payments";
 
 export default class PeriodsList extends React.Component {
   constructor(props){
@@ -12,25 +12,22 @@ export default class PeriodsList extends React.Component {
 
   componentDidMount() {
     Store.subscribe(() => this._onChange())
-    Store.dispatch(SubscriptionsActions.findAllPeriods())
+    Store.dispatch(PaymentsBookActions.findAllPeriods())
   }
 
   render() {
     const { periods } = this.state
     return (
       <div ref="periodsList">
-        <h3>Subscription Periods</h3>
+        <h3>Payments Periods</h3>
         { (!periods) ? <em>Loading...</em> : periods.length === 0 ?
           <em>None</em> :
           <table>
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Fee token</th>
-                <th>Fee amount</th>
                 <th>Balance checkpoint</th>
                 <th>Total active balance</th>
-                <th>Collected fees</th>
               </tr>
             </thead>
             <tbody>
@@ -51,11 +48,8 @@ export default class PeriodsList extends React.Component {
               <b>#{period.id}</b>
             </Link>
           </td>
-          <td>{period.feeToken}</td>
-          <td>{fromWei(period.feeAmount)}</td>
-          <td>{period.balanceCheckpoint ? period.balanceCheckpoint : 'loading...'}</td>
-          <td>{period.totalActiveBalance ? fromWei(period.totalActiveBalance) : 'loading...'}</td>
-          <td>{fromWei(period.collectedFees)}</td>
+          <td>{period.balanceCheckpoint}</td>
+          <td>{period.totalActiveBalance}</td>
         </tr>
       )
     })
@@ -63,7 +57,7 @@ export default class PeriodsList extends React.Component {
 
   _onChange() {
     if(this.refs.periodsList) {
-      const { periods } = Store.getState().subscriptions
+      const { periods } = Store.getState().payments
       this.setState({ periods })
     }
   }

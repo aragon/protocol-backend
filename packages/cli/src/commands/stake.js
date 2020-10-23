@@ -1,18 +1,19 @@
 const logger = require('@aragon/protocol-backend-shared/helpers/logger')('stake')
 
 const command = 'stake'
-const describe = 'Stake ANJ tokens for a juror'
+const describe = 'Stake tokens for a guardian'
 
 const builder = {
-  juror: { alias: 'j', describe: 'Address of the juror staking the tokens', type: 'string', demand: true },
-  amount: { alias: 'a', describe: 'Number of ANJ tokens to stake', type: 'string', demand: true },
+  guardian: { alias: 'g', describe: 'Address of the guardian staking the tokens', type: 'string' },
+  amount: { alias: 'a', describe: 'Number of tokens to stake', type: 'string', demand: true },
   data: { alias: 'd', describe: 'Optional data that can be used to ask for token activation', type: 'string' },
 }
 
-const handlerAsync = async (environment, { juror, amount, data }) => {
-  const court = await environment.getCourt()
-  await court.stake(juror, amount, data)
-  logger.success(`Staked ${amount} ANJ for ${juror}`)
+const handlerAsync = async (environment, { guardian, amount, data }) => {
+  const protocol = await environment.getProtocol()
+  const to = guardian || await protocol.environment.getSender()
+  await protocol.stake(to, amount, data)
+  logger.success(`Staked ${amount} for ${to}`)
 }
 
 module.exports = {

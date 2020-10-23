@@ -43,7 +43,7 @@ export default class EmailsForm extends React.Component {
         id: 'actionUrl',
         label: 'Action Button URL',
         required: true,
-        default: 'https://court.aragon.org/',
+        default: 'https://protocol.aragon.org/',
       },
       {
         id: 'testEmail',

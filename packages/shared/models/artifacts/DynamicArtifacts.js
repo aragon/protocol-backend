@@ -7,8 +7,8 @@ const BUILD_DIRS = ['build/contracts', 'artifacts']
 class DynamicArtifacts extends BaseArtifacts {
   getContractSchema(contractName, dependency = undefined) {
     const contractPaths = dependency
-      ? this._getNodeModulesPath(dependency, contractName)
-      : this._getLocalBuildPath(contractName)
+      ? this._getNodeModulesPaths(dependency, contractName)
+      : this._getLocalBuildPaths(contractName)
 
     const artifact = this._findArtifact(contractPaths)
     if (!artifact) throw Error(`Could not find artifact for ${dependency} ${contractName}`)
@@ -20,11 +20,11 @@ class DynamicArtifacts extends BaseArtifacts {
     return path ? require(path) : undefined
   }
 
-  _getLocalBuildPath(contractName) {
+  _getLocalBuildPaths(contractName) {
     return BUILD_DIRS.map(dir => path.resolve(process.cwd(), `./${dir}/${contractName}.json`))
   }
 
-  _getNodeModulesPath(dependency, contractName) {
+  _getNodeModulesPaths(dependency, contractName) {
     return BUILD_DIRS.map(dir => path.resolve(__dirname, `../../node_modules/${dependency}/${dir}/${contractName}.json`))
   }
 }

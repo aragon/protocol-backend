@@ -118,6 +118,13 @@ docker-compose up --build -d
 - Rest API is available at http://localhost:3000
 - Grafana dashboard is available at http://localhost:5000
 
+Local tests can then be run using:
+```bash
+docker-compose exec test yarn workspace @aragon/protocol-backend-server build
+docker-compose exec test yarn test:server
+docker-compose exec test yarn test:services
+```
+
 When finished remove the containers with:
 ```bash
 docker-compose down
@@ -126,7 +133,7 @@ docker-compose down
 
 ## Grafana dashboard updates
 
-To update the dashboard, click `Ctrl+S` > `Copy JSON to clipboard` and overwrite the file in `monitoring/grafana/provisioning/dashboards/court-backend.json`.
+To update the dashboard, click `Ctrl+S` > `Copy JSON to clipboard` and overwrite the file in `monitoring/grafana/provisioning/dashboards/protocol-backend.json`.
 
 
 ## CI/CD

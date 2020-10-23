@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  court_server_db:
+  postgres:
     image: postgres:11-alpine
     environment:
     - POSTGRES_PASSWORD=${DB_PASS}
@@ -11,6 +11,6 @@ services:
     image: ${SERVER_IMAGE}
     command: sleep infinity
     depends_on:
-    - court_server_db
+    - postgres
     env_file:
     - .env

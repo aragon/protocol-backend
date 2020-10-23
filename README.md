@@ -57,7 +57,7 @@ To deploy a local instance run the following commands on a separate terminal:
 You can use the provided deployment script to create a manifest file with the providing the court deployed address as follows:
 
 ```bash
-  NETWORK=rpc COURT=<COURT_ADDRESS> ./scripts/deploy
+  NETWORK=rpc COURT=<PROTOCOL_ADDRESS> ./scripts/deploy
 ``` 
 
 ##### 6. Populate Aragon Court

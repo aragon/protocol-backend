@@ -1,20 +1,19 @@
-# Aragon Court CLI tool
+# Aragon Protocol CLI tool
 
-This tool aims to provide a set of commands to interact with an Aragon Court instance.
+This tool aims to provide a set of commands to interact with an Aragon Protocol instance.
 Currently, there is no published version of it. However, you can use it locally.
 
 ### Commands
 
-- [`mint`](./src/commands/mint.js): Mint ANJ or Fee tokens for a certain address
-- [`heartbeat`](./src/commands/hearbeat.js): Transition Court terms
-- [`config`](./src/commands/config.js): Change Court config
-- [`stake`](./src/commands/stake.js): Stake ANJ tokens for a juror
-- [`unstake`](./src/commands/unstake.js): Unstake ANJ tokens
-- [`activate`](./src/commands/activate.js): Activate ANJ to the Court
-- [`deactivate`](./src/commands/deactivate.js): Deactivate ANJ from the Court
-- [`donate`](./src/commands/donate.js): Donate funds to Court jurors
-- [`arbitrable`](./src/commands/arbitrable.js): Create new Arbitrable instance for the Court
-- [`subscribe`](./src/commands/subscribe.js): Subscribe Arbitrable instance to the Court
+- [`mint`](./src/commands/mint.js): Mint tokens for a certain address
+- [`heartbeat`](./src/commands/hearbeat.js): Transition Protocol terms
+- [`pay`](./src/commands/payment.js): Send Aragon Protocol payment
+- [`config`](./src/commands/config.js): Change Protocol config
+- [`stake`](./src/commands/stake.js): Stake tokens for a guardian
+- [`unstake`](./src/commands/unstake.js): Unstake tokens
+- [`activate`](./src/commands/activate.js): Activate tokens into the Protocol
+- [`deactivate`](./src/commands/deactivate.js): Deactivate tokens from the Protocol
+- [`arbitrable`](./src/commands/arbitrable.js): Create new Arbitrable instance for the Protocol
 - [`dispute`](./src/commands/dispute.js): Create dispute submitting evidence
 - [`draft`](./src/commands/draft.js): Draft dispute and close evidence submission period if necessary
 - [`commit`](./src/commands/commit.js): Commit vote for a dispute round
@@ -22,7 +21,7 @@ Currently, there is no published version of it. However, you can use it locally.
 - [`appeal`](./src/commands/appeal.js): Appeal dispute in favour of a certain outcome
 - [`confirm-appeal`](./src/commands/confirm-appeal.js): Confirm an existing appeal for a dispute
 - [`settle-round`](./src/commands/settle-round.js): Settle penalties and appeals for a dispute
-- [`settle-juror`](./src/commands/settle-juror.js): Settle juror for a dispute
+- [`settle-guardian`](./src/commands/settle-guardian.js): Settle guardian for a dispute
 - [`execute`](./src/commands/execute.js): Execute ruling for a dispute
 
 ### Setup
@@ -30,14 +29,14 @@ Currently, there is no published version of it. However, you can use it locally.
 To use the CLI tool locally simply run the following commands to install it locally:
 
 ```bash
-  git clone https://github.com/aragonone/court-backend/
-  cd court-backend
+  git clone https://github.com/aragon/protocol-backend/
+  cd protocol-backend
   npm i
   npx lerna bootstrap
   cd packages/cli
 ```
 
-The only thing you need to setup is to make sure you configure an Aragon Court address in the `truffle-config.js` file of the shared package.
+The only thing you need to setup is to make sure you configure an Aragon Protocol address in the `truffle-config.js` file of the shared package.
 After that, you can start playing with all the provided commands: 
 
 ### Keys

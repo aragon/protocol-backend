@@ -3,7 +3,7 @@ import Network from '@aragon/protocol-backend-server/build/web3/Network'
 
 export default async function (ctx) {
   const { logger } = ctx
-  const protocol = await Network.getCourt()
+  const protocol = await Network.getProtocol()
 
   for (const disputesQuery of queries) {
     await settleDisputes(logger, protocol, disputesQuery)

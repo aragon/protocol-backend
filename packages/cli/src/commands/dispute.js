@@ -13,8 +13,8 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { arbitrable, rulings, metadata, evidence, submitters, close }) => {
-  const court = await environment.getCourt()
-  const disputeId = await court.createDispute(arbitrable, rulings, metadata, evidence, submitters, close)
+  const protocol = await environment.getProtocol()
+  const disputeId = await protocol.createDispute(arbitrable, rulings, metadata, evidence, submitters, close)
   logger.success(`Created dispute #${disputeId}`)
 }
 

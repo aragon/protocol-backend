@@ -3,9 +3,9 @@ import Store from '../../store/store'
 import { fromWei } from 'web3-utils'
 import { toDate } from '../../helpers/toDate'
 import { summarize } from '../../helpers/summarize'
-import JurorsActions from '../../actions/jurors'
+import GuardiansActions from '../../actions/guardians'
 
-export default class JurorStakingList extends React.Component {
+export default class GuardianStakingList extends React.Component {
   constructor(props){
     super(props)
     this.state = { address: this.props.match.params.address, staking: null }
@@ -13,14 +13,14 @@ export default class JurorStakingList extends React.Component {
 
   componentDidMount() {
     Store.subscribe(() => this._onChange())
-    Store.dispatch(JurorsActions.findStaking(this.state.address))
+    Store.dispatch(GuardiansActions.findStaking(this.state.address))
   }
 
   render() {
     const { address, staking } = this.state
     return (
-      <div ref="jurorStakingList">
-        <h3>Staking of Juror {address}</h3>
+      <div ref="guardianStakingList">
+        <h3>Staking of Guardian {address}</h3>
         { (!staking) ? <em>Loading...</em> : staking.length === 0 ?
           <em>None</em> :
           <table>
@@ -57,9 +57,9 @@ export default class JurorStakingList extends React.Component {
   }
 
   _onChange() {
-    if(this.refs.jurorStakingList) {
-      const { jurorStaking } = Store.getState().jurors
-      this.setState({ staking: jurorStaking })
+    if(this.refs.guardianStakingList) {
+      const { guardianStaking } = Store.getState().guardians
+      this.setState({ staking: guardianStaking })
     }
   }
 }

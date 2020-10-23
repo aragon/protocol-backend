@@ -1,6 +1,6 @@
 import Network from '../web3/Network'
 import ErrorActions from './errors'
-import CourtActions from './court'
+import ProtocolActions from './protocol'
 import AccountActions from './accounts'
 import * as ActionTypes from '../actions/types'
 import { fromWei } from 'web3-utils'
@@ -9,15 +9,14 @@ const FaucetActions = {
   find() {
     return async function(dispatch) {
       try {
-        const courtAddress = await CourtActions.findCourt()
-        if (await Network.isCourtAt(courtAddress)) {
+        const protocolAddress = await ProtocolActions.findProtocolAddress()
+        if (await Network.isProtocolAt(protocolAddress)) {
           if (await Network.isFaucetAvailable()) {
             const faucet = await Network.getFaucet()
             if (faucet) {
               dispatch(FaucetActions.receiveFaucet(faucet.address))
-              dispatch(FaucetActions.updateAntBalance(faucet))
-              dispatch(FaucetActions.updateAnjBalance(faucet, courtAddress))
-              dispatch(FaucetActions.updateFeeBalance(faucet, courtAddress))
+              dispatch(FaucetActions.updateAntBalance(faucet, protocolAddress))
+              dispatch(FaucetActions.updateFeeBalance(faucet, protocolAddress))
             }
           }
         }
@@ -27,10 +26,11 @@ const FaucetActions = {
     }
   },
 
-  updateAntBalance(faucet) {
+  updateAntBalance(faucet, protocolAddress) {
     return async function(dispatch) {
       try {
-        const ant = await Network.getANT()
+        const protocol = await Network.getProtocol(protocolAddress)
+        const ant = await protocol.token()
         const symbol = await ant.symbol()
         const antBalance = await faucet.getTotalSupply(ant.address)
         const { period, amount } = await faucet.getQuota(ant.address)
@@ -43,28 +43,11 @@ const FaucetActions = {
     }
   },
 
-  updateAnjBalance(faucet, courtAddress) {
+  updateFeeBalance(faucet, protocolAddress) {
     return async function(dispatch) {
       try {
-        const court = await Network.getCourt(courtAddress)
-        const anj = await court.anj()
-        const symbol = await anj.symbol()
-        const anjBalance = await faucet.getTotalSupply(anj.address)
-        const { period, amount } = await faucet.getQuota(anj.address)
-        const quota = fromWei(amount.toString())
-        const balance = fromWei(anjBalance.toString())
-        dispatch(FaucetActions.receiveAnjBalance({ symbol, balance, address: anj.address, period, quota }))
-      } catch (error) {
-        dispatch(ErrorActions.show(error))
-      }
-    }
-  },
-
-  updateFeeBalance(faucet, courtAddress) {
-    return async function(dispatch) {
-      try {
-        const court = await Network.getCourt(courtAddress)
-        const feeToken = await court.feeToken()
+        const protocol = await Network.getProtocol(protocolAddress)
+        const feeToken = await protocol.feeToken()
         const symbol = await feeToken.symbol()
         const feeBalance = await faucet.getTotalSupply(feeToken.address)
         const { period, amount } = await faucet.getQuota(feeToken.address)
@@ -97,10 +80,6 @@ const FaucetActions = {
 
   receiveAntBalance({ symbol, balance, address, period, quota }) {
     return { type: ActionTypes.RECEIVE_FAUCET_ANT_BALANCE, symbol, balance, address, period, quota }
-  },
-
-  receiveAnjBalance({ symbol, balance, address, period, quota }) {
-    return { type: ActionTypes.RECEIVE_FAUCET_ANJ_BALANCE, symbol, balance, address, period, quota }
   },
 
   receiveFeeBalance({ symbol, balance, address, period, quota }) {

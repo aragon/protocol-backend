@@ -2,7 +2,7 @@ import Network from '@aragon/protocol-backend-server/build/web3/Network'
 import { bn } from '@aragon/protocol-backend-shared/helpers/numbers'
 
 async function draftTermIdFor(state) {
-  const protocol = await Network.getCourt()
+  const protocol = await Network.getProtocol()
   const currentTerm = await protocol.currentTermId()
   const { roundDurations: { commitTerms, revealTerms } } = await protocol.getConfigAt()
   if (state == 'revealing') {
@@ -20,7 +20,7 @@ async function draftTermIdFor(state) {
 }
 
 async function dueDateFor(draftTermId, type) {
-  const protocol = await Network.getCourt()
+  const protocol = await Network.getProtocol()
   const { roundDurations: { commitTerms, revealTerms } } = await protocol.getConfigAt()
   draftTermId = bn(parseInt(draftTermId))
   let terms

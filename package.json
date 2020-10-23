@@ -21,9 +21,7 @@
       "packages/*"
     ],
     "nohoist": [
-      "@aragon/minime",
-      "@aragon/court",
-      "@aragonone/precedence-campaign-arbitrable"
+      "**/@aragon/protocol-evm"
     ]
   }
 }

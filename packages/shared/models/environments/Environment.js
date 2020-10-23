@@ -1,4 +1,4 @@
-const Court = require('../Court')
+const Protocol = require('../Protocol')
 const { request } = require('graphql-request')
 
 const SUBGRAPH_LOCAL = 'http://127.0.0.1:8000'
@@ -10,9 +10,8 @@ class Environment {
   }
 
   getSubgraph() {
-    const base = this.network === 'rpc' ? SUBGRAPH_LOCAL : SUBGRAPH_REMOTE
-    const env = this.network === 'mainnet' ? '' : `-${this.network}`
-    return `${base}/subgraphs/name/aragon/aragon-court${env}`
+    const base = this.network === 'ganache' ? SUBGRAPH_LOCAL : SUBGRAPH_REMOTE
+    return `${base}/subgraphs/name/aragon/aragon-protocol-${this.network}`
   }
 
   async query(query) {
@@ -20,10 +19,10 @@ class Environment {
     return request(subgraph, query)
   }
 
-  async getCourt(address) {
-    const AragonCourt = await this.getArtifact('AragonCourt', '@aragon/court')
-    const court = await AragonCourt.at(address)
-    return new Court(court, this)
+  async getProtocol(address) {
+    const AragonProtocol = await this.getArtifact('AragonProtocol', '@aragon/protocol-evm')
+    const protocol = await AragonProtocol.at(address)
+    return new Protocol(protocol, this)
   }
 
   async getTransaction(hash) {

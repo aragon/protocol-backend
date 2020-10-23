@@ -5,18 +5,18 @@ const command = 'mint'
 const describe = 'Mint tokens for a certain address'
 
 const builder = {
-  token: { alias: 't', describe: 'Token symbol (ANJ or FEE)', type: 'string', demand: true },
-  amount: { alias: 'a', describe: 'Amount to mint (without decimals)', type: 'string', demand: true },
+  token: { alias: 't', describe: 'Token symbol', type: 'string', demand: true },
+  amount: { alias: 'a', describe: 'Amount to mint', type: 'string', demand: true },
   recipient: { alias: 'r', describe: 'Recipient address (will use default address if missing)', type: 'string' },
 }
 
 const handlerAsync = async (environment, { recipient, token: symbol, amount }) => {
-  const court = await environment.getCourt()
-  const to = recipient || await court.environment.getSender()
+  const protocol = await environment.getProtocol()
+  const to = recipient || await protocol.environment.getSender()
 
   let token
-  if (symbol.toLowerCase() === 'anj') token = await court.anj()
-  if (symbol.toLowerCase() === 'fee') token = await court.feeToken()
+  if (symbol.toLowerCase() === 'ant') token = await protocol.token()
+  if (symbol.toLowerCase() === 'fee') token = await protocol.feeToken()
   if (!token) throw new Error(`Minting ${symbol} is not supported yet`)
 
   logger.info(`Minting ${symbol} ${amount} to ${to}...`)

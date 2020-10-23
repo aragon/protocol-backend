@@ -21,8 +21,8 @@ export default async function (ctx) {
 }
 
 async function monitorTransactions(logger, etherscan, keeper, network) {
-  const court = await Network.getCourt()
-  const courtAddresses = await getWhitelistedAddresses(court)
+  const protocol = await Network.getCourt()
+  const protocolAddresses = await getWhitelistedAddresses(protocol)
   const lastInspectedBlockNumber = (await KeeperSuspiciousTransaction.lastInspectedBlockNumber()) + 1
   logger.info(`Checking transactions for keeper address ${keeper} from block ${lastInspectedBlockNumber}`)
   const transactions = await etherscan.getTransactionsFrom(keeper, lastInspectedBlockNumber)
@@ -31,7 +31,7 @@ async function monitorTransactions(logger, etherscan, keeper, network) {
   try {
     for (const transaction of transactions) {
       const { hash, to, value, blockNumber } = transaction
-      if (value !== '0' || !courtAddresses.includes(to)) {
+      if (value !== '0' || !protocolAddresses.includes(to)) {
         await KeeperSuspiciousTransaction.create({ blockNumber, txHash: hash })
         logger.warn(`Found suspicious transaction ${hash} on block ${blockNumber}`)
         await sendNotification(logger, buildSuspiciousTransactionMessage(keeper, transaction, network))
@@ -85,11 +85,11 @@ function buildLowKeeperBalanceMessage(keeper, balance, network) {
   }
 }
 
-async function getWhitelistedAddresses(court) {
+async function getWhitelistedAddresses(protocol) {
   const addresses = []
-  addresses.push(court.instance.address)                  // Controller
-  addresses.push((await court.disputeManager()).address)  // Dispute Manager
-  addresses.push((await court.voting()).address)          // Voting
-  addresses.push((await court.subscriptions()).address)   // Subscriptions
+  addresses.push(protocol.instance.address)                  // Controller
+  addresses.push((await protocol.disputeManager()).address)  // Dispute Manager
+  addresses.push((await protocol.voting()).address)          // Voting
+  addresses.push((await protocol.subscriptions()).address)   // Subscriptions
   return addresses.map(a => a.toLowerCase())
 }

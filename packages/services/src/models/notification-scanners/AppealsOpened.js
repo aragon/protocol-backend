@@ -13,8 +13,8 @@ class AppealsOpened extends NotificationScannerBaseModel {
         dispute {
           id
         }
-        jurors {
-          juror {id}
+        guardians {
+          guardian {id}
         } 
       }
     }
@@ -24,11 +24,11 @@ class AppealsOpened extends NotificationScannerBaseModel {
       const {
         id: adjudicationRoundId,
         dispute: { id: disputeId },
-        jurors
+        guardians
       } = adjudicationRound
-      for (const juror of jurors) {
+      for (const guardian of guardians) {
         notifications.push({
-          address: juror.juror.id,
+          address: guardian.guardian.id,
           details: {
             emailTemplateModel: {
               disputeId,

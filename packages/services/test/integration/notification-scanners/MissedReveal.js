@@ -56,9 +56,9 @@ describe('MissedReveal notifications', () => {
             "id":TEST_DISPUTE_ID
           },
           "id": TEST_ROUND_ID,
-          "jurors": [
+          "guardians": [
             {
-              "juror": {
+              "guardian": {
                 "id": TEST_ADDR
               }
             },

@@ -15,8 +15,8 @@ class DueTasks extends NotificationScannerBaseModel {
         dispute {
           id
         }
-        jurors (where: {commitment: null}) {
-          juror {id}
+        guardians (where: {commitment: null}) {
+          guardian {id}
         } 
       }
      	revealingRounds: adjudicationRounds(where: {stateInt_in: [1,2], draftedTermId_lte: ${revealingTermId}}, orderBy: createdAt) {
@@ -24,17 +24,17 @@ class DueTasks extends NotificationScannerBaseModel {
         dispute {
           id
         }
-        jurors (where: {commitment_not: null, revealDate: null}) {
-          juror {id}
+        guardians (where: {commitment_not: null, revealDate: null}) {
+          guardian {id}
         } 
       }
     }
     `
     const { committingRounds, revealingRounds } = await Network.query(query)
-    let jurorTasks = {}
-    await this._getTasks(jurorTasks, committingRounds, 'commit')
-    await this._getTasks(jurorTasks, revealingRounds, 'reveal')
-    for (const [address, tasks] of Object.entries(jurorTasks)) {
+    let guardianTasks = {}
+    await this._getTasks(guardianTasks, committingRounds, 'commit')
+    await this._getTasks(guardianTasks, revealingRounds, 'reveal')
+    for (const [address, tasks] of Object.entries(guardianTasks)) {
       notifications.push({
         address,
         details: {
@@ -45,18 +45,18 @@ class DueTasks extends NotificationScannerBaseModel {
     return notifications
   }
 
-  async _getTasks(jurorTasks, adjudicationRounds, type) {
+  async _getTasks(guardianTasks, adjudicationRounds, type) {
     for (const adjudicationRound of adjudicationRounds) {
       const {
         draftedTermId,
         dispute: { id: disputeId },
-        jurors
+        guardians
       } = adjudicationRound
       const dueDate = await this._dueDateString(draftedTermId, type)
-      for (const juror of jurors) {
-        const address = juror.juror.id
-        if (!jurorTasks[address]) jurorTasks[address] = []
-        jurorTasks[address].push({
+      for (const guardian of guardians) {
+        const address = guardian.guardian.id
+        if (!guardianTasks[address]) guardianTasks[address] = []
+        guardianTasks[address].push({
           name: type == 'commit' ? 'Commit vote' : 'Reveal vote',
           disputeId,
           disputeUrl: this.disputeUrl(disputeId),

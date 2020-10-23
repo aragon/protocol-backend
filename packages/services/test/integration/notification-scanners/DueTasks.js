@@ -57,9 +57,9 @@ describe('DueTasks notifications', () => {
           "dispute": {
             "id": TEST_DISPUTE_ID
           },
-          "jurors": [
+          "guardians": [
             {
-              "juror": {
+              "guardian": {
                 "id": TEST_ADDR
               }
             }
@@ -72,9 +72,9 @@ describe('DueTasks notifications', () => {
           "dispute": {
             "id": TEST_DISPUTE_ID
           },
-          "jurors": [
+          "guardians": [
             {
-              "juror": {
+              "guardian": {
                 "id": TEST_ADDR
               }
             }

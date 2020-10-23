@@ -23,10 +23,10 @@ async function main() {
     try {
       await emailClient.sendEmailWithTemplate({
         To: email,
-        From: 'notifications@court.aragon.org',
+        From: 'notifications@protocol.aragon.org',
         TemplateAlias: 'notification-settings-announcement',
         TemplateModel: {
-          dashboardUrl: 'https://court.aragon.org/dashboard',
+          dashboardUrl: 'https://protocol.aragon.org/dashboard',
         },
       })
     } catch (err) {

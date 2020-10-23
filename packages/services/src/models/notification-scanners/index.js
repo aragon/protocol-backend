@@ -1,5 +1,5 @@
 import SubscriptionReminder from './SubscriptionReminder'
-import JurorDrafted from './JurorDrafted'
+import GuardianDrafted from './GuardianDrafted'
 import DueTasks from './DueTasks'
 import AppealsOpened from './AppealsOpened'
 import DisputeRuled from './DisputeRuled'
@@ -8,7 +8,7 @@ import MissedReveal from './MissedReveal'
 
 export {
   SubscriptionReminder,
-  JurorDrafted,
+  GuardianDrafted,
   DueTasks,
   AppealsOpened,
   DisputeRuled,

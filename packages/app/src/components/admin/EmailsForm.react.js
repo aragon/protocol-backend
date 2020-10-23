@@ -136,7 +136,7 @@ export default class EmailsForm extends React.Component {
     e.preventDefault()
     if (!this.state.enabled) return
     let params = {
-      notifyAllJurors: true,
+      notifyAllGuardians: true,
       TemplateModel: {},
     }
     this.sendEmails(params)

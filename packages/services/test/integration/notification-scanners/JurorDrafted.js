@@ -11,13 +11,13 @@ import { User } from '@aragon/protocol-backend-server/build/models/objection'
 import Network from '@aragon/protocol-backend-server/build/web3/Network'
 
 const { env: { CLIENT_URL } } = process
-const notificationTypeModel = 'JurorDrafted'
+const notificationTypeModel = 'GuardianDrafted'
 const TEST_ADDR = '0xfc3771B19123F1f0237C737e92645BA6d628e2cB'
 const TEST_EMAIL = 'notifications@service.test'
 const TEST_ROUND_ID = '1020847100762815390390123822295304634368'
 const TEST_DISPUTE_ID = '3'
 
-describe('JurorDrafted notifications', () => {
+describe('GuardianDrafted notifications', () => {
 
   after(async () => {
     await userDbCleanup(TEST_ADDR, TEST_EMAIL)
@@ -38,7 +38,7 @@ describe('JurorDrafted notifications', () => {
     }
   })
   
-  it('should create a notification for drafted juror', async () => {
+  it('should create a notification for drafted guardian', async () => {
     await User.query().insertGraph({
       address: TEST_ADDR,
       addressVerified: true,
@@ -54,9 +54,9 @@ describe('JurorDrafted notifications', () => {
             "id":TEST_DISPUTE_ID
           },
           "id": TEST_ROUND_ID,
-          "jurors": [
+          "guardians": [
             {
-              "juror": {
+              "guardian": {
                 "id": TEST_ADDR
               }
             },

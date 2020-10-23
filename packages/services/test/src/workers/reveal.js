@@ -9,9 +9,9 @@ const { expect } = chai
 chai.use(sinonChai)
 
 const REVEALS_MOCK_DATA = [
-  { juror: '0xfc3771B19123F1f0237C737e92645BA6d628e2cB', salt: 'password', outcome: '3', voteId: '5444517870735015415413993718908291383296', disputeId: '15', roundNumber: '0' },
-  { juror: '0xd5ad815503d459faf1674c72bfcc53f2cf48358c', salt: 'password', outcome: '2', voteId: '5444517870735015415413993718908291383296', disputeId: '15', roundNumber: '0' },
-  { juror: '0x61f73dfc8561c322171c774e5be0d9ae21b2da42', salt: 'password', outcome: '4', voteId: '5444517870735015415413993718908291383296', disputeId: '14', roundNumber: '1' },
+  { guardian: '0xfc3771B19123F1f0237C737e92645BA6d628e2cB', salt: 'password', outcome: '3', voteId: '5444517870735015415413993718908291383296', disputeId: '15', roundNumber: '0' },
+  { guardian: '0xd5ad815503d459faf1674c72bfcc53f2cf48358c', salt: 'password', outcome: '2', voteId: '5444517870735015415413993718908291383296', disputeId: '15', roundNumber: '0' },
+  { guardian: '0x61f73dfc8561c322171c774e5be0d9ae21b2da42', salt: 'password', outcome: '4', voteId: '5444517870735015415413993718908291383296', disputeId: '14', roundNumber: '1' },
 ]
 
 describe('Reveals worker', () => {
@@ -45,7 +45,7 @@ describe('Reveals worker', () => {
     context('when the reveal is not expired', () => {
       context('when it can be revealed', () => {
         context('when the reveal does not fail', () => {
-          beforeEach('mock court and reveal', async () => {
+          beforeEach('mock protocol and reveal', async () => {
             Network.getCourt = () => ({
               getRevealStatus: () => ({ canReveal: true, expired: false }),
               revealFor: () => true,
@@ -77,18 +77,18 @@ describe('Reveals worker', () => {
         })
 
         context('when the reveal fails once', () => {
-          beforeEach('mock court and reveal', async () => {
-            const Court = {
+          beforeEach('mock protocol and reveal', async () => {
+            const Protocol = {
               getRevealStatus: () => ({ canReveal: true, expired: false }),
               revealFor: function () {
-                if (Court.revealFailed) return
+                if (Protocol.revealFailed) return
                 this.revealFailed = true
                 throw 'error'
               },
               getOutcome: () => reveal.outcome,
             }
 
-            Network.getCourt = () => Court
+            Network.getCourt = () => Protocol
             await revealWorker(ctx)
           })
 
@@ -119,7 +119,7 @@ describe('Reveals worker', () => {
         })
 
         context('when the reveal fails three times', () => {
-          beforeEach('mock court and reveal', async () => {
+          beforeEach('mock protocol and reveal', async () => {
             Network.getCourt = () => ({
               getRevealStatus: () => ({ canReveal: true, expired: false }),
               revealFor: () => { throw 'error' }
@@ -157,12 +157,12 @@ describe('Reveals worker', () => {
       })
 
       context('when it cannot be revealed', () => {
-        beforeEach('mock court and reveal', async () => {
-          const Court = {
+        beforeEach('mock protocol and reveal', async () => {
+          const Protocol = {
             getRevealStatus: () => ({ canReveal: false, expired: false }),
           }
 
-          Network.getCourt = () => Court
+          Network.getCourt = () => Protocol
           await revealWorker(ctx)
         })
 
@@ -194,12 +194,12 @@ describe('Reveals worker', () => {
     })
 
     context('when the reveal is expired', () => {
-      beforeEach('mock court and reveal', async () => {
-        const Court = {
+      beforeEach('mock protocol and reveal', async () => {
+        const Protocol = {
           getRevealStatus: () => ({ canReveal: false, expired: true })
         }
 
-        Network.getCourt = () => Court
+        Network.getCourt = () => Protocol
         await revealWorker(ctx)
       })
 
@@ -241,12 +241,12 @@ describe('Reveals worker', () => {
     })
 
     context('when all the reveals can be revealed', () => {
-      beforeEach('mock court and reveal', async () => {
+      beforeEach('mock protocol and reveal', async () => {
         Network.getCourt = () => {
           return ({
             getRevealStatus: () => ({ canReveal: true, expired: false }),
             revealFor: () => true,
-            getOutcome: (voteId, juror) => REVEALS_MOCK_DATA.find(data => data.juror == juror).outcome
+            getOutcome: (voteId, guardian) => REVEALS_MOCK_DATA.find(data => data.guardian == guardian).outcome
           })
         }
 
@@ -279,12 +279,12 @@ describe('Reveals worker', () => {
     context('when one of the reveals cannot be revealed yet', () => {
       const REVEALING_DISPUTE = '15'
 
-      beforeEach('mock court and reveal', async () => {
+      beforeEach('mock protocol and reveal', async () => {
         Network.getCourt = () => {
           return ({
             getRevealStatus: disputeId => ({ canReveal: disputeId == REVEALING_DISPUTE, expired: false }),
             revealFor: () => true,
-            getOutcome: (voteId, juror) => REVEALS_MOCK_DATA.find(data => data.juror == juror).outcome
+            getOutcome: (voteId, guardian) => REVEALS_MOCK_DATA.find(data => data.guardian == guardian).outcome
           })
         }
 
@@ -325,12 +325,12 @@ describe('Reveals worker', () => {
     context('when one of the reveals is expired', () => {
       const EXPIRED_DISPUTE = '14'
 
-      beforeEach('mock court and reveal', async () => {
+      beforeEach('mock protocol and reveal', async () => {
         Network.getCourt = () => {
           return ({
             getRevealStatus: disputeId => ({ canReveal: disputeId !== EXPIRED_DISPUTE, expired: disputeId === EXPIRED_DISPUTE }),
             revealFor: () => true,
-            getOutcome: (voteId, juror) => REVEALS_MOCK_DATA.find(data => data.juror == juror).outcome
+            getOutcome: (voteId, guardian) => REVEALS_MOCK_DATA.find(data => data.guardian == guardian).outcome
           })
         }
 

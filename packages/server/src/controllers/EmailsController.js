@@ -4,9 +4,9 @@ import sleep from '@aragon/protocol-backend-shared/helpers/sleep'
 
 export default {
   async send(req, res) {
-    const { TemplateModel, testEmail, notifyAllJurors } = req.body
+    const { TemplateModel, testEmail, notifyAllGuardians } = req.body
     let users = []
-    if (notifyAllJurors) {
+    if (notifyAllGuardians) {
       users = await User.findWithoutDisabledNotifications()
     }
     else if (testEmail) {
@@ -28,7 +28,7 @@ async function sendEmails(users, TemplateModel, res) {
     try {
       await emailClient.sendEmailWithTemplate({
         To: email,
-        From: 'notifications@court.aragon.org',
+        From: 'notifications@protocol.aragon.org',
         TemplateAlias: 'generic',
         TemplateModel,
       })

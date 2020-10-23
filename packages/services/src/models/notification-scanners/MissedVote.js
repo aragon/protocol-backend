@@ -13,8 +13,8 @@ class MissedVote extends NotificationScannerBaseModel {
         dispute {
           id
         }
-        jurors (where: {commitment: null}) {
-          juror {id}
+        guardians (where: {commitment: null}) {
+          guardian {id}
         } 
       }
     }
@@ -24,11 +24,11 @@ class MissedVote extends NotificationScannerBaseModel {
       const {
         id: adjudicationRoundId,
         dispute: { id: disputeId },
-        jurors
+        guardians
       } = adjudicationRound
-      for (const juror of jurors) {
+      for (const guardian of guardians) {
         notifications.push({
-          address: juror.juror.id,
+          address: guardian.guardian.id,
           details: {
             emailTemplateModel: {
               disputeId,

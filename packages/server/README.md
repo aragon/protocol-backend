@@ -1,10 +1,10 @@
-# Court Backend server
+# Protocol Backend server
 
 This server aims to provide different kind of services to complement the logic implemented at the smart contracts level.
 
 ### Setup
 
-To work locally, simply go to the root directory, and make sure you have set up a propoer `.env` file following the `.env.sample` file.
+To work locally, simply go to the root directory, and make sure you have set up a proper `.env` file following the `.env.sample` file.
 Once you have done that, spin up a docker container with:
 ```bash
 docker-compose build
@@ -137,11 +137,11 @@ All the provided endpoints are `Content-Type: application/json`
 
   ```
   {
-    "email": "new-juror@aragoncourt.com" || null
+    "email": "new-guardian@aragonprotocol.com" || null
   }
   ```
 
-##### 1.6. Subscribe juror / Change juror email
+##### 1.6. Subscribe guardian / Change guardian email
 
   Note: this will also automatically send verification email
 
@@ -153,7 +153,7 @@ All the provided endpoints are `Content-Type: application/json`
 
   ```json
   {
-    "email": "juror@aragoncourt.com"
+    "email": "guardian@aragonprotocol.com"
   }
   ```
 
@@ -164,7 +164,7 @@ All the provided endpoints are `Content-Type: application/json`
 
   ```json
   {
-    "email": "juror@aragoncourt.com",
+    "email": "guardian@aragonprotocol.com",
     "sent": true
   }
   ```
@@ -197,7 +197,7 @@ All the provided endpoints are `Content-Type: application/json`
   }
   ```
 
-##### 1.7. Verify juror email
+##### 1.7. Verify guardian email
 
   Note: this endpoint is unauthenticated
 
@@ -357,7 +357,7 @@ All the provided endpoints are `Content-Type: application/json`
 
   ```json
   {
-    "email": "juror@aragoncourt.com",
+    "email": "guardian@aragonprotocol.com",
     "address": "0x6e26ADFa527BcC8B6aEf88716486cBdb4f7914e1"
   }
   ```
@@ -443,8 +443,8 @@ All the provided endpoints are `Content-Type: application/json`
 - URL: /reveals
 - Method: POST
 - Body: 
-  - `juror`: Ethereum address of the juror requesting for the reveal 
-  - `voteId`: Vote ID to be revealed for the given juror
+  - `guardian`: Ethereum address of the guardian requesting for the reveal 
+  - `voteId`: Vote ID to be revealed for the given guardian
   - `outcome`: Outcome voted in favor of
   - `salt`: Salt used for the committed vote to be revealed
 - Response: 
@@ -454,7 +454,7 @@ All the provided endpoints are `Content-Type: application/json`
       {
         "reveal": {
           "id": 1,
-          "juror": "0x4ecc4fe717d70abee26e7e524b2e6caf29b6217d",
+          "guardian": "0x4ecc4fe717d70abee26e7e524b2e6caf29b6217d",
           "voteId": "0", 
           "disputeId": "0", 
           "roundNumber": "0",
@@ -466,7 +466,7 @@ All the provided endpoints are `Content-Type: application/json`
 
 ##### 2.2. Show
 
-- URL: /reveals/:juror/:voteId
+- URL: /reveals/:guardian/:voteId
 - Method: GET
 - Response: 
   - Code: 200
@@ -475,7 +475,7 @@ All the provided endpoints are `Content-Type: application/json`
       {
         "reveal": {
           "id": 1,
-          "juror": "0x4ecc4fe717d70abee26e7e524b2e6caf29b6217d",
+          "guardian": "0x4ecc4fe717d70abee26e7e524b2e6caf29b6217d",
           "voteId": "0", 
           "disputeId": "0", 
           "roundNumber": "0",
@@ -490,7 +490,7 @@ All the provided endpoints are `Content-Type: application/json`
 - URL: /reveals
 - Method: GET
 - Header:
-  - Cookie: `aragonCourtSessionID=<SID>`
+  - Cookie: `aragonProtocolSessionID=<SID>`
 - Query: 
   - `limit`: Number of items to be fetched
   - `page`: Page number to be used for the items to be fetched based on the limit requested
@@ -502,7 +502,7 @@ All the provided endpoints are `Content-Type: application/json`
         "reveals":[
           {
             "id": 9,
-            "juror": "0x4ecc4fe717d70abee26e7e524b2e6caf29b6217d",
+            "guardian": "0x4ecc4fe717d70abee26e7e524b2e6caf29b6217d",
             "voteId": "0", 
             "disputeId": "0", 
             "roundNumber": "0",
@@ -529,7 +529,7 @@ All the provided endpoints are `Content-Type: application/json`
 - Response: 
   - Code: 200
   - Header:
-    - Set-Cookie: `aragonCourtSessionID=<SID>; Path; Expires; HttpOnly`
+    - Set-Cookie: `aragonProtocolSessionID=<SID>; Path; Expires; HttpOnly`
   - Content example: 
     ```json
       {
@@ -543,7 +543,7 @@ All the provided endpoints are `Content-Type: application/json`
 - URL: /me
 - Method: GET
 - Header:
-  - Cookie: `aragonCourtSessionID=<SID>`
+  - Cookie: `aragonProtocolSessionID=<SID>`
 - Response: 
   - Code: 200
   - Content example: 
@@ -561,7 +561,7 @@ All the provided endpoints are `Content-Type: application/json`
 - URL: /admins
 - Method: GET
 - Header:
-  - Cookie: `aragonCourtSessionID=<SID>`
+  - Cookie: `aragonProtocolSessionID=<SID>`
 - Query: 
   - `limit`: Number of items to be fetched
   - `page`: Page number to be used for the items to be fetched based on the limit requested
@@ -573,7 +573,7 @@ All the provided endpoints are `Content-Type: application/json`
         "reveals":[
           {
             "id": 9,
-            "juror": "0x4ecc4fe717d70abee26e7e524b2e6caf29b6217d",
+            "guardian": "0x4ecc4fe717d70abee26e7e524b2e6caf29b6217d",
             "voteId": "0", 
             "disputeId": "0", 
             "roundNumber": "0",
@@ -593,7 +593,7 @@ All the provided endpoints are `Content-Type: application/json`
 - URL: /admins
 - Method: POST
 - Header:
-  - Cookie: `aragonCourtSessionID=<SID>`
+  - Cookie: `aragonProtocolSessionID=<SID>`
 - Body: 
   - `email`: Admin email 
   - `password`: Admin password
@@ -614,14 +614,14 @@ All the provided endpoints are `Content-Type: application/json`
 - URL: /admins/:id
 - Method: DELETE
 - Header:
-  - Cookie: `aragonCourtSessionID=<SID>` 
+  - Cookie: `aragonProtocolSessionID=<SID>` 
 - Response: 
   - Code: 200
   - Content example: empty
 
 ### Keys
 
-This repo needs the private key to be defined as a envrionment variable `PRIVATE_KEY`. 
+This repo needs the private key to be defined as a environment variable `PRIVATE_KEY`. 
 
 Also email verification requires JWT private key `EMAIL_JWT_PRIVATE_KEY`.
 This can be generated with `node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"`

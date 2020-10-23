@@ -12,7 +12,7 @@ import {
 } from '../controllers'
 
 export default app => {
-  app.get('/', (request, response) => response.status(200).send({ message: 'Welcome to Aragon Court server' }))
+  app.get('/', (request, response) => response.status(200).send({ message: 'Welcome to Aragon Protocol server' }))
 
   /*********** Users routes ***********/
 
@@ -40,7 +40,7 @@ export default app => {
 
   /*********** Reveals routes ***********/
 
-  app.get(    '/reveals/:juror/:voteId',              asyncMiddleware(reveals.show))
+  app.get(    '/reveals/:guardian/:voteId',              asyncMiddleware(reveals.show))
   app.post(   '/reveals',                             asyncMiddleware(reveals.create))
 
 

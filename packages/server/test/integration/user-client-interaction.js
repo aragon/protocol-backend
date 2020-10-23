@@ -43,7 +43,7 @@ describe('Client user interaction', () => {
   it('should welcome user to the api', async () => {
     const res = await agent.get('/')
     expect(res).to.have.status(HttpStatus.OK)
-    expect(res.body.message).to.equal('Welcome to Aragon Court server')
+    expect(res.body.message).to.equal('Welcome to Aragon Protocol server')
   })
 
   it('should return session cookie', async () => {
@@ -54,7 +54,7 @@ describe('Client user interaction', () => {
       timestamp
     })
     expect(res).to.have.status(HttpStatus.OK)
-    expect(res).to.have.cookie('aragonCourtSessionID')
+    expect(res).to.have.cookie('aragonProtocolSessionID')
     expect(res.body).to.deep.equal({
       authenticated: true
     })
@@ -175,7 +175,7 @@ describe('Client user interaction', () => {
       timestamp
     })
     expect(res).to.have.status(HttpStatus.OK)
-    expect(res).to.have.cookie('aragonCourtSessionID')
+    expect(res).to.have.cookie('aragonProtocolSessionID')
     expect(res.body).to.deep.equal({
       authenticated: true
     })

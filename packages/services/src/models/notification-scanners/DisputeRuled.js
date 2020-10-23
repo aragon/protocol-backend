@@ -17,8 +17,8 @@ class DisputeRuled extends NotificationScannerBaseModel {
       disputes(where: {ruledAt_gt: ${twoDaysBeforeNow}}, orderBy: createdAt) {
         id
         finalRuling
-        jurors {
-          juror {id}
+        guardians {
+          guardian {id}
         }
       }
     }
@@ -28,11 +28,11 @@ class DisputeRuled extends NotificationScannerBaseModel {
       const { 
         id: disputeId,
         finalRuling,
-        jurors
+        guardians
       } = dispute
-      for (const juror of jurors) {
+      for (const guardian of guardians) {
         notifications.push({ 
-          address: juror.juror.id,
+          address: guardian.guardian.id,
           details: {
             emailTemplateModel: {
               disputeId,

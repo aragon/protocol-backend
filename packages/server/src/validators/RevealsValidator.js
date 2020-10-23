@@ -4,28 +4,28 @@ import BaseValidator from './BaseValidator'
 const { hashVote } = require('@aragon/protocol-backend-shared/helpers/voting')
 
 class RevealsValidator extends BaseValidator {
-  async validateForCreate({ juror, voteId, outcome, salt }) {
-    this._validateJuror(juror)
-    await this._validateVoteId(juror, voteId)
+  async validateForCreate({ guardian, voteId, outcome, salt }) {
+    this._validateGuardian(guardian)
+    await this._validateVoteId(guardian, voteId)
     await this._validateOutcome(voteId, outcome)
-    await this._validateSalt(juror, voteId, outcome, salt)
+    await this._validateSalt(guardian, voteId, outcome, salt)
     return this.resetErrors()
   }
 
-  _validateJuror(juror) {
-    if (!juror) return this.addError({ juror: 'A juror address value must be given' })
+  _validateGuardian(guardian) {
+    if (!guardian) return this.addError({ guardian: 'A guardian address value must be given' })
   }
 
-  async _validateVoteId(juror, voteId) {
+  async _validateVoteId(guardian, voteId) {
     if (!voteId) return this.addError({ voteId: 'A vote ID must be given' })
 
-    const court = await Network.getProtocol()
-    const exists = await court.existsVote(voteId)
+    const protocol = await Network.getProtocol()
+    const exists = await protocol.existsVote(voteId)
     if (!exists) this.addError({ voteId: `Vote with ID ${voteId} does not exist` })
 
-    if (juror) {
-      const reveal = await Reveal.findOne({ juror, voteId })
-      if (reveal) this.addError({ voteId: `Vote with ID ${voteId} was already registered to be revealed for juror ${juror}` })
+    if (guardian) {
+      const reveal = await Reveal.findOne({ guardian, voteId })
+      if (reveal) this.addError({ voteId: `Vote with ID ${voteId} was already registered to be revealed for guardian ${guardian}` })
     }
   }
 
@@ -33,20 +33,20 @@ class RevealsValidator extends BaseValidator {
     if (!outcome) return this.addError({ outcome: 'An outcome must be given' })
 
     if (voteId) {
-      const court = await Network.getProtocol()
-      const isValid = await court.isValidOutcome(voteId, outcome)
+      const protocol = await Network.getProtocol()
+      const isValid = await protocol.isValidOutcome(voteId, outcome)
       if (!isValid) this.addError({ outcome: `Outcome ${outcome} is not valid for the given voteId` })
     }
   }
 
-  async _validateSalt(juror, voteId, outcome, salt) {
+  async _validateSalt(guardian, voteId, outcome, salt) {
     if (!salt) return this.addError({ salt: 'A salt value must be given' })
 
-    if (juror && voteId && outcome) {
-      const court = await Network.getProtocol()
-      const actualCommitment = await court.getCommitment(voteId, juror)
+    if (guardian && voteId && outcome) {
+      const protocol = await Network.getProtocol()
+      const actualCommitment = await protocol.getCommitment(voteId, guardian)
       const expectedCommitment = hashVote(outcome, salt)
-      if (expectedCommitment !== actualCommitment) this.addError({ salt: 'Signature does not correspond to the juror address provided' })
+      if (expectedCommitment !== actualCommitment) this.addError({ salt: 'Signature does not correspond to the guardian address provided' })
     }
   }
 }

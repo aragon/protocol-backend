@@ -54,7 +54,7 @@ export default () => {
     resave: false,                                      // Don't force sessions to be saved back to the store even if they didn't change
     saveUninitialized: false,                           // Don't force uninitialized session to be saved to the store
     secret: process.env.SESSION_SECRET,                 // Secret used to generate session IDs
-    name: 'aragonCourtSessionID',                       // Cookie name to be used
+    name: 'aragonProtocolSessionID',                       // Cookie name to be used
     cookie: {
       secure: SESSION_SECURE === 'true',                    // Compliant clients will not send the cookie back to the server if the browser does not have an HTTPS connection
       sameSite: SESSION_SECURE === 'true' ? 'none' : null,  // Must set "Samesite=None Secure" for cross-site cookies for Chrome 80+

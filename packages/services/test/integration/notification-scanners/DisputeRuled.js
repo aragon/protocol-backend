@@ -52,9 +52,9 @@ describe('DisputeRuled notifications', () => {
         {
           "finalRuling": TEST_DISPUTE_RULING,
           "id": TEST_DISPUTE_ID,
-          "jurors": [
+          "guardians": [
             {
-              "juror": {
+              "guardian": {
                 "id": TEST_ADDR
               }
             }

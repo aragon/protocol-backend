@@ -24,7 +24,7 @@ async function main() {
     try {
       await emailClient.sendEmailWithTemplate({
         To: email,
-        From: 'notifications@court.aragon.org',
+        From: 'notifications@protocol.aragon.org',
         TemplateAlias: 'appeals-confirm',
         TemplateModel: {
           subject: 'Aragon Court Dispute #20 and Dispute #21 have been APPEALED.',

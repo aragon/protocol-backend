@@ -16,7 +16,6 @@
     "db:setup": "./scripts/db-setup.sh"
   },
   "dependencies": {
-    "@aragon/court": "1.1.0",
     "@aragon/protocol-backend-shared": "^0.2.21",
     "@promster/express": "^4.0.0",
     "@promster/server": "^4.0.0",

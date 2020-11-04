@@ -1,4 +1,4 @@
-FROM node:12.14.0-alpine
+FROM node:12.19.0-alpine
 RUN apk add --no-cache git
 
 WORKDIR /app
@@ -28,6 +28,8 @@ COPY ./yarn.lock /app/yarn.lock
 RUN yarn install
 RUN yarn lerna link
 
+# try building the app
 COPY . .
+RUN yarn build
 
 CMD echo specify one of the package.json scripts in command line

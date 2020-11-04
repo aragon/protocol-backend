@@ -1,5 +1,5 @@
 import Etherscan from '../models/Etherscan'
-import { DAYS } from '@aragon/protocol-backend-shared/helpers/times'
+import { DAYS } from '@aragon/protocol-backend-shared/build/helpers/times'
 import getWalletFromPk from '@aragon/protocol-backend-shared/helpers/get-wallet-from-pk'
 import abi from 'web3-eth-abi'
 

@@ -5,10 +5,10 @@
 
 # Logs
 lerna-debug.json
+yarn-error.log
 
 # Dependencies
 node_modules
-package-lock.json
 
 # builds
 build

@@ -25,8 +25,7 @@ COPY ./packages/shared/package.json /app/packages/shared/package.json
 
 # install dependencies
 COPY ./yarn.lock /app/yarn.lock
-RUN yarn install
-RUN yarn lerna link
+RUN yarn install --frozen-lockfile
 
 # try building the app
 COPY . .

@@ -10,10 +10,10 @@
     web3-eth-abi "1.2.5"
     web3-utils "1.2.5"
 
-"@aragon/protocol-evm@1.0.0-beta.2":
-  version "1.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@aragon/protocol-evm/-/protocol-evm-1.0.0-beta.2.tgz#3cfdcfcbbaebc2b651fb3f1b9d200f17533ca95f"
-  integrity sha512-2EyoiAUDOZV8zZPqAZpVP9ih/H+AhYRQde7sapMJJv124yd7QdfAVxDuthq92bf5Jpppty1uuWKw9Ne2MBSQQA==
+"@aragon/protocol-evm@1.0.0-beta.3":
+  version "1.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@aragon/protocol-evm/-/protocol-evm-1.0.0-beta.3.tgz#674443d03160917a63bd969dab87790e4f7478ac"
+  integrity sha512-WH/w6oqgNhJOwmfpVlPaLjEfnKEjnWO5PXZ7gWa9lsPZp7Qm4U03miLmJ4UcbExV2clrBXX/ikU9VM05ehQqUw==
 
 "@aragon/truffle-config-v5@^1.0.1":
   version "1.0.1"

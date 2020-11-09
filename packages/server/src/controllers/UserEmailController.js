@@ -1,7 +1,7 @@
 import HttpError from '../errors/http-error'
 import UsersValidator from '../validators/UsersValidator'
 import UserEmailVerificationTokenValidator from '../validators/UserEmailVerificationTokenValidator'
-import { User } from '../models/objection'
+import { User } from '@aragon/protocol-backend-shared/build/models/objection'
 
 export default {
   async get(req, res) {

@@ -1,4 +1,4 @@
-import sleep from '@aragon/protocol-backend-shared/helpers/sleep'
+import sleep from '@aragon/protocol-backend-shared/build/helpers/sleep'
 import Network from '@aragon/protocol-backend-server/build/web3/Network'
 
 const HEARTBEAT_TRIES_PER_JOB = 3
@@ -19,7 +19,7 @@ async function heartbeat(logger, protocol, attempt = 1) {
   } catch (error) {
     logger.error('Failed to transition terms with error', error)
     if (attempt >= HEARTBEAT_TRIES_PER_JOB) return
-    await sleep(SECONDS_BETWEEN_INTENTS)
+    await sleep(SECONDS_BETWEEN_INTENTS * 1000)
     await heartbeat(logger, protocol, attempt + 1)
   }
 }

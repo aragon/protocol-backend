@@ -7,7 +7,7 @@
     "lerna": "^3.14.1"
   },
   "scripts": {
-    "db:setup": "lerna run db:setup --scope '*/*-server' --stream",
+    "db:setup": "lerna run db:setup --scope '*/*-shared' --stream",
     "build": "lerna run --stream build",
     "build:shared": "yarn run --scope '*/*-shared' build",
     "start:app": "lerna run --scope '*/*-app' --stream start",

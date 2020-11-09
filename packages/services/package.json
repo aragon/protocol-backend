@@ -10,7 +10,8 @@
     "build:server": "yarn workspace @aragon/protocol-backend-server build",
     "start": "npm run build:server && babel-node ./bin/main.js",
     "start:dev": "npm run build:server && nodemon --ignore ./build --exec babel-node ./bin/main.js",
-    "test": "npx mocha test --recursive --exit --require @babel/register"
+    "test": "npx mocha test --recursive --exit --require @babel/register",
+    "db:setup": "lerna run db:setup --scope '*/*-shared' --stream"
   },
   "dependencies": {
     "@aragon/protocol-backend-server": "^0.2.21",

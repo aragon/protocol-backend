@@ -26,12 +26,13 @@ The first one is only used by the back-office frontend app where all the compone
 ### Helpers
 
 It provides the following helper functions:
-- [`email-client`](./helpers/email-client.js): Handles sending emails through Postmark
+- [`email-client`](./src/helpers/email-client.ts): Handles sending emails through Postmark
+- [`jwt-manager`](./src/helpers/jwt-manager.ts): For creating and validating JWTs in email verification
 - [`gas-price-oracle`](./helpers/gas-price-oracle.js): Get gas price oracle object used to know the current gas prices being paid on each network
 - [`get-wallet-from-pk`](./helpers/get-wallet-from-pk.js): Decode Ethereum address based on a private key
 - [`logger`](./helpers/logger.js): Logger object that provides a friendly interface for fancy logging 
 - [`numbers`](./helpers/numbers.js): BigNumber-related helper functions
-- [`sleep`](./helpers/sleep.js): Sleep function to wait a number of seconds 
+- [`sleep`](./src/helpers/sleep.ts): Sleep function to wait a number of seconds 
 - [`times`](./helpers/times.ts): Time constants for using with `Date()`
 - [`voting`](./helpers/voting.js): Utils related to the CR Voting module of Aragon Protocol
 
@@ -44,4 +45,9 @@ yarn build
 
 # from another package:
 yarn build:shared
+```
+
+Shared Typescript packages need to be imported from the `build` directory, e.g.:
+```js
+import sleep from '@aragon/protocol-backend-shared/build/helpers/sleep'
 ```

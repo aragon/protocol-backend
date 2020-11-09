@@ -4,7 +4,7 @@ import HttpStatus from 'http-status-codes'
 import { ethers } from 'ethers'
 
 import app from '../../src/app'
-import { User } from '../../src/models/objection'
+import { User } from '@aragon/protocol-backend-shared/build/models/objection'
 import dbCleanup from '../helpers/dbCleanup'
 const serverPort = process.env.SERVER_PORT || 8000
 const { expect } = chai

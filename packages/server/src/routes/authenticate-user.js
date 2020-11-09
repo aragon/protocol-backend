@@ -1,6 +1,6 @@
 import HttpError from '../errors/http-error'
 import asyncMiddleware from '../helpers/async-middleware'
-import { User } from '../models/objection'
+import { User } from '@aragon/protocol-backend-shared/build/models/objection'
 
 const authenticate = (route) => async (req, res, next) => {
   const { session: { userId }, params: { address } } = req

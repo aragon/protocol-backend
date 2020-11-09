@@ -1,4 +1,4 @@
-import { Reveal } from '../models/objection'
+import { Reveal } from '@aragon/protocol-backend-shared/build/models/objection'
 import HttpError from '../errors/http-error'
 import RevealsValidator from '../validators/RevealsValidator'
 import { decodeVoteId } from '@aragon/protocol-backend-shared/helpers/voting'

@@ -1,4 +1,4 @@
-import { User, UserNotification, UserNotificationType } from '@aragon/protocol-backend-server/build/models/objection'
+import { User, UserNotification, UserNotificationType } from '@aragon/protocol-backend-shared/build/models/objection'
 import * as notificationScanners from '../models/notification-scanners'
 
 /**

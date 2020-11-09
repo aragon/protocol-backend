@@ -8,7 +8,7 @@ import { userDbCleanup, userNotificationTypeDbCleanup } from '../../helpers/dbCl
 import userNotificationTypeByModel from '../../helpers/userNotificationTypeByModel'
 import { tryRunScanner } from '../../../src/workers/notification-scanner'
 import { trySendNotification } from '../../../src/workers/notification-sender'
-import { User, UserEmail, UserNotification } from '@aragon/protocol-backend-server/build/models/objection'
+import { User, UserEmail, UserNotification } from '@aragon/protocol-backend-shared/build/models/objection'
 
 const { env: { CLIENT_URL } } = process
 const notificationTypeModel = 'SubscriptionReminder'
@@ -117,7 +117,7 @@ describe('SubscriptionReminder notifications', () => {
       await type.$query().update({scannedAt: null})
       await tryRunScanner(ctx, notificationTypeModel)
       const newType = await userNotificationTypeByModel(notificationTypeModel)
-      expect(type.notifications).to.deep.equal(newType.notifications)
+      expect(type.notifications[0].updatedAt).to.deep.equal(newType.notifications[0].updatedAt)
     })
 
     it('should send single notification', async () => {

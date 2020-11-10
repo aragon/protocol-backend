@@ -1,5 +1,5 @@
 import expressSession from 'express-session'
-import { Session } from '../models/objection'
+import { Session } from '@aragon/protocol-backend-shared/build/models/objection'
 
 import { HOURS, DAYS } from '@aragon/protocol-backend-shared/build/helpers/times'
 const SESSION_MAXAGE = 30 * DAYS

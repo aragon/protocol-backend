@@ -1,6 +1,6 @@
 import HttpError from '../errors/http-error'
 import UsersValidator from '../validators/UsersValidator'
-import { User, UserEmail } from '../models/objection'
+import { User, UserEmail } from '@aragon/protocol-backend-shared/build/models/objection'
 
 export default {
   async details(req, res) {

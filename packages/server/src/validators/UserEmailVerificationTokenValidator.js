@@ -1,6 +1,6 @@
 import BaseValidator from './BaseValidator'
-import { User } from '../models/objection'
-import { isTokenValid } from '../helpers/token-manager'
+import { User } from '@aragon/protocol-backend-shared/build/models/objection'
+import { isTokenValid } from '@aragon/protocol-backend-shared/build/helpers/jwt-manager'
 
 class UserEmailVerificationTokenValidator extends BaseValidator {
   async validateForVerify({ address, token }) {

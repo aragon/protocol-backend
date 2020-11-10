@@ -1,4 +1,4 @@
-import { User } from '../../src/models/objection'
+import { User } from '@aragon/protocol-backend-shared/build/models/objection'
 
 export default async function dbCleanup(address) {
   const user = await User.findOne({address})

@@ -1,6 +1,6 @@
 import HttpError from '../errors/http-error'
 import UserSessionsValidator from '../validators/UserSessionsValidator'
-import { User } from '../models/objection'
+import { User } from '@aragon/protocol-backend-shared/build/models/objection'
 
 export default {
   async create(req, res) {

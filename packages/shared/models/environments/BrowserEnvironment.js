@@ -1,5 +1,5 @@
 const { ethers } = require('ethers')
-const sleep = require('../../helpers/sleep')
+const sleep = require('../../build/helpers/sleep')
 const Environment = require('./Environment')
 const JsonRpcSigner = require('../providers/JsonRpcSigner')
 const StaticArtifacts = require('../artifacts/StaticArtifacts')
@@ -10,7 +10,7 @@ class BrowserEnvironment extends Environment {
   }
 
   async isEnabled() {
-    await sleep(2)
+    await sleep(2000)
     const { web3 } = window
     return !!(web3 && web3.currentProvider && web3.currentProvider.selectedAddress)
   }

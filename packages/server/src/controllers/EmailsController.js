@@ -1,6 +1,6 @@
-import { User } from '../models/objection'
-import emailClient from '@aragon/protocol-backend-shared/helpers/email-client'
-import sleep from '@aragon/protocol-backend-shared/helpers/sleep'
+import { User } from '@aragon/protocol-backend-shared/build/models/objection'
+import emailClient from '@aragon/protocol-backend-shared/build/helpers/email-client'
+import sleep from '@aragon/protocol-backend-shared/build/helpers/sleep'
 
 export default {
   async send(req, res) {
@@ -40,7 +40,7 @@ async function sendEmails(users, TemplateModel, res) {
     }
   }
   console.log(`Total emails: ${emails.size}`)
-  await sleep(0.1) // sleep to make sure Total emails is in the next chunk
+  await sleep(100) // sleep to make sure Total emails is in the next chunk
   res.write(`Total emails: ${emails.size}`)
   res.end()
 }

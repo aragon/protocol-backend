@@ -1,7 +1,7 @@
 import validator from 'validator'
 
 import BaseValidator from './BaseValidator'
-import { User } from '../models/objection'
+import { User } from '@aragon/protocol-backend-shared/build/models/objection'
 
 class UsersValidator extends BaseValidator {
   async validateForCreate({ address, email }) {

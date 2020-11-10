@@ -1,4 +1,4 @@
-import { Admin } from '../models/objection'
+import { Admin } from '@aragon/protocol-backend-shared/build/models/objection'
 import BaseValidator from './BaseValidator'
 
 class AdminValidator extends BaseValidator {

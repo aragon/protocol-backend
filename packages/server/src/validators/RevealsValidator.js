@@ -1,4 +1,4 @@
-import { Reveal } from '../models/objection'
+import { Reveal } from '@aragon/protocol-backend-shared/build/models/objection'
 import Network from '../web3/Network'
 import BaseValidator from './BaseValidator'
 const { hashVote } = require('@aragon/protocol-backend-shared/helpers/voting')

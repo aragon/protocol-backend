@@ -1,5 +1,5 @@
 import HttpError from '../errors/http-error'
-import { User } from '../models/objection'
+import { User } from '@aragon/protocol-backend-shared/build/models/objection'
 
 export default {
   async set(req, res) {

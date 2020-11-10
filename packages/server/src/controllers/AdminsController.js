@@ -1,4 +1,4 @@
-import { Admin } from '../models/objection'
+import { Admin } from '@aragon/protocol-backend-shared/build/models/objection'
 import HttpError from '../errors/http-error'
 import AdminValidator from '../validators/AdminValidator'
 

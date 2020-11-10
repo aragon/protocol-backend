@@ -1,4 +1,4 @@
-import { Reveal } from '@aragon/protocol-backend-server/build/models/objection'
+import { Reveal } from '@aragon/protocol-backend-shared/build/models/objection'
 import Network from '@aragon/protocol-backend-server/build/web3/Network'
 
 const REVEAL_TRIES = 3

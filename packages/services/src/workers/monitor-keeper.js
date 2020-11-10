@@ -1,7 +1,7 @@
-import emailClient from '@aragon/protocol-backend-shared/helpers/email-client'
+import emailClient from '@aragon/protocol-backend-shared/build/helpers/email-client'
 import Etherscan from '../models/Etherscan'
 import Network from '@aragon/protocol-backend-server/build/web3/Network'
-import { Admin, KeeperSuspiciousTransaction } from '@aragon/protocol-backend-server/build/models/objection'
+import { Admin, KeeperSuspiciousTransaction } from '@aragon/protocol-backend-shared/build/models/objection'
 
 import { fromWei } from 'web3-utils'
 import { bigExp } from '@aragon/protocol-backend-shared/helpers/numbers'

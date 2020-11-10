@@ -1,5 +1,4 @@
-import { Prometheus } from '@promster/metrics'
-import { createServer } from '@promster/server'
+import { Reporter } from '@aragon/protocol-backend-shared/build/helpers/metrics-reporter'
 
 const generalMetrics = {
   worker: [
@@ -28,74 +27,40 @@ const workerMetrics = {
   'contract-monitor': {
     ... generalMetrics,
     transaction: [
-      { name: 'errors', help: 'Total recent transaction errors', labelNames: ['type'], metricType: 'gauge' },
+      { name: 'errors', help: 'Total recent transaction errors', labelNames: ['type'], type: 'gauge' },
     ]
   }
 }
 
-class MetricsReporter {
+class MetricsReporter extends Reporter {
   constructor(workerName, port) {
+    super(workerMetrics[workerName], ['workerName'])
     this._defaultLabels = { workerName }
-    this._initializeCounterMetrics(workerMetrics[workerName], port)
-    this._startServer(port)
+    this.createServer(Number(port))
   }
-
   workerRun() {
-    this.worker.runs.inc(this._defaultLabels)
+    this.counters.worker.runs.inc(this._defaultLabels)
   }
-
   workerSuccess() {
-    this.worker.success.inc(this._defaultLabels)
+    this.counters.worker.success.inc(this._defaultLabels)
   }
-
   workerError() {
-    this.worker.errors.inc(this._defaultLabels)
+    this.counters.worker.errors.inc(this._defaultLabels)
   }
-
   notificationScanned(scannerName) {
-    this.notifications.scanned.inc({
+    this.counters.notifications.scanned.inc({
       ... this._defaultLabels,
       scannerName
     })
   }
-
   notificationSent(scannerName) {
-    this.notifications.sent.inc({
+    this.counters.notifications.sent.inc({
       ... this._defaultLabels,
       scannerName
     })
   }
-
   transactionErrors(type, count) {
-    this.transaction.errors.set({ type }, count)
-  }
-
-  _initializeCounterMetrics(metrics) {
-    const { Counter, Gauge, Registry: { globalRegistry: registry } } = Prometheus
-    Object.keys(metrics).forEach(type => {
-      this[type] = {}
-      metrics[type].forEach(({ name, help, labelNames, metricType }) => {
-        if (!labelNames) labelNames = []
-        labelNames.push('workerName')
-        const metricName = `${type}_${name}`
-        const metric = registry.getSingleMetric(metricName)
-        if (metric) {
-          this[type][name] = metric  
-        }
-        else if (metricType == 'gauge') {
-          this[type][name] = new Gauge({ name: metricName, help, labelNames })
-        }
-        else {
-          this[type][name] = new Counter({ name: metricName, help, labelNames })
-        }
-      })
-    })
-  }
-
-  _startServer(port) {
-    createServer({ port }).then(() =>
-      console.log(`Metrics server started on port ${port}`)
-    )
+    this.gauges.transaction.errors.set({ type }, count)
   }
 }
 

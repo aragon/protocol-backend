@@ -3,14 +3,13 @@ import HttpStatus from 'http-status-codes'
 import { Errors as PostmarkErrors } from 'postmark'
 
 import HttpError from './http-error'
-import MetricsReporter from '../helpers/metrics-reporter'
+import metrics from '../helpers/metrics-reporter'
 
 export default app => (err, req, res, next) => {
   if (res.headersSent) {
     return next(err)
   }
 
-  const reporter = MetricsReporter(app)
   let code, body
 
   if (err instanceof HttpError) {
@@ -25,7 +24,7 @@ export default app => (err, req, res, next) => {
     code = HttpStatus.INTERNAL_SERVER_ERROR
     body = { errors: [{ email: 'Could not send email.' }] }
     console.error(err.stack)
-    reporter.emailError()
+    metrics.emailError()
   }
   else if (err.message.includes('CORS')) {
     code = HttpStatus.BAD_REQUEST
@@ -37,7 +36,7 @@ export default app => (err, req, res, next) => {
     body = 'Something went wrong :('
 
     if (err instanceof DBError) {
-      reporter.dbError()
+      metrics.dbError()
     }
   }
 

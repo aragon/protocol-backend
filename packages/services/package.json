@@ -16,8 +16,6 @@
   "dependencies": {
     "@aragon/protocol-backend-server": "^0.2.21",
     "@aragon/protocol-backend-shared": "^0.2.21",
-    "@promster/metrics": "^4.1.10",
-    "@promster/server": "^4.2.12",
     "axios": "^0.19.0",
     "dateformat": "^3.0.3",
     "dotenv": "^8.2.0",

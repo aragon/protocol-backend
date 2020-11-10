@@ -23,6 +23,7 @@ services:
     volumes:
     - ./packages/server/src:/app/packages/server/src
     - ./packages/server/test:/app/packages/server/test
+    - ./packages/shared/build:/app/packages/shared/build
     env_file:
     - .env
     logging: &loki
@@ -43,6 +44,7 @@ services:
     - ./packages/services/bin:/app/packages/services/bin
     - ./packages/services/src:/app/packages/services/src
     - ./packages/services/test:/app/packages/services/test
+    - ./packages/shared/build:/app/packages/shared/build
     env_file:
     - .env
     logging: *loki

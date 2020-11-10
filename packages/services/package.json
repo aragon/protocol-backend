@@ -6,8 +6,8 @@
   "license": "(GPL-3.0-or-later OR AGPL-3.0-or-later)",
   "main": "index.js",
   "scripts": {
-    "build:shared": "yarn workspace @aragonone/protocol-backend-shared build",
-    "build:server": "yarn workspace @aragonone/protocol-backend-server build",
+    "build:shared": "yarn workspace @aragon/protocol-backend-shared build",
+    "build:server": "yarn workspace @aragon/protocol-backend-server build",
     "start": "npm run build:server && babel-node ./bin/main.js",
     "start:dev": "npm run build:server && nodemon --ignore ./build --exec babel-node ./bin/main.js",
     "test": "npx mocha test --recursive --exit --require @babel/register"

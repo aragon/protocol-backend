@@ -11,6 +11,8 @@ export function up(knex: Knex): Promise<void> {
     table.integer('outcome').notNullable()
     table.string('salt').notNullable()
     table.boolean('revealed').defaultTo(false).notNullable()
+    table.integer('failedAttempts').notNullable().defaultTo(0)
+    table.boolean('expired').notNullable().defaultTo(false)
     table.dateTime('createdAt').defaultTo(knex.fn.now()).notNullable()
     table.dateTime('updatedAt').defaultTo(knex.fn.now()).notNullable()
   })

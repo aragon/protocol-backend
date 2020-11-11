@@ -1,13 +1,18 @@
-import { Reporter } from '@aragon/protocol-backend-shared/build/helpers/metrics-reporter'
+import { Reporter, Metrics } from '@aragon/protocol-backend-shared/build/helpers/metrics-reporter'
 
-const generalMetrics = {
+const generalMetrics: Metrics = {
   worker: [
     { name: 'runs', help: 'Total worker runs' },
     { name: 'success', help: 'Total successful worker runs' },
     { name: 'errors', help: 'Total worker run errors' },
   ]
 }
-const workerMetrics = {
+
+interface WorkerMetrics {
+  [workerName: string]: Metrics
+}
+
+const workerMetrics: WorkerMetrics = {
   heartbeat: { ... generalMetrics },
   reveal: { ... generalMetrics },
   settlements: { ... generalMetrics },
@@ -33,33 +38,44 @@ const workerMetrics = {
 }
 
 class MetricsReporter extends Reporter {
-  constructor(workerName, port) {
+
+  private _defaultLabels: {
+    [labelName: string]: string
+  }
+
+  constructor(workerName: string, port: number) {
     super(workerMetrics[workerName], ['workerName'])
     this._defaultLabels = { workerName }
     this.createServer(Number(port))
   }
-  workerRun() {
+
+  workerRun(): void {
     this.counters.worker.runs.inc(this._defaultLabels)
   }
-  workerSuccess() {
+
+  workerSuccess(): void {
     this.counters.worker.success.inc(this._defaultLabels)
   }
-  workerError() {
+
+  workerError(): void {
     this.counters.worker.errors.inc(this._defaultLabels)
   }
-  notificationScanned(scannerName) {
+
+  notificationScanned(scannerName: string): void {
     this.counters.notifications.scanned.inc({
       ... this._defaultLabels,
       scannerName
     })
   }
-  notificationSent(scannerName) {
+
+  notificationSent(scannerName: string): void {
     this.counters.notifications.sent.inc({
       ... this._defaultLabels,
       scannerName
     })
   }
-  transactionErrors(type, count) {
+
+  transactionErrors(type: string, count: number): void {
     this.gauges.transaction.errors.set({ type }, count)
   }
 }

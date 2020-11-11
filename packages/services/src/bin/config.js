@@ -4,7 +4,7 @@ const workers = [
   {
     name: 'heartbeat',
     color: 'yellow',
-    path: './src/workers/heartbeat',
+    path: '../workers/heartbeat',
     processes: 1,
     times: 0,
     repeat: ONE_MINUTE * 10,
@@ -13,7 +13,7 @@ const workers = [
   {
     name: 'reveal',
     color: 'pink',
-    path: './src/workers/reveal',
+    path: '../workers/reveal',
     processes: 1,
     times: 0,
     repeat: ONE_MINUTE,
@@ -22,7 +22,7 @@ const workers = [
   {
     name: 'settlements',
     color: 'cyan',
-    path: './src/workers/settlements',
+    path: '../workers/settlements',
     processes: 1,
     times: 0,
     repeat: ONE_MINUTE * 5,
@@ -31,7 +31,7 @@ const workers = [
   {
     name: 'monitor-keeper',
     color: 'green',
-    path: './src/workers/monitor-keeper',
+    path: '../workers/monitor-keeper',
     processes: 1,
     times: 0,
     repeat: ONE_MINUTE * 30,
@@ -40,7 +40,7 @@ const workers = [
   {
     name: 'notification-scanner',
     color: 'blue',
-    path: './src/workers/notification-scanner',
+    path: '../workers/notification-scanner',
     processes: 1,
     times: 0,
     repeat: ONE_MINUTE,
@@ -49,7 +49,7 @@ const workers = [
   {
     name: 'notification-sender',
     color: 'magenta',
-    path: './src/workers/notification-sender',
+    path: '../workers/notification-sender',
     processes: 1,
     times: 0,
     repeat: ONE_MINUTE * 5,
@@ -57,7 +57,7 @@ const workers = [
   },
   {
     name: 'contract-monitor',
-    path: './src/workers/contract-monitor',
+    path: '../workers/contract-monitor',
     processes: 1,
     times: 0,
     repeat: ONE_MINUTE * 5,

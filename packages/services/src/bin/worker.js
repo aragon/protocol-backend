@@ -1,9 +1,7 @@
-#! /usr/bin/env node
-
 import path from 'path'
-import Logger from '../src/helpers/worker-logger'
-import MetricsReporter from '../src/helpers/metrics-reporter'
-import errorHandler from '../src/helpers/error-handler'
+import Logger from '../helpers/worker-logger'
+import MetricsReporter from '../helpers/metrics-reporter'
+import errorHandler from '../helpers/error-handler'
 import sleep from '@aragon/protocol-backend-shared/build/helpers/sleep'
 
 let [workerPath, name, times, repeat, color, metricsPort] = process.argv.slice(2)
@@ -19,7 +17,7 @@ Logger.setDefaults(false, true)
 const logger = Logger(name, color)
 const metrics = new MetricsReporter(name, metricsPort)
 const ctx = { logger, metrics }
-const worker = require(path.resolve(process.cwd(), workerPath)).default
+const worker = require(path.resolve(__dirname, workerPath)).default
 
 async function run() {
   logger.info(`Starting worker, will run ${times == 0 ? 'infinite' : times} jobs`)

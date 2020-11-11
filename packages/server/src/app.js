@@ -6,7 +6,7 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import express from 'express'
 import bodyParser from 'body-parser'
-import { createMiddleware } from '@promster/express'
+import metrics from './helpers/metrics-reporter'
 
 import routes from './routes'
 import errorHandler from './errors/error-handler'
@@ -20,7 +20,7 @@ dotenv.config()
 // Set up express layers
 const app = express()
 app.set('trust proxy', 1) // required for secure sessions
-app.use(createMiddleware({ app }))
+app.use(metrics.createExpressMiddleware())
 app.use(helmet())
 app.use(morgan('dev'))
 app.use(corsMiddleware)

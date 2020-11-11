@@ -1,16 +1,13 @@
 import app from './app'
-import { createServer } from '@promster/server'
-import { signalIsUp } from '@promster/express'
+import metrics from './helpers/metrics-reporter'
 
 const serverPort = process.env.SERVER_PORT || 8000
 app.listen(serverPort, error => {
   if (error) return console.error(error)
-  signalIsUp()
+  metrics.setExpressMiddlewareUp()
   console.log(`Server listening on port ${serverPort}`)
 })
 
 // Start Prometheus metrics
-const metricsPort = process.env.SERVER_METRICS_PORT || 9091
-createServer({ port: metricsPort }).then(() =>
-  console.log(`Metrics server started on port ${metricsPort}`)
-)
+const metricsPort = Number(process.env.SERVER_METRICS_PORT) || 9091
+metrics.createServer(metricsPort).then()

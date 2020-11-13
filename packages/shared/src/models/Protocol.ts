@@ -1,38 +1,51 @@
-const { sha3, fromWei, utf8ToHex, soliditySha3 } = require('web3-utils')
-const { ZERO_ADDRESS, getEventArgument, getEvents } = require('@aragon/contract-helpers-test')
+import { sha3, fromWei, utf8ToHex, soliditySha3 } from 'web3-utils'
+import { Contract } from 'ethers'
+import { ZERO_ADDRESS, getEventArgument, getEvents } from '@aragon/contract-helpers-test'
 
-const logger = require('../helpers/logger').default('Protocol')
-const { bn, bigExp } = require('../helpers/numbers')
-const { encodeVoteId, hashVote } = require('../helpers/voting')
+import Logger from '../helpers/logger'
+const logger = Logger('Protocol')
+import { bn, bigExp, BigNumberish } from '../helpers/numbers'
+import { encodeVoteId, hashVote } from '../helpers/voting'
+import Environment from './environments/Environment'
 
 const ROUND_STATE_ENDED = 5
 
-module.exports = class {
-  constructor(instance, environment) {
+export default class Protocol {
+
+  instance: any // TODO: provide proper types for Protocol instance
+  environment: Environment
+  _token?: Contract
+  _feeToken?: Contract
+  _registry?: Contract
+  _disputeManager?: Contract
+  _voting?: Contract
+  _paymentsBook?: Contract
+
+  constructor(instance: any, environment: Environment) {
     this.instance = instance
     this.environment = environment
   }
 
-  async token() {
+  async token(): Promise<Contract> {
     if (!this._token) {
       const registry = await this.registry()
       const address = await registry.token()
       const ERC20 = await this.environment.getArtifact('ERC20Mock', '@aragon/protocol-evm')
       this._token = await ERC20.at(address)
     }
-    return this._token
+    return this._token!
   }
 
-  async feeToken() {
+  async feeToken(): Promise<Contract> {
     if (!this._feeToken) {
       const { feeToken } = await this.getConfigAt()
       const ERC20 = await this.environment.getArtifact('ERC20Mock', '@aragon/protocol-evm')
       this._feeToken = await ERC20.at(feeToken)
     }
-    return this._feeToken
+    return this._feeToken!
   }
 
-  async registry() {
+  async registry(): Promise<Contract> {
     if (!this._registry) {
       const { addr: address } = await this.instance.getGuardiansRegistry()
       const GuardiansRegistry = await this.environment.getArtifact('GuardiansRegistry', '@aragon/protocol-evm')
@@ -41,7 +54,7 @@ module.exports = class {
     return this._registry
   }
 
-  async disputeManager() {
+  async disputeManager(): Promise<Contract> {
     if (!this._disputeManager) {
       const { addr: address } = await this.instance.getDisputeManager()
       const DisputeManager = await this.environment.getArtifact('DisputeManager', '@aragon/protocol-evm')
@@ -50,7 +63,7 @@ module.exports = class {
     return this._disputeManager
   }
 
-  async voting() {
+  async voting(): Promise<Contract> {
     if (!this._voting) {
       const { addr: address } = await this.instance.getVoting()
       const Voting = await this.environment.getArtifact('CRVoting', '@aragon/protocol-evm')
@@ -59,7 +72,7 @@ module.exports = class {
     return this._voting
   }
 
-  async paymentsBook() {
+  async paymentsBook(): Promise<Contract> {
     if (!this._paymentsBook) {
       const { addr: address } = await this.instance.getPaymentsBook()
       const PaymentsBook = await this.environment.getArtifact('PaymentsBook', '@aragon/protocol-evm')
@@ -81,7 +94,7 @@ module.exports = class {
     return this.instance.getCurrentTermId()
   }
 
-  async getTerm(id) {
+  async getTerm(id: BigNumberish) {
     return this.instance.getTerm(id)
   }
 
@@ -105,7 +118,7 @@ module.exports = class {
     }
   }
 
-  async getRevealStatus(disputeId, roundNumber) {
+  async getRevealStatus(disputeId: BigNumberish, roundNumber: number) {
     const disputeManager = await this.disputeManager()
     const { createTermId } = await disputeManager.getDispute(disputeId)
     const { draftTerm, delayedTerms } = await disputeManager.getRound(disputeId, roundNumber)
@@ -122,7 +135,7 @@ module.exports = class {
     return { canReveal, expired }
   }
 
-  async canSettle(disputeId) {
+  async canSettle(disputeId: BigNumberish) {
     const disputeManager = await this.disputeManager()
 
     const { finalRuling, lastRoundId } = await disputeManager.getDispute(disputeId)
@@ -132,50 +145,50 @@ module.exports = class {
     return state === ROUND_STATE_ENDED
   }
 
-  async getGuardians(disputeId, roundNumber) {
+  async getGuardians(disputeId: BigNumberish, roundNumber: number) {
     const result = await this.environment.query(`{ 
       dispute (id: "${disputeId}") {
         id
         rounds (where: { number: "${roundNumber}" }) { guardians { guardian { id } }}
       }}`)
-    return result.dispute.rounds[0].guardians.map(guardian => guardian.guardian.id)
+    return result.dispute.rounds[0].guardians.map((guardian: any) => guardian.guardian.id)
   }
 
-  async existsVote(voteId) {
+  async existsVote(voteId: BigNumberish) {
     const voting = await this.voting()
     const maxAllowedOutcomes = await voting.getMaxAllowedOutcome(voteId)
     return maxAllowedOutcomes !== 0
   }
 
-  async isValidOutcome(voteId, outcome) {
+  async isValidOutcome(voteId: BigNumberish, outcome: string) {
     const voting = await this.voting()
     const exists = await this.existsVote(voteId)
     return exists && (await voting.isValidOutcome(voteId, outcome))
   }
 
-  async getLastRoundVoteId(disputeId) {
+  async getLastRoundVoteId(disputeId: BigNumberish) {
     const disputeManager = await this.disputeManager()
     const { lastRoundId } = await disputeManager.getDispute(disputeId)
     return encodeVoteId(disputeId, lastRoundId)
   }
 
-  async getCommitment(voteId, voter) {
+  async getCommitment(voteId: BigNumberish, voter: string) {
     const result = await this.environment.query(`{ guardianDrafts (where: { round:"${voteId}", guardian: "${voter}" }) { commitment }}`)
     return (!result || !result.guardianDrafts || result.guardianDrafts.length === 0) ? undefined : result.guardianDrafts[0].commitment
   }
 
-  async getOutcome(voteId, voter) {
+  async getOutcome(voteId: BigNumberish, voter: string) {
     const voting = await this.voting()
     return voting.getVoterOutcome(voteId, voter)
   }
 
-  async getPeriodBalanceDetails(periodId) {
+  async getPeriodBalanceDetails(periodId: BigNumberish) {
     const paymentsBook = await this.paymentsBook()
     const { balanceCheckpoint, totalActiveBalance } = await paymentsBook.getPeriodBalanceDetails(periodId)
     return { balanceCheckpoint, totalActiveBalance }
   }
 
-  async heartbeat(transitions = undefined) {
+  async heartbeat(transitions?: any) {
     const needed = await this.neededTransitions()
     logger.info(`Required ${needed} transitions`)
     if (needed.eq(bn(0))) return needed
@@ -185,7 +198,7 @@ module.exports = class {
     return Math.min(heartbeats, needed)
   }
 
-  async stake(guardian, amount, data = '0x') {
+  async stake(guardian: string, amount: BigNumberish, data = '0x') {
     const token = await this.token()
     const decimals = await token.decimals()
     const registry = await this.registry()
@@ -195,7 +208,7 @@ module.exports = class {
     return registry.stakeFor(guardian, bigExp(amount, decimals), data)
   }
 
-  async unstake(amount, data = '0x') {
+  async unstake(amount: BigNumberish, data = '0x') {
     const token = await this.token()
     const decimals = await token.decimals()
     const registry = await this.registry()
@@ -204,7 +217,7 @@ module.exports = class {
     return registry.unstake(bigExp(amount, decimals), data)
   }
 
-  async activate(amount) {
+  async activate(amount: BigNumberish) {
     const token = await this.token()
     const decimals = await token.decimals()
     const registry = await this.registry()
@@ -213,18 +226,18 @@ module.exports = class {
     return registry.activate(bigExp(amount, decimals))
   }
 
-  async activateFor(address, amount) {
+  async activateFor(address: string, amount: BigNumberish) {
     const token = await this.token()
     const decimals = await token.decimals()
     const registry = await this.registry()
     const symbol = await token.symbol()
     await this._approve(token, bigExp(amount, decimals), registry.address)
-    const ACTIVATE_DATA = sha3('activate(uint256)').slice(0, 10)
+    const ACTIVATE_DATA = sha3('activate(uint256)')!.slice(0, 10)
     logger.info(`Activating ${amount} ${symbol} for ${address}...`)
     return registry.stakeFor(address, bigExp(amount, decimals), ACTIVATE_DATA)
   }
 
-  async deactivate(amount) {
+  async deactivate(amount: BigNumberish) {
     const token = await this.token()
     const decimals = await token.decimals()
     const registry = await this.registry()
@@ -232,7 +245,7 @@ module.exports = class {
     return registry.deactivate(bigExp(amount, decimals))
   }
 
-  async pay(tokenAddress, amount, payer, data) {
+  async pay(tokenAddress: string, amount: BigNumberish, payer: string, data: any) {
     const paymentsBook = await this.paymentsBook()
     const ERC20 = await this.environment.getArtifact('ERC20Mock', '@aragon/protocol-evm')
     const token = await ERC20.at(tokenAddress)
@@ -250,7 +263,7 @@ module.exports = class {
     return Arbitrable.new(this.instance.address)
   }
 
-  async createDispute(subject, rulings = 2, metadata = '', evidence = [], submitters = [], closeEvidencePeriod = false) {
+  async createDispute(subject: string, rulings = 2, metadata = '', evidence = [], submitters = [], closeEvidencePeriod = false) {
     logger.info(`Transferring tokens to Arbitrable instance ${subject}...`)
     const feeToken = await this.feeToken()
     const disputeManager = await this.disputeManager()
@@ -280,33 +293,33 @@ module.exports = class {
     return disputeId
   }
 
-  async draft(disputeId) {
+  async draft(disputeId: BigNumberish) {
     const disputeManager = await this.disputeManager()
     logger.info(`Drafting dispute #${disputeId} ...`)
     const { hash } = await disputeManager.draft(disputeId)
     const receipt = await this.environment.getTransaction(hash)
-    return getEvents(receipt, 'GuardianDrafted', { decodeForAbi: disputeManager.interface.abi }).map(event => event.args.guardian)
+    return getEvents(receipt, 'GuardianDrafted', { decodeForAbi: disputeManager.interface.abi }).map((event: any) => event.args.guardian)
   }
 
-  async commit(disputeId, outcome, password) {
+  async commit(disputeId: BigNumberish, outcome: string, password: string) {
     const voteId = await this.getLastRoundVoteId(disputeId)
     logger.info(`Committing a vote for dispute #${disputeId} on vote ID ${voteId}...`)
     const voting = await this.voting()
-    return voting.commit(voteId, hashVote(outcome, soliditySha3(password)))
+    return voting.commit(voteId, hashVote(outcome, soliditySha3(password)!))
   }
 
-  async reveal(disputeId, guardian, outcome, password) {
+  async reveal(disputeId: BigNumberish, guardian: string, outcome: string, password: string) {
     const voteId = await this.getLastRoundVoteId(disputeId)
-    return this.revealFor(voteId, guardian, outcome, soliditySha3(password))
+    return this.revealFor(voteId, guardian, outcome, soliditySha3(password)!)
   }
 
-  async revealFor(voteId, guardian, outcome, salt) {
+  async revealFor(voteId: BigNumberish, guardian: string, outcome: string, salt: string) {
     logger.info(`Revealing vote for guardian ${guardian} on vote ID ${voteId}...`)
     const voting = await this.voting()
     return voting.reveal(voteId, guardian, outcome, salt)
   }
 
-  async appeal(disputeId, outcome) {
+  async appeal(disputeId: BigNumberish, outcome: string) {
     const disputeManager = await this.disputeManager()
     const { lastRoundId } = await disputeManager.getDispute(disputeId)
 
@@ -318,7 +331,7 @@ module.exports = class {
     return disputeManager.createAppeal(disputeId, lastRoundId, outcome)
   }
 
-  async confirmAppeal(disputeId, outcome) {
+  async confirmAppeal(disputeId: BigNumberish, outcome: string) {
     const disputeManager = await this.disputeManager()
     const { lastRoundId } = await disputeManager.getDispute(disputeId)
 
@@ -330,7 +343,7 @@ module.exports = class {
     return disputeManager.confirmAppeal(disputeId, lastRoundId, outcome)
   }
 
-  async settleRound(disputeId) {
+  async settleRound(disputeId: BigNumberish) {
     const disputeManager = await this.disputeManager()
     const { lastRoundId } = await disputeManager.getDispute(disputeId)
 
@@ -345,7 +358,7 @@ module.exports = class {
     }
   }
 
-  async settleGuardian(disputeId, guardian) {
+  async settleGuardian(disputeId: BigNumberish, guardian: string) {
     const disputeManager = await this.disputeManager()
     const { lastRoundId } = await disputeManager.getDispute(disputeId)
 
@@ -358,12 +371,12 @@ module.exports = class {
     }
   }
 
-  async execute(disputeId) {
+  async execute(disputeId: BigNumberish) {
     logger.info(`Executing ruling of dispute #${disputeId}...`)
     return this.instance.executeRuling(disputeId)
   }
 
-  async settle(disputeId) {
+  async settle(disputeId: BigNumberish) {
     const voting = await this.voting()
     const disputeManager = await this.disputeManager()
     const { finalRuling: ruling, lastRoundId } = await disputeManager.getDispute(disputeId)
@@ -409,7 +422,7 @@ module.exports = class {
     }
   }
 
-  async _approve(token, amount, recipient) {
+  async _approve(token: Contract, amount: BigNumberish, recipient: string) {
     const allowance = await token.allowance(await this.environment.getSender(), recipient)
     if (allowance.gt(bn(0))) {
       logger.info(`Resetting allowance to zero for ${recipient}...`)

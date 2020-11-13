@@ -1,6 +1,6 @@
 import { utils } from 'ethers'
 import { fromWei } from 'web3-utils'
-import { BigNumberish } from 'ethers/utils'
+import { BigNumber, BigNumberish } from 'ethers/utils'
 
 const bn = (x: BigNumberish) => utils.bigNumberify(x)
 const bigExp = (x: BigNumberish, y = 18) => bn(x).mul(bn(10).pow(bn(y)))
@@ -14,5 +14,7 @@ export {
   bigExp,
   maxUint,
   tokenToString,
-  MAX_UINT64
+  MAX_UINT64,
+  BigNumber,
+  BigNumberish
 }

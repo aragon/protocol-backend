@@ -1,7 +1,7 @@
-const Wallet = require('../providers/Wallet')
-const Environment = require('./Environment')
-const JsonRpcProvider = require('../providers/JsonRpcProvider')
-const DynamicArtifacts = require('../artifacts/DynamicArtifacts')
+import { Wallet, GasParams } from '../providers/Wallet'
+import { Network, Environment, Protocol } from './Environment'
+import JsonRpcProvider from '../providers/JsonRpcProvider'
+import DynamicArtifacts from '../artifacts/DynamicArtifacts'
 
 require('dotenv').config() // Load env vars from .env file
 
@@ -18,30 +18,33 @@ require('dotenv').config() // Load env vars from .env file
 
 const { NETWORK, PROTOCOL_ADDRESS, RPC, PRIVATE_KEY, GAS, GAS_PRICE, WEB3_POLLING_INTERVAL } = process.env
 
-class LocalEnvironment extends Environment {
+export default class LocalEnvironment extends Environment {
   constructor() {
-    super(NETWORK)
+    super(NETWORK as Network)
   }
 
-  async getProtocol(address = undefined) {
-    return super.getProtocol(PROTOCOL_ADDRESS)
+  async getProtocol(): Promise<Protocol> {
+    return super.getProtocol(PROTOCOL_ADDRESS as string)
   }
 
-  async _getProvider() {
+  async _getProvider(): Promise<JsonRpcProvider> {
     const provider = new JsonRpcProvider(RPC)
-    provider.pollingInterval = parseInt(WEB3_POLLING_INTERVAL)
+    provider.pollingInterval = parseInt(WEB3_POLLING_INTERVAL as string)
     return provider
   }
 
-  async _getSigner() {
+  async _getSigner(): Promise<Wallet> {
     const provider = await this.getProvider()
-    return new Wallet(PRIVATE_KEY, provider, { gasPrice: GAS_PRICE, gasLimit: GAS })
+    return new Wallet(PRIVATE_KEY as string, provider, { gasPrice: GAS_PRICE, gasLimit: GAS } as GasParams)
   }
 
-  async _getArtifacts() {
+  async _getArtifacts(): Promise<DynamicArtifacts> {
     const signer = await this._getSigner()
     return new DynamicArtifacts(signer)
   }
 }
 
-module.exports = LocalEnvironment
+export {
+  LocalEnvironment,
+  Protocol
+}

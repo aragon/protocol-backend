@@ -1,11 +1,11 @@
-const fs = require('fs')
-const path = require('path')
-const BaseArtifacts = require('./BaseArtifacts')
+import fs from 'fs'
+import path from 'path'
+import BaseArtifacts from './BaseArtifacts'
 
-const BUILD_DIRS = ['build/contracts', 'artifacts']
+const BUILD_DIRS: string[] = ['build/contracts', 'artifacts']
 
-class DynamicArtifacts extends BaseArtifacts {
-  getContractSchema(contractName, dependency = undefined) {
+export default class DynamicArtifacts extends BaseArtifacts {
+  getContractSchema(contractName: string, dependency?: string): any {
     const contractPaths = dependency
       ? this._getNodeModulesPaths(dependency, contractName)
       : this._getLocalBuildPaths(contractName)
@@ -15,18 +15,16 @@ class DynamicArtifacts extends BaseArtifacts {
     return artifact
   }
 
-  _findArtifact(paths) {
+  private _findArtifact(paths: string[]): any {
     const path = paths.find(fs.existsSync)
     return path ? require(path) : undefined
   }
 
-  _getLocalBuildPaths(contractName) {
+  private _getLocalBuildPaths(contractName: string): string[] {
     return BUILD_DIRS.map(dir => path.resolve(process.cwd(), `./${dir}/${contractName}.json`))
   }
 
-  _getNodeModulesPaths(dependency, contractName) {
+  private _getNodeModulesPaths(dependency: string, contractName: string): string[] {
     return BUILD_DIRS.map(dir => path.resolve(__dirname, `../../../node_modules/${dependency}/${dir}/${contractName}.json`))
   }
 }
-
-module.exports = DynamicArtifacts

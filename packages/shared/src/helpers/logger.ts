@@ -47,7 +47,7 @@ class Logger {
   }
 }
 
-const LoggerConstructor = (actor: string, color: string) => new Logger(actor, color)
+const LoggerConstructor = (actor: string, color?: string) => new Logger(actor, color)
 
 export default LoggerConstructor
 

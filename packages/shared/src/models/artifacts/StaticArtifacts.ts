@@ -1,6 +1,6 @@
-const BaseArtifacts = require('./BaseArtifacts')
+import BaseArtifacts from './BaseArtifacts'
 
-const BUILDS = {
+const BUILDS: { [repo: string]: { [contract: string]: any } } = {
   '@aragon/erc20-faucet': {
     'ERC20Faucet': require('@aragonone/erc20-faucet/build/contracts/ERC20Faucet'),
   },
@@ -13,10 +13,9 @@ const BUILDS = {
   }
 }
 
-class StaticArtifacts extends BaseArtifacts {
-  getContractSchema(contractName, dependency = undefined) {
+export default class StaticArtifacts extends BaseArtifacts {
+  getContractSchema(contractName: string, dependency: string): any {
+    if (!BUILDS[dependency]) throw Error(`Could not find artifact for ${dependency}/${contractName}`)
     return BUILDS[dependency][contractName]
   }
 }
-
-module.exports = StaticArtifacts

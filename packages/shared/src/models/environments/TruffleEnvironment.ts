@@ -1,16 +1,21 @@
-const { ethers } = require('ethers')
-const Environment = require('./Environment')
-const TruffleConfig = require('@truffle/config')
-const JsonRpcSigner = require('../providers/JsonRpcSigner')
-const DynamicArtifacts = require('../artifacts/DynamicArtifacts')
+import { ethers } from 'ethers'
+import { Web3Provider } from 'ethers/providers'
+import { Environment, Network, Protocol } from './Environment'
+import TruffleConfig from '@truffle/config'
+import JsonRpcSigner from '../providers/JsonRpcSigner'
+import DynamicArtifacts from '../artifacts/DynamicArtifacts'
 
-class TruffleEnvironment extends Environment {
-  constructor(network, sender = undefined) {
+export default class TruffleEnvironment extends Environment {
+
+  sender?: string
+  config?: TruffleConfig
+
+  constructor(network: Network, sender?: string) {
     super(network)
     this.sender = sender
   }
 
-  async getProtocol(address = undefined) {
+  async getProtocol(address?: string): Promise<Protocol> {
     if (address) return super.getProtocol(address)
     if (process.env.PROTOCOL_ADDRESS) return super.getProtocol(process.env.PROTOCOL_ADDRESS)
     const config = require('../../truffle-config')
@@ -19,12 +24,12 @@ class TruffleEnvironment extends Environment {
     return super.getProtocol(protocol)
   }
 
-  async _getProvider() {
+  async _getProvider(): Promise<Web3Provider> {
     const { provider } = this._getNetworkConfig()
-    return new ethers.providers.Web3Provider(provider)
+    return new Web3Provider(provider)
   }
 
-  async _getSigner() {
+  async _getSigner(): Promise<JsonRpcSigner> {
     const { from, gas, gasPrice } = this._getNetworkConfig()
     const provider = await this.getProvider()
     return new JsonRpcSigner(provider, this.sender || from, { gasLimit: gas, gasPrice })
@@ -35,7 +40,7 @@ class TruffleEnvironment extends Environment {
     return new DynamicArtifacts(signer)
   }
 
-  _getNetworkConfig() {
+  _getNetworkConfig(): TruffleConfig {
     if (!this.config) {
       this.config = TruffleConfig.detect({ logger: console })
       this.config.network = this.network
@@ -43,5 +48,3 @@ class TruffleEnvironment extends Environment {
     return this.config
   }
 }
-
-export default TruffleEnvironment

@@ -1,5 +1,5 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('mint')
-const { bigExp } = require('@aragon/protocol-backend-shared/helpers/numbers')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('mint')
+const { bigExp } = require('@aragon/protocol-backend-shared/build/helpers/numbers')
 
 const command = 'mint'
 const describe = 'Mint tokens for a certain address'

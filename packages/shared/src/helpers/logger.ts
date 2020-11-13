@@ -1,4 +1,4 @@
-const chalk = require('chalk')
+import chalk from 'chalk'
 
 const DEFAULTS = {
   verbose: false,
@@ -6,29 +6,33 @@ const DEFAULTS = {
 }
 
 class Logger {
-  constructor(actor, color = 'white') {
+
+  actor: string
+  color: string
+
+  constructor(actor: string, color = 'white') {
     this.actor = actor
     this.color = color
   }
 
-  info(msg) {
+  info(msg: string): void {
     if (!DEFAULTS.verbose) return
     this.log(msg, '️  ', 'white')
   }
 
-  success(msg) {
+  success(msg: string): void {
     this.log(msg, '✅', 'green')
   }
 
-  warn(msg) {
+  warn(msg: string): void {
     this.log(msg, '⚠️ ', 'yellow')
   }
 
-  error(msg) {
+  error(msg: string): void {
     this.log(msg, '🚨', 'red')
   }
 
-  log(msg, emoji, color = 'white') {
+  log(msg: string, emoji: string, color = 'white'): void {
     if (DEFAULTS.silent) return
     let formattedMessage = chalk.keyword(color)(`${emoji}  ${this._stringify(msg)}`)
     if (DEFAULTS.verbose) {
@@ -38,16 +42,18 @@ class Logger {
     console.error(formattedMessage)
   }
 
-  _stringify(obj) {
+  _stringify(obj: any): string {
     return (typeof obj === 'object') ? JSON.stringify(obj) : obj.toString()
   }
 }
 
-module.exports = (actor, color) => new Logger(actor, color)
+const LoggerConstructor = (actor: string, color: string) => new Logger(actor, color)
 
-module.exports.Logger = Logger
+export default LoggerConstructor
 
-module.exports.setDefaults = (silent, verbose) => {
+export { LoggerConstructor as Logger }
+
+export const setDefaults = (silent: boolean, verbose: boolean): void => {
   DEFAULTS.silent = silent
   DEFAULTS.verbose = verbose
 }

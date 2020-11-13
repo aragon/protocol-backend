@@ -1,7 +1,7 @@
 import { Reveal } from '@aragon/protocol-backend-shared/build/models/objection'
-import Network from '../web3/Network'
+import Network from '@aragon/protocol-backend-shared/build/web3/Network'
 import BaseValidator from './BaseValidator'
-const { hashVote } = require('@aragon/protocol-backend-shared/helpers/voting')
+const { hashVote } = require('@aragon/protocol-backend-shared/build/helpers/voting')
 
 class RevealsValidator extends BaseValidator {
   async validateForCreate({ guardian, voteId, outcome, salt }) {

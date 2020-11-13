@@ -1,11 +1,11 @@
 import emailClient from '@aragon/protocol-backend-shared/build/helpers/email-client'
 import Etherscan from '../models/Etherscan'
-import Network from '@aragon/protocol-backend-server/build/web3/Network'
+import Network from '@aragon/protocol-backend-shared/build/web3/Network'
 import { Admin, KeeperSuspiciousTransaction } from '@aragon/protocol-backend-shared/build/models/objection'
 
 import { fromWei } from 'web3-utils'
-import { bigExp } from '@aragon/protocol-backend-shared/helpers/numbers'
-import getWalletFromPk from '@aragon/protocol-backend-shared/helpers/get-wallet-from-pk'
+import { bigExp } from '@aragon/protocol-backend-shared/build/helpers/numbers'
+import getWalletFromPk from '@aragon/protocol-backend-shared/build/helpers/get-wallet-from-pk'
 
 const FROM = 'noreply@aragon.one'
 const BALANCE_THRESHOLD = bigExp(1, 17) // 0.1 ETH

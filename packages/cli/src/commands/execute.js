@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('execute')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('execute')
 
 const command = 'execute'
 const describe = 'Execute ruling for a dispute'

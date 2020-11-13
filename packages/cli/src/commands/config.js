@@ -1,6 +1,6 @@
 const path = require('path')
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('config')
-const { bn } = require('@aragon/protocol-backend-shared/helpers/numbers')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('config')
+const { bn } = require('@aragon/protocol-backend-shared/build/helpers/numbers')
 
 const command = 'config'
 const describe = 'Get current protocol config or set a new one'

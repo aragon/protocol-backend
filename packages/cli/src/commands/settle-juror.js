@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('settle-guardian')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('settle-guardian')
 
 const command = 'settle-guardian'
 const describe = 'Settle guardian for a dispute'

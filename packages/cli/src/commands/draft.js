@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('draft')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('draft')
 
 const command = 'draft'
 const describe = 'Draft dispute and close evidence submission period if necessary'

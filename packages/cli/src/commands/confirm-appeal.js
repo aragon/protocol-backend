@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('confirm-appeal')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('confirm-appeal')
 
 const command = 'confirm-appeal'
 const describe = 'Confirm an existing appeal for a dispute'

@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('commit')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('commit')
 
 const command = 'commit'
 const describe = 'Commit vote for a dispute round'

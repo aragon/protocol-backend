@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('activate')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('activate')
 
 const command = 'activate'
 const describe = 'Activate tokens to the Protocol'

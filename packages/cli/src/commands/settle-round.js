@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('settle-round')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('settle-round')
 
 const command = 'settle-round'
 const describe = 'Settle penalties and appeals for a dispute'

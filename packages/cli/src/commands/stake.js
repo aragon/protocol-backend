@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('stake')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('stake')
 
 const command = 'stake'
 const describe = 'Stake tokens for a guardian'

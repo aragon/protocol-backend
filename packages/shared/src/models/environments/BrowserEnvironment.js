@@ -1,5 +1,5 @@
 const { ethers } = require('ethers')
-const sleep = require('../../build/helpers/sleep')
+const sleep = require('../../helpers/sleep')
 const Environment = require('./Environment')
 const JsonRpcSigner = require('../providers/JsonRpcSigner')
 const StaticArtifacts = require('../artifacts/StaticArtifacts')

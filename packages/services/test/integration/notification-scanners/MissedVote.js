@@ -8,7 +8,7 @@ import { userDbCleanup, userNotificationTypeDbCleanup } from '../../helpers/dbCl
 import userNotificationTypeByModel from '../../helpers/userNotificationTypeByModel'
 import { tryRunScanner } from '../../../src/workers/notification-scanner'
 import { User } from '@aragon/protocol-backend-shared/build/models/objection'
-import Network from '@aragon/protocol-backend-server/build/web3/Network'
+import Network from '@aragon/protocol-backend-shared/build/web3/Network'
 import * as termIdGetter from '../../../src/helpers/term-id-getter'
 
 const { env: { CLIENT_URL } } = process

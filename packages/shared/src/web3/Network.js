@@ -1,4 +1,4 @@
-import Environment from '@aragon/protocol-backend-shared/models/environments/LocalEnvironment'
+import Environment from '../models/environments/LocalEnvironment'
 
 const Network = {
   get environment() {

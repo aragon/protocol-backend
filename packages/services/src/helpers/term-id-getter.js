@@ -1,5 +1,5 @@
-import Network from '@aragon/protocol-backend-server/build/web3/Network'
-import { bn } from '@aragon/protocol-backend-shared/helpers/numbers'
+import Network from '@aragon/protocol-backend-shared/build/web3/Network'
+import { bn } from '@aragon/protocol-backend-shared/build/helpers/numbers'
 
 async function draftTermIdFor(state) {
   const protocol = await Network.getProtocol()

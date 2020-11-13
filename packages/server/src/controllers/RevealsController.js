@@ -1,7 +1,7 @@
 import { Reveal } from '@aragon/protocol-backend-shared/build/models/objection'
 import HttpError from '../errors/http-error'
 import RevealsValidator from '../validators/RevealsValidator'
-import { decodeVoteId } from '@aragon/protocol-backend-shared/helpers/voting'
+import { decodeVoteId } from '@aragon/protocol-backend-shared/build/helpers/voting'
 
 export default {
   async show(request, response) {

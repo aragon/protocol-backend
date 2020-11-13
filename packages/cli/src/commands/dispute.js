@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('dispute')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('dispute')
 
 const command = 'dispute'
 const describe = 'Create dispute submitting evidence'

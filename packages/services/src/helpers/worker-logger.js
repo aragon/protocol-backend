@@ -1,4 +1,4 @@
-const Logger = require('@aragon/protocol-backend-shared/helpers/logger')
+const { Logger, setDefaults } = require('@aragon/protocol-backend-shared/build/helpers/logger')
 
 class WorkerLogger {
   constructor(worker, logger) {
@@ -32,4 +32,4 @@ module.exports = (worker, color) => {
   return new WorkerLogger(worker, logger)
 }
 
-module.exports.setDefaults = Logger.setDefaults
+module.exports.setDefaults = setDefaults

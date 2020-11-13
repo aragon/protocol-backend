@@ -25,7 +25,7 @@ class DynamicArtifacts extends BaseArtifacts {
   }
 
   _getNodeModulesPaths(dependency, contractName) {
-    return BUILD_DIRS.map(dir => path.resolve(__dirname, `../../node_modules/${dependency}/${dir}/${contractName}.json`))
+    return BUILD_DIRS.map(dir => path.resolve(__dirname, `../../../node_modules/${dependency}/${dir}/${contractName}.json`))
   }
 }
 

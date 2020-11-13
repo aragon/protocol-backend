@@ -1,5 +1,5 @@
-import Protocol from '@aragon/protocol-backend-shared/models/Protocol'
-import Environment from '@aragon/protocol-backend-shared/models/environments/BrowserEnvironment'
+import Protocol from '@aragon/protocol-backend-shared/build/models/Protocol'
+import Environment from '@aragon/protocol-backend-shared/build/models/environments/BrowserEnvironment'
 
 const FAUCET = {
   staging: '0x19420Cf68cf6a8d18882730c8e8BAd169eeb1bdC',

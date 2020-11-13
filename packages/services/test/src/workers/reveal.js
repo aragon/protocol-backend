@@ -2,7 +2,7 @@ import chai from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
 import revealWorker from '../../../src/workers/reveal'
-import Network from '@aragon/protocol-backend-server/build/web3/Network'
+import Network from '@aragon/protocol-backend-shared/build/web3/Network'
 import { Reveal } from '@aragon/protocol-backend-shared/build/models/objection'
 
 const { expect } = chai

@@ -3,7 +3,7 @@ import Store from '../../store/store'
 import Network from '../../web3/Network'
 import ProtocolActions from '../../actions/protocol'
 import { fromWei } from 'web3-utils'
-import { bn } from '@aragon/protocol-backend-shared/helpers/numbers'
+import { bn } from '@aragon/protocol-backend-shared/build/helpers/numbers'
 
 export default class Protocol extends React.Component {
 

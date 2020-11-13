@@ -3,7 +3,7 @@
 import path from 'path'
 import { fork } from 'child_process'
 import { workers } from './config'
-import Logger from '@aragon/protocol-backend-shared/helpers/logger'
+import Logger from '@aragon/protocol-backend-shared/build/helpers/logger'
 
 require('dotenv').config()
 

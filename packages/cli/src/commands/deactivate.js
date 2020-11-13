@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('deactivate')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('deactivate')
 
 const command = 'deactivate'
 const describe = 'Deactivate tokens to the Protocol'

@@ -1,5 +1,5 @@
 import NotificationScannerBaseModel from './NotificationScannerBaseModel'
-import Network from '@aragon/protocol-backend-server/build/web3/Network'
+import Network from '@aragon/protocol-backend-shared/build/web3/Network'
 
 class GuardianDrafted extends NotificationScannerBaseModel {
   async scan() {

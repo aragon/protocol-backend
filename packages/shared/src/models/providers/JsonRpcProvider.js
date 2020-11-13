@@ -1,5 +1,5 @@
 const ethers = require('ethers')
-const logger = require('../../helpers/logger')('Provider')
+const logger = require('../../helpers/logger').default('Provider')
 
 class JsonRpcProvider extends ethers.providers.JsonRpcProvider {
   constructor(url, network) {

@@ -1,7 +1,7 @@
 const { sha3, fromWei, utf8ToHex, soliditySha3 } = require('web3-utils')
 const { ZERO_ADDRESS, getEventArgument, getEvents } = require('@aragon/contract-helpers-test')
 
-const logger = require('../helpers/logger')('Protocol')
+const logger = require('../helpers/logger').default('Protocol')
 const { bn, bigExp } = require('../helpers/numbers')
 const { encodeVoteId, hashVote } = require('../helpers/voting')
 

@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('reveal')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('reveal')
 
 const command = 'reveal'
 const describe = 'Reveal committed vote'

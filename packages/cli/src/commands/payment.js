@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('payment')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('payment')
 
 const command = 'payment'
 const describe = 'Make Aragon Protocol payment'

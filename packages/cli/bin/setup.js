@@ -1,11 +1,11 @@
 const yargs = require('yargs')
-const { bn } = require('@aragon/protocol-backend-shared/helpers/numbers')
+const { bn } = require('@aragon/protocol-backend-shared/build/helpers/numbers')
 const { execSync } = require('child_process')
 const errorHandler = require('../src/helpers/error-handler')
-const Logger = require('@aragon/protocol-backend-shared/helpers/logger')
-const Environment = require('@aragon/protocol-backend-shared/models/environments/TruffleEnvironment')
+const { Logger, setDefaults } = require('@aragon/protocol-backend-shared/build/helpers/logger')
+const Environment = require('@aragon/protocol-backend-shared/build/models/environments/TruffleEnvironment').default
 
-Logger.setDefaults(false, false)
+setDefaults(false, false)
 const logger = Logger('setup')
 
 const { network, guardians: guardiansNumber, disputes } = yargs

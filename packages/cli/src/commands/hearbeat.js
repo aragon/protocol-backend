@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('heartbeat')
+const logger = require('@aragon/protocol-backend-shared/build/helpers/logger').default('heartbeat')
 
 const command = 'heartbeat'
 const describe = 'Call protocol hearbeat'

@@ -1,5 +1,5 @@
 import sleep from '@aragon/protocol-backend-shared/build/helpers/sleep'
-import Network from '@aragon/protocol-backend-server/build/web3/Network'
+import Network from '@aragon/protocol-backend-shared/build/web3/Network'
 
 const HEARTBEAT_TRIES_PER_JOB = 3
 const SECONDS_BETWEEN_INTENTS = 3

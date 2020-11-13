@@ -44,4 +44,4 @@ class TruffleEnvironment extends Environment {
   }
 }
 
-module.exports = TruffleEnvironment
+export default TruffleEnvironment

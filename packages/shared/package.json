@@ -5,10 +5,10 @@
   "author": "Aragon One",
   "license": "(GPL-3.0-or-later OR AGPL-3.0-or-later)",
   "scripts": {
-    "lint": "eslint src/** --ext .ts",
+    "lint": "eslint src/**/*.ts --ext .ts",
     "build": "yarn lint && yarn build:types && yarn build:js",
     "build:types": "tsc",
-    "build:js": "babel ./src --out-dir ./build --extensions .ts",
+    "build:js": "babel ./src --out-dir ./build --extensions .js,.ts",
     "build:clean": "yarn clean && yarn build",
     "clean": "rm -rf ./build",
     "db:setup": "babel-node --extensions .ts src/scripts/db-setup"
@@ -25,6 +25,8 @@
     "axios": "^0.19.0",
     "chalk": "^2.4.2",
     "dotenv": "^8.2.0",
+    "ethereumjs-util": "^7.0.7",
+    "ethereumjs-wallet": "^1.0.1",
     "ethers": "^4.0.46",
     "graphql-request": "^1.8.2",
     "jsonwebtoken": "^8.5.1",

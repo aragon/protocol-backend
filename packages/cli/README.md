@@ -31,8 +31,8 @@ To use the CLI tool locally simply run the following commands to install it loca
 ```bash
   git clone https://github.com/aragon/protocol-backend/
   cd protocol-backend
-  npm i
-  npx lerna bootstrap
+  yarn install
+  yarn build:shared
   cd packages/cli
 ```
 

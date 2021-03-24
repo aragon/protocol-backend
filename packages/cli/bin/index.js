@@ -6,7 +6,7 @@ const yargs = require('yargs')
 const Logger = require('@aragon/protocol-backend-shared/helpers/logger')
 const Environment = require('@aragon/protocol-backend-shared/models/environments/TruffleEnvironment')
 const errorHandler = require('../src/helpers/error-handler')
-
+//just comment
 const DEFAULT_OPTIONS = {
   from: { alias: 'f', describe: 'Sender address', type: 'string' },
   network: { alias: 'n', describe: 'Network name', type: 'string', demand: true },

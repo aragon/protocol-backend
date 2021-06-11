@@ -1,10 +1,10 @@
-# Aragon Protocol backend
+# Aragon Court backend
 
-This mono-repo includes a set of sub-repos that are in charge of different parts of the whole Aragon Protocol backend:
-- [`app`](./packages/app): This repo provides a React app as the frontend app of the Aragon Protocol backend
-- [`cli`](./packages/cli): This repo provides a CLI tool with a set of commands to interact with an Aragon Protocol instance.
+This mono-repo includes a set of sub-repos that are in charge of different parts of the whole Aragon Court backend:
+- [`app`](./packages/app): This repo provides a React app as the frontend app of the Aragon Court backend
+- [`cli`](./packages/cli): This repo provides a CLI tool with a set of commands to interact with an Aragon Court instance.
 - [`server`](./packages/server): This repo provides the backend server in charge of setting up a database and exposing a set of endpoints that will complement the functionality exposed by the smart contracts.
-- [`services`](./packages/services): This repo provides a set of background workers in charge of maintaining those things that could be done automatically for Aragon Protocol.
+- [`services`](./packages/services): This repo provides a set of background workers in charge of maintaining those things that could be done automatically for Aragon Court.
 - [`shared`](./packages/shared): This repo provides a set of components shared among all the sub-repos of this mono-repo.
 
 To understand better about these repos, you will find detailed information about them on their own READMEs.
@@ -34,7 +34,7 @@ docker-compose up --build -d
 
 Local tests can then be run using:
 ```bash
-docker-compose exec test yarn workspace @aragon/protocol-backend-server build
+docker-compose exec test yarn workspace @aragon/court-backend-server build
 docker-compose exec test yarn test:server
 docker-compose exec test yarn test:services
 ```
@@ -46,7 +46,7 @@ docker-compose down
 
 ## Grafana dashboard updates
 
-To update the dashboard, click `Ctrl+S` > `Copy JSON to clipboard` and overwrite the file in `monitoring/grafana/provisioning/dashboards/protocol-backend.json`.
+To update the dashboard, click `Ctrl+S` > `Copy JSON to clipboard` and overwrite the file in `monitoring/grafana/provisioning/dashboards/court-backend.json`.
 
 
 ## CI/CD

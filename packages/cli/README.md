@@ -1,19 +1,19 @@
-# Aragon Protocol CLI tool
+# Aragon Court CLI tool
 
-This tool aims to provide a set of commands to interact with an Aragon Protocol instance.
+This tool aims to provide a set of commands to interact with an Aragon Court instance.
 Currently, there is no published version of it. However, you can use it locally.
 
 ### Commands
 
 - [`mint`](./src/commands/mint.js): Mint tokens for a certain address
-- [`heartbeat`](./src/commands/hearbeat.js): Transition Protocol terms
-- [`pay`](./src/commands/payment.js): Send Aragon Protocol payment
-- [`config`](./src/commands/config.js): Change Protocol config
+- [`heartbeat`](./src/commands/hearbeat.js): Transition Court terms
+- [`pay`](./src/commands/payment.js): Send Aragon Court payment
+- [`config`](./src/commands/config.js): Change Court config
 - [`stake`](./src/commands/stake.js): Stake tokens for a guardian
 - [`unstake`](./src/commands/unstake.js): Unstake tokens
-- [`activate`](./src/commands/activate.js): Activate tokens into the Protocol
-- [`deactivate`](./src/commands/deactivate.js): Deactivate tokens from the Protocol
-- [`arbitrable`](./src/commands/arbitrable.js): Create new Arbitrable instance for the Protocol
+- [`activate`](./src/commands/activate.js): Activate tokens into the Court
+- [`deactivate`](./src/commands/deactivate.js): Deactivate tokens from the Court
+- [`arbitrable`](./src/commands/arbitrable.js): Create new Arbitrable instance for the Court
 - [`dispute`](./src/commands/dispute.js): Create dispute submitting evidence
 - [`draft`](./src/commands/draft.js): Draft dispute and close evidence submission period if necessary
 - [`commit`](./src/commands/commit.js): Commit vote for a dispute round
@@ -36,7 +36,7 @@ To use the CLI tool locally simply run the following commands to install it loca
   cd packages/cli
 ```
 
-The only thing you need to setup is to make sure you configure an Aragon Protocol address in the `truffle-config.js` file of the shared package.
+The only thing you need to setup is to make sure you configure an Aragon Court address in the `truffle-config.js` file of the shared package.
 After that, you can start playing with all the provided commands: 
 
 ### Keys

@@ -1,4 +1,4 @@
-const Logger = require('@aragon/protocol-backend-shared/helpers/logger')
+const Logger = require('@aragon/court-backend-shared/helpers/logger')
 
 class WorkerLogger {
   constructor(worker, logger) {

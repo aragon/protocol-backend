@@ -17,7 +17,7 @@ export default class Navbar extends React.Component {
     return (
       <nav>
         <div className="logo">
-          <Link to="/">Aragon Protocol</Link>
+          <Link to="/">Aragon Court</Link>
         </div>
         <div className="links">
           <Link to="/disputes">Disputes</Link>

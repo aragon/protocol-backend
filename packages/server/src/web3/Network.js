@@ -1,12 +1,12 @@
-import Environment from '@aragon/protocol-backend-shared/models/environments/LocalEnvironment'
+import Environment from '@aragon/court-backend-shared/models/environments/LocalEnvironment'
 
 const Network = {
   get environment() {
     return new Environment()
   },
 
-  async getProtocol() {
-    return this.environment.getProtocol()
+  async getCourt() {
+    return this.environment.getCourt()
   },
 
   async query(query) {

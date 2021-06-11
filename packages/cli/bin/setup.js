@@ -1,9 +1,9 @@
 const yargs = require('yargs')
-const { bn } = require('@aragon/protocol-backend-shared/helpers/numbers')
+const { bn } = require('@aragon/court-backend-shared/helpers/numbers')
 const { execSync } = require('child_process')
 const errorHandler = require('../src/helpers/error-handler')
-const Logger = require('@aragon/protocol-backend-shared/helpers/logger')
-const Environment = require('@aragon/protocol-backend-shared/models/environments/TruffleEnvironment')
+const Logger = require('@aragon/court-backend-shared/helpers/logger')
+const Environment = require('@aragon/court-backend-shared/models/environments/TruffleEnvironment')
 
 Logger.setDefaults(false, false)
 const logger = Logger('setup')
@@ -18,7 +18,7 @@ const { network, guardians: guardiansNumber, disputes } = yargs
 
 async function setup() {
   const environment = new Environment(network)
-  const protocol = await environment.getProtocol()
+  const court = await environment.getCourt()
   const allAccounts = await environment.getAccounts()
   const sender = allAccounts[0]
   const guardians = allAccounts.slice(1, Math.min(parseInt(guardiansNumber) + 1, allAccounts.length))
@@ -35,17 +35,17 @@ async function setup() {
     execSync(`node ./bin/index.js activate -a ${amount} -f ${guardian} -n ${network}`)
   }
 
-  // check protocol has started
-  const currentTermId = await protocol.currentTermId()
-  const neededTransitions = await protocol.neededTransitions()
+  // check court has started
+  const currentTermId = await court.currentTermId()
+  const neededTransitions = await court.neededTransitions()
   if (currentTermId.eq(bn(0)) && neededTransitions.eq(bn(0))) {
-    logger.warn('Protocol has not started yet, please make sure Protocol is at term 1 to create disputes and run the script again.')
+    logger.warn('court has not started yet, please make sure court is at term 1 to create disputes and run the script again.')
   } else {
     // create disputes
     for (let i = 0; i < disputes; i++) {
       const arbitrable = arbitrables[i]
       execSync(`node ./bin/index.js mint -t fee -a 5000 -r ${arbitrable} -n ${network}`)
-      execSync(`node ./bin/index.js dispute -a ${arbitrable} -m 'Testing dispute #${i}' -e 'http://github.com/aragon/aragon-protocol' -c -n ${network}`)
+      execSync(`node ./bin/index.js dispute -a ${arbitrable} -m 'Testing dispute #${i}' -e 'http://github.com/aragon/protocol' -c -n ${network}`)
     }
   }
 }

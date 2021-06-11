@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('Error Handler')
+const logger = require('@aragon/court-backend-shared/helpers/logger')('Error Handler')
 
 export default error => {
   logger.error(`Process finished with error:`)

@@ -1,5 +1,5 @@
 import NotificationScannerBaseModel from './NotificationScannerBaseModel'
-import Network from '@aragon/protocol-backend-server/build/web3/Network'
+import Network from '@aragon/court-backend-server/build/web3/Network'
 import { draftTermIdFor } from '../../helpers/term-id-getter'
 
 class AppealsOpened extends NotificationScannerBaseModel {

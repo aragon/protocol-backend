@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('draft')
+const logger = require('@aragon/court-backend-shared/helpers/logger')('draft')
 
 const command = 'draft'
 const describe = 'Draft dispute and close evidence submission period if necessary'
@@ -8,8 +8,8 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { dispute }) => {
-  const protocol = await environment.getProtocol()
-  const guardians = await protocol.draft(dispute)
+  const court = await environment.getCourt()
+  const guardians = await court.draft(dispute)
   logger.success(`Drafted dispute #${dispute} with guardians ${guardians.join(', ')}`)
 }
 

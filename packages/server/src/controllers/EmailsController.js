@@ -1,6 +1,6 @@
 import { User } from '../models/objection'
-import emailClient from '@aragon/protocol-backend-shared/helpers/email-client'
-import sleep from '@aragon/protocol-backend-shared/helpers/sleep'
+import emailClient from '@aragon/court-backend-shared/helpers/email-client'
+import sleep from '@aragon/court-backend-shared/helpers/sleep'
 
 export default {
   async send(req, res) {
@@ -28,7 +28,7 @@ async function sendEmails(users, TemplateModel, res) {
     try {
       await emailClient.sendEmailWithTemplate({
         To: email,
-        From: 'notifications@protocol.aragon.org',
+        From: 'notifications@court.aragon.org',
         TemplateAlias: 'generic',
         TemplateModel,
       })

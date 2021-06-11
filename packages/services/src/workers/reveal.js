@@ -1,5 +1,5 @@
-import { Reveal } from '@aragon/protocol-backend-server/build/models/objection'
-import Network from '@aragon/protocol-backend-server/build/web3/Network'
+import { Reveal } from '@aragon/court-backend-server/build/models/objection'
+import Network from '@aragon/court-backend-server/build/web3/Network'
 
 const REVEAL_TRIES = 3
 
@@ -12,16 +12,16 @@ export default async function (ctx) {
     .orderBy('createdAt', 'DESC')
 
   logger.info(`${reveals.length} reveals pending`)
-  const protocol = await Network.getProtocol()
-  for (const instance of reveals) await reveal(logger, protocol, instance)
+  const court = await Network.getCourt()
+  for (const instance of reveals) await reveal(logger, court, instance)
 }
 
-async function reveal(logger, protocol, reveal) {
+async function reveal(logger, court, reveal) {
   const { voteId, guardian, outcome, salt, failedAttempts } = reveal
   try {
     logger.info(`Revealing vote #${voteId} for guardian ${guardian}`)
     const { disputeId, roundNumber } = reveal
-    const { canReveal, expired } = await protocol.getRevealStatus(disputeId, roundNumber)
+    const { canReveal, expired } = await court.getRevealStatus(disputeId, roundNumber)
 
     if (expired) {
       await reveal.$query().update({ expired: true })
@@ -30,8 +30,8 @@ async function reveal(logger, protocol, reveal) {
       return logger.warn(`Cannot reveal round #${roundNumber} for dispute #${disputeId} yet`)
     }
 
-    await protocol.revealFor(voteId, guardian, outcome, salt)
-    const actualOutcome = await protocol.getOutcome(voteId, guardian)
+    await court.revealFor(voteId, guardian, outcome, salt)
+    const actualOutcome = await court.getOutcome(voteId, guardian)
     if (actualOutcome.toString() !== outcome.toString()) throw Error(`Expected outcome ${outcome}, got ${actualOutcome.toString()}`)
     await reveal.$query().update({ revealed: true })
     logger.success(`Revealed vote #${voteId} for guardian ${guardian}`)

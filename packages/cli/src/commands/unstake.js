@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('unstake')
+const logger = require('@aragon/court-backend-shared/helpers/logger')('unstake')
 
 const command = 'unstake'
 const describe = 'Unstake tokens for a guardian'
@@ -9,8 +9,8 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { amount, data }) => {
-  const protocol = await environment.getProtocol()
-  await protocol.unstake(amount, data)
+  const court = await environment.getCourt()
+  await court.unstake(amount, data)
   logger.success(`Unstaked ${amount} tokens`)
 }
 

@@ -2,7 +2,6 @@ import React from 'react'
 import Store from '../../store/store'
 import { Link } from 'react-router-dom'
 import PaymentsBookActions from '../../actions/payments'
-import payments from "../../reducers/payments";
 
 export default class PeriodsList extends React.Component {
   constructor(props){

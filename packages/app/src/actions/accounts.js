@@ -1,6 +1,6 @@
 import Network from '../web3/Network'
 import ErrorActions from './errors'
-import ProtocolActions from './protocol'
+import CourtActions from './court'
 import * as ActionTypes from '../actions/types'
 import { fromWei } from 'web3-utils'
 
@@ -13,15 +13,15 @@ const AccountActions = {
 
         if (enabled) {
           const account = await Network.getAccount()
-          const protocolAddress = await ProtocolActions.findProtocolAddress()
+          const courtAddress = await CourtActions.findCourtAddress()
           dispatch(AccountActions.receive(account))
           dispatch(AccountActions.updateEthBalance(account))
 
-          if (await Network.isProtocolAt(protocolAddress)) {
-            dispatch(AccountActions.updateAntBalance(account, protocolAddress))
-            dispatch(AccountActions.updateFeeBalance(account, protocolAddress))
+          if (await Network.isCourtAt(courtAddress)) {
+            dispatch(AccountActions.updateAntBalance(account, courtAddress))
+            dispatch(AccountActions.updateFeeBalance(account, courtAddress))
           } else {
-            dispatch(ErrorActions.show(new Error(`Could not find Protocol at ${protocolAddress}, please make sure you're in the right network`)))
+            dispatch(ErrorActions.show(new Error(`Could not find Court at ${courtAddress}, please make sure you're in the right network`)))
           }
         }
       } catch(error) {
@@ -42,11 +42,11 @@ const AccountActions = {
     }
   },
 
-  updateAntBalance(account, protocolAddress) {
+  updateAntBalance(account, courtAddress) {
     return async function(dispatch) {
       try {
-        const protocol = await Network.getProtocol(protocolAddress)
-        const ant = await protocol.token()
+        const court = await Network.getCourt(courtAddress)
+        const ant = await court.token()
         const symbol = await ant.symbol()
         const antBalance = await ant.balanceOf(account)
         const balance = fromWei(antBalance.toString())
@@ -57,11 +57,11 @@ const AccountActions = {
     }
   },
 
-  updateFeeBalance(account, protocolAddress) {
+  updateFeeBalance(account, courtAddress) {
     return async function(dispatch) {
       try {
-        const protocol = await Network.getProtocol(protocolAddress)
-        const feeToken = await protocol.feeToken()
+        const court = await Network.getCourt(courtAddress)
+        const feeToken = await court.feeToken()
         const symbol = await feeToken.symbol()
         const feeBalance = await feeToken.balanceOf(account)
         const balance = fromWei(feeBalance.toString())

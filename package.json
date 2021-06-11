@@ -1,5 +1,5 @@
 {
-  "name": "@aragon/protocol-backend-monorepo",
+  "name": "@aragon/court-backend-monorepo",
   "author": "Aragon One",
   "license": "GPL-3.0-or-later",
   "private": true,
@@ -8,20 +8,20 @@
   },
   "scripts": {
     "db:setup": "lerna run db:setup --scope '*/*-server' --stream",
-    "start:app": "lerna run --scope=@aragon/protocol-backend-app --concurrency=1 --stream start",
-    "start:server": "lerna run --scope=@aragon/protocol-backend-server --concurrency=1 --stream start",
-    "start:server:dev": "lerna run --scope=@aragon/protocol-backend-server --concurrency=1 --stream start:dev",
-    "start:services": "lerna run --scope=@aragon/protocol-backend-services --concurrency=1 --stream start",
-    "start:services:dev": "lerna run --scope=@aragon/protocol-backend-services --concurrency=1 --stream start:dev",
-    "test:server": "lerna run --scope=@aragon/protocol-backend-server --concurrency=1 --stream test",
-    "test:services": "lerna run --scope=@aragon/protocol-backend-services --concurrency=1 --stream test"
+    "start:app": "lerna run --scope=@aragon/court-backend-app --concurrency=1 --stream start",
+    "start:server": "lerna run --scope=@aragon/court-backend-server --concurrency=1 --stream start",
+    "start:server:dev": "lerna run --scope=@aragon/court-backend-server --concurrency=1 --stream start:dev",
+    "start:services": "lerna run --scope=@aragon/court-backend-services --concurrency=1 --stream start",
+    "start:services:dev": "lerna run --scope=@aragon/court-backend-services --concurrency=1 --stream start:dev",
+    "test:server": "lerna run --scope=@aragon/court-backend-server --concurrency=1 --stream test",
+    "test:services": "lerna run --scope=@aragon/court-backend-services --concurrency=1 --stream test"
   },
   "workspaces": {
     "packages": [
       "packages/*"
     ],
     "nohoist": [
-      "**/@aragon/protocol-evm"
+      "**/@aragon/court-evm"
     ]
   }
 }

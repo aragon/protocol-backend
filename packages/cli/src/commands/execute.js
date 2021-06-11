@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('execute')
+const logger = require('@aragon/court-backend-shared/helpers/logger')('execute')
 
 const command = 'execute'
 const describe = 'Execute ruling for a dispute'
@@ -8,8 +8,8 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { dispute }) => {
-  const protocol = await environment.getProtocol()
-  await protocol.execute(dispute)
+  const court = await environment.getCourt()
+  await court.execute(dispute)
   logger.success(`Executed final ruling of dispute #${dispute}`)
 }
 

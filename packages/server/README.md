@@ -1,4 +1,4 @@
-# Protocol Backend server
+# Court Backend server
 
 This server aims to provide different kind of services to complement the logic implemented at the smart contracts level.
 
@@ -137,7 +137,7 @@ All the provided endpoints are `Content-Type: application/json`
 
   ```
   {
-    "email": "new-guardian@aragonprotocol.com" || null
+    "email": "new-guardian@aragoncourt.com" || null
   }
   ```
 
@@ -153,7 +153,7 @@ All the provided endpoints are `Content-Type: application/json`
 
   ```json
   {
-    "email": "guardian@aragonprotocol.com"
+    "email": "guardian@aragoncourt.com"
   }
   ```
 
@@ -164,7 +164,7 @@ All the provided endpoints are `Content-Type: application/json`
 
   ```json
   {
-    "email": "guardian@aragonprotocol.com",
+    "email": "guardian@aragoncourt.com",
     "sent": true
   }
   ```
@@ -357,7 +357,7 @@ All the provided endpoints are `Content-Type: application/json`
 
   ```json
   {
-    "email": "guardian@aragonprotocol.com",
+    "email": "guardian@aragoncourt.com",
     "address": "0x6e26ADFa527BcC8B6aEf88716486cBdb4f7914e1"
   }
   ```
@@ -490,7 +490,7 @@ All the provided endpoints are `Content-Type: application/json`
 - URL: /reveals
 - Method: GET
 - Header:
-  - Cookie: `aragonProtocolSessionID=<SID>`
+  - Cookie: `aragonCourtSessionID=<SID>`
 - Query: 
   - `limit`: Number of items to be fetched
   - `page`: Page number to be used for the items to be fetched based on the limit requested
@@ -529,7 +529,7 @@ All the provided endpoints are `Content-Type: application/json`
 - Response: 
   - Code: 200
   - Header:
-    - Set-Cookie: `aragonProtocolSessionID=<SID>; Path; Expires; HttpOnly`
+    - Set-Cookie: `aragonCourtSessionID=<SID>; Path; Expires; HttpOnly`
   - Content example: 
     ```json
       {
@@ -543,7 +543,7 @@ All the provided endpoints are `Content-Type: application/json`
 - URL: /me
 - Method: GET
 - Header:
-  - Cookie: `aragonProtocolSessionID=<SID>`
+  - Cookie: `aragonCourtSessionID=<SID>`
 - Response: 
   - Code: 200
   - Content example: 
@@ -561,7 +561,7 @@ All the provided endpoints are `Content-Type: application/json`
 - URL: /admins
 - Method: GET
 - Header:
-  - Cookie: `aragonProtocolSessionID=<SID>`
+  - Cookie: `aragonCourtSessionID=<SID>`
 - Query: 
   - `limit`: Number of items to be fetched
   - `page`: Page number to be used for the items to be fetched based on the limit requested
@@ -593,7 +593,7 @@ All the provided endpoints are `Content-Type: application/json`
 - URL: /admins
 - Method: POST
 - Header:
-  - Cookie: `aragonProtocolSessionID=<SID>`
+  - Cookie: `aragonCourtSessionID=<SID>`
 - Body: 
   - `email`: Admin email 
   - `password`: Admin password
@@ -614,7 +614,7 @@ All the provided endpoints are `Content-Type: application/json`
 - URL: /admins/:id
 - Method: DELETE
 - Header:
-  - Cookie: `aragonProtocolSessionID=<SID>` 
+  - Cookie: `aragonCourtSessionID=<SID>` 
 - Response: 
   - Code: 200
   - Content example: empty

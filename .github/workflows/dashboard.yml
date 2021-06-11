@@ -5,7 +5,7 @@ on:
     - master
     - development
     paths:
-    - monitoring/grafana/provisioning/dashboards/protocol-backend.json
+    - monitoring/grafana/provisioning/dashboards/court-backend.json
 
 jobs:
   deploy:
@@ -15,6 +15,6 @@ jobs:
     - run: .github/scripts/kubectl-config.sh ${{secrets.KUBE_CA}} ${{secrets.KUBE_SERVER}} ${{secrets.KUBE_TOKEN}}
     # replace Grafana dashboard ConfigMap
     - run: >
-        kubectl create configmap protocol-backend-dashboard --from-file=monitoring/grafana/provisioning/dashboards/protocol-backend.json --dry-run -o yaml | 
+        kubectl create configmap protocol-backend-dashboard --from-file=monitoring/grafana/provisioning/dashboards/court-backend.json --dry-run -o yaml | 
         kubectl label grafana_dashboard=protocol-backend -f - --local -o yaml | 
         kubectl apply -f -

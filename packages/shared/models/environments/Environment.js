@@ -11,7 +11,7 @@ class Environment {
 
   getSubgraph() {
     const base = this.network === 'ganache' ? SUBGRAPH_LOCAL : SUBGRAPH_REMOTE
-    return `${base}/subgraphs/name/aragon/aragon-protocol-${this.network}`
+    return `${base}/subgraphs/name/aragon/aragon-court-v2-${this.network}`
   }
 
   async query(query) {

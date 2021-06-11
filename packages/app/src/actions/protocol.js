@@ -6,10 +6,10 @@ const HEARTBEAT_MAX_TRANSITIONS = 20
 
 const ProtocolActions = {
   async findProtocolAddress() {
-    const result = await Network.query('{ protocols { id } }')
-    if (result.protocols.length === 0) throw Error('Missing Aragon Protocol deployment')
-    if (result.protocols.length > 1) throw Error('Found more than Aragon Protocol deployment')
-    return result.protocols[0].id
+    const result = await Network.query('{ courts { id } }')
+    if (result.courts.length === 0) throw Error('Missing Aragon Court deployment')
+    if (result.courts.length > 1) throw Error('Found more than Aragon Court deployment')
+    return result.courts[0].id
   },
 
   findProtocol() {
@@ -17,7 +17,7 @@ const ProtocolActions = {
       try {
         const protocolAddress = await ProtocolActions.findProtocolAddress()
         const result = await Network.query(`{
-          protocol(id: "${protocolAddress}") {
+          court(id: "${protocolAddress}") {
             id
             termDuration
             currentTerm
@@ -74,7 +74,7 @@ const ProtocolActions = {
             const protocol = await Network.getProtocol(protocolAddress)
             neededTransitions = await protocol.neededTransitions()
           } else {
-            dispatch(ErrorActions.show(new Error(`Could not find Aragon Protocol at ${protocolAddress}, please make sure you're in the right network`)))
+            dispatch(ErrorActions.show(new Error(`Could not find Aragon Court at ${protocolAddress}, please make sure you're in the right network`)))
           }
         }
 

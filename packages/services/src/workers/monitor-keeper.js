@@ -90,6 +90,6 @@ async function getWhitelistedAddresses(court) {
   addresses.push(court.instance.address)                  // Controller
   addresses.push((await court.disputeManager()).address)  // Dispute Manager
   addresses.push((await court.voting()).address)          // Voting
-  addresses.push((await court.subscriptions()).address)   // Subscriptions
+  addresses.push((await court.paymentsBook()).address)
   return addresses.map(a => a.toLowerCase())
 }

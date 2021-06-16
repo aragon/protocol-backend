@@ -10,12 +10,14 @@ const postmarkClient = new ServerClient(POSTMARK_SERVER_API_TOKEN)
 
 class EmailClient {
   async sendMagicLink({ email, address, token }) {
+    console.log("into the sendmagiclink ", email, address, token)
     const verifyEmailUrl = `${CLIENT_URL}?preferences=notifications&address=${address}&token=${token}`
     const message = {
       To: email,
       TemplateAlias: POSTMARK_TEMPLATE_ALIAS_VERIFY,
       TemplateModel: { verifyEmailUrl },
     }
+    console.log(POSTMARK_SERVER_API_TOKEN, " API TOKEN just in case");
     await this.sendEmailWithTemplate(message)
   }
 
@@ -26,10 +28,12 @@ class EmailClient {
 
   async sendEmailWithTemplate(message) {
     message = this._sanitizeMessage(message)
+    console.log("message is sanitized ", message);
     // simply check postmark endpoint when testing.
     // there is no way to run template test as of 2020-05-04:
     // https://github.com/wildbit/postmark.js/issues/56
     if (POSTMARK_SERVER_API_TOKEN == 'POSTMARK_API_TEST') {
+      console.log("entering into the catarasss ");
       message.TextBody = 'test'
       delete message.TemplateAlias
       delete message.TemplateModel

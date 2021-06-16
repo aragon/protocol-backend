@@ -39,10 +39,14 @@ export default {
   },
 
   async resend(req, res) {
+    console.log("=== Coming to resend=========");
     const { params: { address } } = req
+    console.log("USER ADDRESS HERE : ", address )
     const errors = await UserEmailVerificationTokenValidator.validateForResend({address})
     if (errors.length > 0) throw HttpError.BAD_REQUEST({errors})
+    console.log("errors here ", errors);
     const user = await User.findOne({address})
+    console.log("user found here ===== ");
     await user.sendVerificationEmail()
     res.send({
       sent: true

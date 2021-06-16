@@ -116,15 +116,20 @@ export default class User extends BaseModel {
   }
   
   async sendVerificationEmail() {
+    console.log("coming into sendVerificationEmail ");
     const user = await this.$fetchGraph('email')
+    console.log("is this the user ? ", user);
     const { email: { email }, address } = user
+    console.log("email here is ", email, address)
     const tokenExpiresSeconds = EMAIL_TOKEN_EXPIRES/1000
     const token = generateToken(tokenExpiresSeconds)
+    console.log("we got the token ", token);
     await user.relatedUpdateOrInsert('emailVerificationToken', {
       email,
       token,
       expiresAt: new Date(Date.now()+EMAIL_TOKEN_EXPIRES)
     })
+    console.log("before calling sendMagicLink ", email, address, token)
     await emailClient.sendMagicLink({
       email, 
       address, 

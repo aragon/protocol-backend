@@ -26,7 +26,7 @@ class EmailClient {
 
   async sendEmailWithTemplate(message) {
     message = this._sanitizeMessage(message)
-    // simply checks postmark endpoint when testing.
+    // simply check postmark endpoint when testing.
     // there is no way to run template test as of 2020-05-04:
     // https://github.com/wildbit/postmark.js/issues/56
     if (POSTMARK_SERVER_API_TOKEN == 'POSTMARK_API_TEST') {

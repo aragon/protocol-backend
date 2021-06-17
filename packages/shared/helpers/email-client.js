@@ -39,7 +39,8 @@ class EmailClient {
       delete message.TemplateModel
       return await this.sendEmail(message)
     }
-    await postmarkClient.sendEmailWithTemplate(message)
+    const result = await postmarkClient.sendEmailWithTemplate(message)
+    console.log(result, ' result here');
   }
 
   _sanitizeMessage(message) {

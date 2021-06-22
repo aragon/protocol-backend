@@ -27,6 +27,7 @@ export async function tryRunScanner(ctx, model) {
   console.log(scanner, ' scanner');
   if (!shouldScanNow(type, scanner)) return
   console.log("scanner should scan");
+  console.log("notifications ", notifications)
   const notifications = await scanner.scan()
   for (const notification of notifications) {
     const { address, details } = notification
@@ -50,8 +51,5 @@ export async function tryRunScanner(ctx, model) {
 function shouldScanNow(type, scanner) {
   const { scannedAt } = type
   const { scanPeriod } = scanner
-  console.log(scanPeriod, ' period')
-  console.log(scannedAt, ' scanned at ');
-  console.log(scannedAt.getTime(), ' getTime')
   return !scannedAt || scannedAt.getTime()+scanPeriod <= Date.now()
 }

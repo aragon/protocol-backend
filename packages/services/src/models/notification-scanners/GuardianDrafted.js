@@ -25,7 +25,7 @@ class GuardianDrafted extends NotificationScannerBaseModel {
         dispute: { id: disputeId },
         guardians
       } = adjudicationRound
-      console.log(guardian, ' guardian');
+      console.log(guardians, ' guardian');
       for (const guardian of guardians) {
         notifications.push({ 
           address: guardian.guardian.id,

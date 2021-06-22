@@ -18,12 +18,14 @@ class GuardianDrafted extends NotificationScannerBaseModel {
     }
     `
     const { adjudicationRounds } = await Network.query(query)
+    console.log(adjudicationRounds, ' adjucation rounds here');
     for (const adjudicationRound of adjudicationRounds) {
       const { 
         id: adjudicationRoundId,
         dispute: { id: disputeId },
         guardians
       } = adjudicationRound
+      console.log(guardian, ' guardian');
       for (const guardian of guardians) {
         notifications.push({ 
           address: guardian.guardian.id,

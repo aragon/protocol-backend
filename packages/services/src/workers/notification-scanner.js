@@ -22,6 +22,9 @@ export async function tryRunScanner(ctx, model) {
   }
   console.log("scanner continues");
   const type = await UserNotificationType.findOrInsert({model})
+  console.log(!shouldScanNow(type, scanner), ' first')
+  console.log(type,  " type");
+  console.log(scanner, ' scanner');
   if (!shouldScanNow(type, scanner)) return
   console.log("scanner should scan");
   const notifications = await scanner.scan()
@@ -47,5 +50,8 @@ export async function tryRunScanner(ctx, model) {
 function shouldScanNow(type, scanner) {
   const { scannedAt } = type
   const { scanPeriod } = scanner
+  console.log(scanPeriod, ' period')
+  console.log(scannedAt, ' scanned at ');
+  console.log(scannedAt.getTime(), ' getTime')
   return !scannedAt || scannedAt.getTime()+scanPeriod <= Date.now()
 }

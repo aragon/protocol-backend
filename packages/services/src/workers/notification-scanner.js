@@ -27,8 +27,8 @@ export async function tryRunScanner(ctx, model) {
   console.log(scanner, ' scanner');
   if (!shouldScanNow(type, scanner)) return
   console.log("scanner should scan");
-  console.log("notifications ", notifications)
   const notifications = await scanner.scan()
+  console.log("notifications ", notifications)
   for (const notification of notifications) {
     const { address, details } = notification
     const user = await User.findOne({address})

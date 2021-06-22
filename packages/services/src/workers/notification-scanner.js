@@ -13,26 +13,33 @@ export default async function (ctx) {
 }
 
 export async function tryRunScanner(ctx, model) {
+  console.log("scanner started");
   const { logger, metrics } = ctx
   const scanner = notificationScanners[model]
   if (!scanner) {
     logger.error(`Notification scanner ${model} not found.`)
     return
   }
+  console.log("scanner continues");
   const type = await UserNotificationType.findOrInsert({model})
   if (!shouldScanNow(type, scanner)) return
+  console.log("scanner should scan");
   const notifications = await scanner.scan()
   for (const notification of notifications) {
     const { address, details } = notification
     const user = await User.findOne({address})
+    console.log("user is found ", user);
     if (!await scanner.shouldNotifyUser(user)) continue
+    console.log("user should get notified now");
     await UserNotification.findOrInsert({
       userId: user.id,
       userNotificationTypeId: type.id,
       details
     })
+    console.log("inserting worked");
   }
   await type.$query().update({ scannedAt: new Date() })
+  console.log("update happened");
   logger.success(`Notification type ${model} scanned.`)
   metrics.notificationScanned(model)
 }

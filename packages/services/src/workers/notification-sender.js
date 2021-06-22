@@ -16,6 +16,7 @@ export default async function (ctx) {
 
 export async function trySendNotification(ctx, notification) {
   const { logger, metrics } = ctx
+  console.log("notification try send");
   if (notification.sentAt != null) return
   notification = await notification.$fetchGraph('[user.email, type]')
   const { user, type: { model } } = notification
@@ -24,11 +25,13 @@ export async function trySendNotification(ctx, notification) {
     logger.error(`Notification scanner ${model} not found.`)
     return
   }
+  console.log("scanner notification try found");
   if (!await scanner.shouldNotifyUser(user)) {
     logger.warn(`Deleting stale notification type ${model} for user ${user.address}`)
     await notification.$query().del()
     return
   }
+  console.log("starts here really");
   let TemplateModel = notification.details.emailTemplateModel ?? {}
   TemplateModel = {
     ...TemplateModel,
@@ -40,13 +43,17 @@ export async function trySendNotification(ctx, notification) {
     TemplateAlias: scanner.emailTemplateAlias,
     TemplateModel,
   }
+  console.log("message found here === ", message);
   try {
-    await emailClient.sendEmailWithTemplate(message)
+    const a = await emailClient.sendEmailWithTemplate(message)
+    console.log(a, " result");
     await notification.$query().update({sentAt: new Date()})
     logger.success(`Notification type ${model} sent for user ${user.address}`)
     metrics.notificationSent(model)
+    console.log("sending with a template +++");
   }
   catch (error) {
+    console.log("why not worked", error);
     metrics.workerError()
     logger.error(`Could not send notification type ${model} for user ${user.address}`, error)
   }

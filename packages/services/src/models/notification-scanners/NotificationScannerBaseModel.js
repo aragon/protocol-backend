@@ -4,7 +4,9 @@ import { MINUTES, HOURS, DAYS } from '@aragon/court-backend-shared/helpers/times
 export default class NotificationScannerBaseModel {
   async shouldNotifyUser(user) {
     if (!user) return false
+    console.log("before user here ", user);
     user = await user.$fetchGraph('[email, notificationSetting]')
+    console.log("latest user here ", user);
     return (
       user.email &&
       !user.notificationSetting?.notificationsDisabled &&

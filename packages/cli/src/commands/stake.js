@@ -4,15 +4,14 @@ const command = 'stake'
 const describe = 'Stake tokens for a guardian'
 
 const builder = {
-  guardian: { alias: 'g', describe: 'Address of the guardian staking the tokens', type: 'string' },
   amount: { alias: 'a', describe: 'Number of tokens to stake', type: 'string', demand: true },
-  data: { alias: 'd', describe: 'Optional data that can be used to ask for token activation', type: 'string' },
+  guardian: { alias: 'g', describe: 'Address of the guardian staking the tokens for (sender by default)', type: 'string' },
 }
 
-const handlerAsync = async (environment, { guardian, amount, data }) => {
+const handlerAsync = async (environment, { guardian, amount }) => {
   const protocol = await environment.getProtocol()
   const to = guardian || await protocol.environment.getSender()
-  await protocol.stake(to, amount, data)
+  await protocol.stake(to, amount)
   logger.success(`Staked ${amount} for ${to}`)
 }
 

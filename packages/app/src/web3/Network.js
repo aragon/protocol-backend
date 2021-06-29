@@ -2,9 +2,9 @@ import Protocol from '@aragon/protocol-backend-shared/models/Protocol'
 import Environment from '@aragon/protocol-backend-shared/models/environments/BrowserEnvironment'
 
 const FAUCET = {
-  staging: '0x19420Cf68cf6a8d18882730c8e8BAd169eeb1bdC',
-  ropsten: '0xeBB0e629958469f28508d13f8497f9473AAd1A49',
-  rinkeby: '0x555Fc80D37b7Cd5Bc13E27BD899539BB6280aa58',
+  staging: '0xe350061440B68B23bE0Eab5a497f04c573f439c7',
+  ropsten: '0x9096366248a74B31bE66A02E208d99c9f6924677',
+  rinkeby: '0x69db98BaDA6c639C1bc9482eA79C61E2E85BE61C',
 }
 
 const Network = {

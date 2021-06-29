@@ -16,7 +16,7 @@ module.exports = class {
   async token() {
     if (!this._token) {
       const registry = await this.registry()
-      const address = await registry.token()
+      const address = await registry.guardiansToken()
       const ERC20 = await this.environment.getArtifact('ERC20Mock', '@aragon/protocol-evm')
       this._token = await ERC20.at(address)
     }
@@ -185,51 +185,40 @@ module.exports = class {
     return Math.min(heartbeats, needed)
   }
 
-  async stake(guardian, amount, data = '0x') {
+  async stake(guardian, amount) {
     const token = await this.token()
     const decimals = await token.decimals()
     const registry = await this.registry()
     const symbol = await token.symbol()
     await this._approve(token, bigExp(amount, decimals), registry.address)
     logger.info(`Staking ${amount} ${symbol} for ${guardian}...`)
-    return registry.stakeFor(guardian, bigExp(amount, decimals), data)
+    return registry.stake(guardian, bigExp(amount, decimals))
   }
 
-  async unstake(amount, data = '0x') {
+  async unstake(guardian, amount) {
     const token = await this.token()
     const decimals = await token.decimals()
     const registry = await this.registry()
     const symbol = await token.symbol()
-    logger.info(`Unstaking ${amount} ${symbol} for ${await this.environment.getSender()}...`)
-    return registry.unstake(bigExp(amount, decimals), data)
+    logger.info(`Unstaking ${amount} ${symbol} for ${guardian}...`)
+    return registry.unstake(guardian, bigExp(amount, decimals))
   }
 
-  async activate(amount) {
+  async activate(guardian, amount) {
     const token = await this.token()
     const decimals = await token.decimals()
     const registry = await this.registry()
     const symbol = await token.symbol()
-    logger.info(`Activating ${amount} ${symbol} for ${await this.environment.getSender()}...`)
-    return registry.activate(bigExp(amount, decimals))
+    logger.info(`Activating ${amount} ${symbol} for guardian ${guardian}...`)
+    return registry.activate(guardian, bigExp(amount, decimals))
   }
 
-  async activateFor(address, amount) {
+  async deactivate(guardian, amount) {
     const token = await this.token()
     const decimals = await token.decimals()
     const registry = await this.registry()
-    const symbol = await token.symbol()
-    await this._approve(token, bigExp(amount, decimals), registry.address)
-    const ACTIVATE_DATA = sha3('activate(uint256)').slice(0, 10)
-    logger.info(`Activating ${amount} ${symbol} for ${address}...`)
-    return registry.stakeFor(address, bigExp(amount, decimals), ACTIVATE_DATA)
-  }
-
-  async deactivate(amount) {
-    const token = await this.token()
-    const decimals = await token.decimals()
-    const registry = await this.registry()
-    logger.info(`Requesting ${amount} from ${await this.environment.getSender()} for deactivation...`)
-    return registry.deactivate(bigExp(amount, decimals))
+    logger.info(`Requesting ${amount} from ${guardian} for deactivation...`)
+    return registry.deactivate(guardian, bigExp(amount, decimals))
   }
 
   async pay(tokenAddress, amount, payer, data) {
@@ -246,7 +235,7 @@ module.exports = class {
 
   async deployArbitrable() {
     logger.info(`Creating new Arbitrable instance...`)
-    const Arbitrable = await this.environment.getArtifact('Arbitrable', '@aragon/protocol-evm')
+    const Arbitrable = await this.environment.getArtifact('ArbitrableMock', '@aragon/protocol-evm')
     return Arbitrable.new(this.instance.address)
   }
 
@@ -258,7 +247,7 @@ module.exports = class {
     await feeToken.transfer(subject, totalFees)
 
     logger.info(`Creating new dispute for subject ${subject} ...`)
-    const Arbitrable = await this.environment.getArtifact('Arbitrable', '@aragon/protocol-evm')
+    const Arbitrable = await this.environment.getArtifact('ArbitrableMock', '@aragon/protocol-evm')
     const arbitrable = await Arbitrable.at(subject)
     const { hash } = await arbitrable.createDispute(rulings, utf8ToHex(metadata))
     const receipt = await this.environment.getTransaction(hash)
@@ -288,22 +277,22 @@ module.exports = class {
     return getEvents(receipt, 'GuardianDrafted', { decodeForAbi: disputeManager.interface.abi }).map(event => event.args.guardian)
   }
 
-  async commit(disputeId, outcome, password) {
+  async commit(disputeId, voter, outcome, password) {
     const voteId = await this.getLastRoundVoteId(disputeId)
     logger.info(`Committing a vote for dispute #${disputeId} on vote ID ${voteId}...`)
     const voting = await this.voting()
-    return voting.commit(voteId, hashVote(outcome, soliditySha3(password)))
+    return voting.commit(voteId, voter, hashVote(outcome, soliditySha3(password)))
   }
 
-  async reveal(disputeId, guardian, outcome, password) {
+  async reveal(disputeId, voter, outcome, password) {
     const voteId = await this.getLastRoundVoteId(disputeId)
-    return this.revealFor(voteId, guardian, outcome, soliditySha3(password))
+    return this.revealFor(voteId, voter, outcome, soliditySha3(password))
   }
 
-  async revealFor(voteId, guardian, outcome, salt) {
-    logger.info(`Revealing vote for guardian ${guardian} on vote ID ${voteId}...`)
+  async revealFor(voteId, voter, outcome, salt) {
+    logger.info(`Revealing vote for ${voter} on vote ID ${voteId}...`)
     const voting = await this.voting()
-    return voting.reveal(voteId, guardian, outcome, salt)
+    return voting.reveal(voteId, voter, outcome, salt)
   }
 
   async appeal(disputeId, outcome) {
@@ -360,7 +349,7 @@ module.exports = class {
 
   async execute(disputeId) {
     logger.info(`Executing ruling of dispute #${disputeId}...`)
-    return this.instance.executeRuling(disputeId)
+    return this.instance.rule(disputeId)
   }
 
   async settle(disputeId) {

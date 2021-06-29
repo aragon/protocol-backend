@@ -9,9 +9,9 @@ config.networks.staging = Object.assign({}, { ...config.networks.rinkeby })
 const { networks: { ganache, ropsten, rinkeby, staging, mainnet } } = config
 
 ganache.protocol = undefined
-staging.protocol = '0x2057Fa53c5c85bB2cff125f9DB2D0cA7E4eeBE02'
-ropsten.protocol = '0x7639480251C12f8168eeEc5e815Ab96072E5fe62'
-rinkeby.protocol = '0xDB56c4d44ba23133805A38d837aBeC811D6c28b9'
-mainnet.protocol = '0xee4650cBe7a2B23701D416f58b41D8B76b617797'
+staging.protocol = '0x3E5D4a431f955C1eaB2BF919e174426572c4714F'
+ropsten.protocol = '0xc236205f7f1c4a4B0A857c350BF64bB0FF385702'
+rinkeby.protocol = '0x3F5E248BB5cd3c1275304e692d6cacC708E004d0'
+mainnet.protocol = undefined
 
 module.exports = config

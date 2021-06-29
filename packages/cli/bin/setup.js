@@ -11,7 +11,7 @@ const logger = Logger('setup')
 const { network, guardians: guardiansNumber, disputes } = yargs
   .help()
   .option('network', { alias: 'n', describe: 'Network name', type: 'string', demand: true })
-  .option('guardians', { alias: 'j', describe: 'Number of guardians to activate', type: 'string', default: 5 })
+  .option('guardians', { alias: 'g', describe: 'Number of guardians to activate', type: 'string', default: 5 })
   .option('disputes', { alias: 'd', describe: 'Number of disputes to create', type: 'string', default: 5 })
   .strict()
   .argv
@@ -31,8 +31,8 @@ async function setup() {
   for (let i = 0; i < guardians.length; i++) {
     const guardian = guardians[i]
     const amount = (i + 1) * 10000
-    execSync(`node ./bin/index.js stake -a ${amount} -j ${guardian} -n ${network}`)
-    execSync(`node ./bin/index.js activate -a ${amount} -f ${guardian} -n ${network}`)
+    execSync(`node ./bin/index.js stake -a ${amount} -g ${guardian} -n ${network}`)
+    execSync(`node ./bin/index.js activate -a ${amount} -g ${guardian} -f ${guardian} -n ${network}`)
   }
 
   // check protocol has started
@@ -41,9 +41,12 @@ async function setup() {
   if (currentTermId.eq(bn(0)) && neededTransitions.eq(bn(0))) {
     logger.warn('Protocol has not started yet, please make sure Protocol is at term 1 to create disputes and run the script again.')
   } else {
+
     // create disputes
     for (let i = 0; i < disputes; i++) {
-      const arbitrable = arbitrables[i]
+      const output = execSync(`node ./bin/index.js arbitrable -n ${network}`)
+      const arbitrable = output.toString().match(/0x[a-fA-F0-9]{40}/g)
+      console.log(arbitrable)
       execSync(`node ./bin/index.js mint -t fee -a 5000 -r ${arbitrable} -n ${network}`)
       execSync(`node ./bin/index.js dispute -a ${arbitrable} -m 'Testing dispute #${i}' -e 'http://github.com/aragon/aragon-protocol' -c -n ${network}`)
     }

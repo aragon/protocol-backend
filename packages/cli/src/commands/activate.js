@@ -5,20 +5,14 @@ const describe = 'Activate tokens to the Protocol'
 
 const builder = {
   amount: { alias: 'a', describe: 'Number of tokens to activate', type: 'string', demand: true },
-  guardian: { alias: 'g', describe: 'Optional address of the guardian activating the tokens for', type: 'string' },
+  guardian: { alias: 'g', describe: 'Optional address of the guardian activating the tokens for (sender by default)', type: 'string' },
 }
 
-const handlerAsync = async (environment, { from, guardian, amount }) => {
+const handlerAsync = async (environment, { guardian, amount }) => {
   const protocol = await environment.getProtocol()
-
-  if (!guardian || guardian === from) {
-    await protocol.activate(amount)
-    logger.success(`Activated ${amount}`)
-  }
-  else {
-    await protocol.activateFor(guardian, amount)
-    logger.success(`Activated ${amount} for ${guardian}`)
-  }
+  const to = guardian || await protocol.environment.getSender()
+  await protocol.activate(to, amount)
+  logger.success(`Activated ${amount} for ${to}`)
 }
 
 module.exports = {

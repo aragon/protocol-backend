@@ -10,6 +10,7 @@ on:
     - 'monitoring/**'
     - 'emails/**'
 env:
+  GKE_ZONE: europe-west6-a
   # This is a base repository and we use ${GITHUB_SHA} to set the version of the container
   REPO: aragon/protocol-backend
 
@@ -44,14 +45,20 @@ jobs:
     needs: release
     steps:
     - uses: actions/checkout@v2
-    - run: .github/scripts/kubectl-config.sh ${{secrets.KUBE_CA}} ${{secrets.KUBE_SERVER}} ${{secrets.KUBE_TOKEN}}
-    - run: .github/scripts/kubectl-set-image.sh protocol-backend-rinkeby $REPO:${GITHUB_SHA}
-    - run: .github/scripts/kubectl-set-image.sh protocol-backend-staging $REPO:${GITHUB_SHA}
-    - run: .github/scripts/kubectl-set-image.sh protocol-backend-ropsten $REPO:${GITHUB_SHA}
-    - run: .github/scripts/kubectl-wait-ready.sh protocol-backend-rinkeby
-    - run: .github/scripts/kubectl-wait-ready.sh protocol-backend-staging
-    - run: .github/scripts/kubectl-wait-ready.sh protocol-backend-ropsten
-    # wait 10 sec for k8s to reroute ingress and check app endpoint
-    - run: sleep 10 && curl --fail https://protocol-app-rinkeby.backend.aragon.org
-    - run: curl --fail https://protocol-app-staging.backend.aragon.org
-    - run: curl --fail https://protocol-app-ropsten.backend.aragon.org
+    # Setup gcloud CLI
+    - uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
+        project_id: ${{ secrets.GKE_PROJECT }}
+    # Get the GKE credentials so we can deploy to the cluster
+    - uses: google-github-actions/get-gke-credentials@v0.2.1
+      with:
+        cluster_name: ${{ secrets.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+        credentials: ${{ secrets.GKE_SA_KEY }}
+    - name: Deploy
+      run: |
+        kubectl rollout restart deployment court-backend-{app,server,services} 
+        kubectl rollout status deployment court-backend-app
+        kubectl rollout status deployment court-backend-server
+        kubectl rollout status deployment court-backend-services

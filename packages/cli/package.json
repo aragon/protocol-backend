@@ -5,6 +5,7 @@
   "author": "Aragon One",
   "license": "(GPL-3.0-or-later OR AGPL-3.0-or-later)",
   "scripts": {
+    "build:shared": "yarn workspace @aragon/protocol-backend-shared build",
     "mint": "node ./bin/index.js mint --verbose",
     "stake": "node ./bin/index.js stake --verbose",
     "unstake": "node ./bin/index.js unstake --verbose",

@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('appeal')
+const logger = require('@aragon/court-backend-shared/helpers/logger')('appeal')
 
 const command = 'appeal'
 const describe = 'Appeal dispute in favour of a certain outcome'
@@ -9,8 +9,8 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { dispute, outcome }) => {
-  const protocol = await environment.getProtocol()
-  await protocol.appeal(dispute, outcome)
+  const court = await environment.getCourt()
+  await court.appeal(dispute, outcome)
   logger.success(`Appealed dispute #${dispute}`)
 }
 

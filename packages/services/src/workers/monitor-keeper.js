@@ -1,11 +1,11 @@
-import emailClient from '@aragon/protocol-backend-shared/helpers/email-client'
+import emailClient from '@aragon/court-backend-shared/helpers/email-client'
 import Etherscan from '../models/Etherscan'
-import Network from '@aragon/protocol-backend-server/build/web3/Network'
-import { Admin, KeeperSuspiciousTransaction } from '@aragon/protocol-backend-server/build/models/objection'
+import Network from '@aragon/court-backend-server/build/web3/Network'
+import { Admin, KeeperSuspiciousTransaction } from '@aragon/court-backend-server/build/models/objection'
 
 import { fromWei } from 'web3-utils'
-import { bigExp } from '@aragon/protocol-backend-shared/helpers/numbers'
-import getWalletFromPk from '@aragon/protocol-backend-shared/helpers/get-wallet-from-pk'
+import { bigExp } from '@aragon/court-backend-shared/helpers/numbers'
+import getWalletFromPk from '@aragon/court-backend-shared/helpers/get-wallet-from-pk'
 
 const FROM = 'noreply@aragon.one'
 const BALANCE_THRESHOLD = bigExp(1, 17) // 0.1 ETH
@@ -21,8 +21,8 @@ export default async function (ctx) {
 }
 
 async function monitorTransactions(logger, etherscan, keeper, network) {
-  const protocol = await Network.getProtocol()
-  const protocolAddresses = await getWhitelistedAddresses(protocol)
+  const court = await Network.getCourt()
+  const courtAddresses = await getWhitelistedAddresses(court)
   const lastInspectedBlockNumber = (await KeeperSuspiciousTransaction.lastInspectedBlockNumber()) + 1
   logger.info(`Checking transactions for keeper address ${keeper} from block ${lastInspectedBlockNumber}`)
   const transactions = await etherscan.getTransactionsFrom(keeper, lastInspectedBlockNumber)
@@ -31,7 +31,7 @@ async function monitorTransactions(logger, etherscan, keeper, network) {
   try {
     for (const transaction of transactions) {
       const { hash, to, value, blockNumber } = transaction
-      if (value !== '0' || !protocolAddresses.includes(to)) {
+      if (value !== '0' || !courtAddresses.includes(to)) {
         await KeeperSuspiciousTransaction.create({ blockNumber, txHash: hash })
         logger.warn(`Found suspicious transaction ${hash} on block ${blockNumber}`)
         await sendNotification(logger, buildSuspiciousTransactionMessage(keeper, transaction, network))
@@ -85,11 +85,11 @@ function buildLowKeeperBalanceMessage(keeper, balance, network) {
   }
 }
 
-async function getWhitelistedAddresses(protocol) {
+async function getWhitelistedAddresses(court) {
   const addresses = []
-  addresses.push(protocol.instance.address)                  // Controller
-  addresses.push((await protocol.disputeManager()).address)  // Dispute Manager
-  addresses.push((await protocol.voting()).address)          // Voting
-  addresses.push((await protocol.subscriptions()).address)   // Subscriptions
+  addresses.push(court.instance.address)                  // Controller
+  addresses.push((await court.disputeManager()).address)  // Dispute Manager
+  addresses.push((await court.voting()).address)          // Voting
+  addresses.push((await court.paymentsBook()).address)
   return addresses.map(a => a.toLowerCase())
 }

@@ -1,6 +1,6 @@
 {
-  "name": "@aragon/protocol-backend-server",
-  "version": "0.2.21",
+  "name": "@aragon/court-backend-server",
+  "version": "1.0.0",
   "private": true,
   "author": "Aragon One",
   "license": "(GPL-3.0-or-later OR AGPL-3.0-or-later)",
@@ -16,7 +16,7 @@
     "db:setup": "./scripts/db-setup.sh"
   },
   "dependencies": {
-    "@aragon/protocol-backend-shared": "^0.2.21",
+    "@aragon/court-backend-shared": "^1.0.0",
     "@promster/express": "^4.0.0",
     "@promster/server": "^4.0.0",
     "bcryptjs": "^2.4.3",

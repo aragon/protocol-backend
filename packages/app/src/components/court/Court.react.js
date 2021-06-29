@@ -1,11 +1,11 @@
 import React from 'react'
 import Store from '../../store/store'
 import Network from '../../web3/Network'
-import ProtocolActions from '../../actions/protocol'
+import CourtActions from '../../actions/court'
 import { fromWei } from 'web3-utils'
-import { bn } from '@aragon/protocol-backend-shared/helpers/numbers'
+import { bn } from '@aragon/court-backend-shared/helpers/numbers'
 
-export default class Protocol extends React.Component {
+export default class Court extends React.Component {
 
   constructor(props){
     super(props)
@@ -14,13 +14,13 @@ export default class Protocol extends React.Component {
 
   componentDidMount() {
     Store.subscribe(() => this._onChange())
-    Store.dispatch(ProtocolActions.findProtocol())
+    Store.dispatch(CourtActions.findCourt())
   }
 
   render() {
 
     return (
-      <div ref="protocol" className="config">
+      <div ref="court" className="config">
         <h3>Config</h3>
         <p>Network: {Network.getNetworkName()}</p>
         { (!this.state.termDuration) ? 'Loading...' : this._renderConfig() }
@@ -62,7 +62,7 @@ export default class Protocol extends React.Component {
 
     return (
       <div>
-        <p>Protocol: {address}</p>
+        <p>court: {address}</p>
         <p>Term duration: {bn(termDuration).div(bn(60)).toString()} minutes</p>
         <p>Current term: #{currentTerm}</p>
         <p>Needed transitions: {neededTransitions.toString()} (<a onClick={() => this._heartbeat()} href="#">heartbeat</a>)</p>
@@ -113,13 +113,13 @@ export default class Protocol extends React.Component {
   }
 
   _heartbeat() {
-    Store.dispatch(ProtocolActions.heartbeat())
+    Store.dispatch(CourtActions.heartbeat())
   }
 
   _onChange() {
-    if(this.refs.protocol) {
-      const { protocol } = Store.getState().protocol
-      this.setState({ ...protocol })
+    if(this.refs.court) {
+      const { court } = Store.getState().court
+      this.setState({ ...court })
     }
   }
 }

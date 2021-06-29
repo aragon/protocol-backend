@@ -9,7 +9,7 @@
  * POSTMARK_SERVER_API_TOKEN=
  */
 import { User } from '../src/models/objection'
-import emailClient from '@aragon/protocol-backend-shared/helpers/email-client'
+import emailClient from '@aragon/court-backend-shared/helpers/email-client'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -23,10 +23,10 @@ async function main() {
     try {
       await emailClient.sendEmailWithTemplate({
         To: email,
-        From: 'notifications@protocol.aragon.org',
+        From: 'notifications@court.aragon.org',
         TemplateAlias: 'notification-settings-announcement',
         TemplateModel: {
-          dashboardUrl: 'https://protocol.aragon.org/dashboard',
+          dashboardUrl: 'https://court.aragon.org/dashboard',
         },
       })
     } catch (err) {

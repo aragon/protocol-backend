@@ -1,6 +1,6 @@
 import Network from '../web3/Network'
 import ErrorActions from './errors'
-import ProtocolActions from './protocol'
+import CourtActions from './court'
 import AccountActions from './accounts'
 import * as ActionTypes from '../actions/types'
 import { fromWei } from 'web3-utils'
@@ -9,14 +9,14 @@ const FaucetActions = {
   find() {
     return async function(dispatch) {
       try {
-        const protocolAddress = await ProtocolActions.findProtocolAddress()
-        if (await Network.isProtocolAt(protocolAddress)) {
+        const courtAddress = await CourtActions.findCourtAddress()
+        if (await Network.isCourtAt(courtAddress)) {
           if (await Network.isFaucetAvailable()) {
             const faucet = await Network.getFaucet()
             if (faucet) {
               dispatch(FaucetActions.receiveFaucet(faucet.address))
-              dispatch(FaucetActions.updateAntBalance(faucet, protocolAddress))
-              dispatch(FaucetActions.updateFeeBalance(faucet, protocolAddress))
+              dispatch(FaucetActions.updateAntBalance(faucet, courtAddress))
+              dispatch(FaucetActions.updateFeeBalance(faucet, courtAddress))
             }
           }
         }
@@ -26,11 +26,11 @@ const FaucetActions = {
     }
   },
 
-  updateAntBalance(faucet, protocolAddress) {
+  updateAntBalance(faucet, courtAddress) {
     return async function(dispatch) {
       try {
-        const protocol = await Network.getProtocol(protocolAddress)
-        const ant = await protocol.token()
+        const court = await Network.getCourt(courtAddress)
+        const ant = await court.token()
         const symbol = await ant.symbol()
         const antBalance = await faucet.getTotalSupply(ant.address)
         const { period, amount } = await faucet.getQuota(ant.address)
@@ -43,11 +43,11 @@ const FaucetActions = {
     }
   },
 
-  updateFeeBalance(faucet, protocolAddress) {
+  updateFeeBalance(faucet, courtAddress) {
     return async function(dispatch) {
       try {
-        const protocol = await Network.getProtocol(protocolAddress)
-        const feeToken = await protocol.feeToken()
+        const court = await Network.getCourt(courtAddress)
+        const feeToken = await court.feeToken()
         const symbol = await feeToken.symbol()
         const feeBalance = await faucet.getTotalSupply(feeToken.address)
         const { period, amount } = await faucet.getQuota(feeToken.address)

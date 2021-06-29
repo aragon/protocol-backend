@@ -1,4 +1,4 @@
-import { User, UserNotification, UserNotificationType } from '@aragon/protocol-backend-server/build/models/objection'
+import { User, UserNotification, UserNotificationType } from '@aragon/court-backend-server/build/models/objection'
 import * as notificationScanners from '../models/notification-scanners'
 
 /**
@@ -13,26 +13,37 @@ export default async function (ctx) {
 }
 
 export async function tryRunScanner(ctx, model) {
+  console.log("scanner started");
   const { logger, metrics } = ctx
   const scanner = notificationScanners[model]
   if (!scanner) {
     logger.error(`Notification scanner ${model} not found.`)
     return
   }
+  console.log("scanner continues");
   const type = await UserNotificationType.findOrInsert({model})
+  console.log(!shouldScanNow(type, scanner), ' first')
+  console.log(type,  " type");
+  console.log(scanner, ' scanner');
   if (!shouldScanNow(type, scanner)) return
+  console.log("scanner should scan");
   const notifications = await scanner.scan()
+  console.log("notifications ", notifications)
   for (const notification of notifications) {
     const { address, details } = notification
     const user = await User.findOne({address})
+    console.log("user is found ", user);
     if (!await scanner.shouldNotifyUser(user)) continue
+    console.log("user should get notified now");
     await UserNotification.findOrInsert({
       userId: user.id,
       userNotificationTypeId: type.id,
       details
     })
+    console.log("inserting worked");
   }
   await type.$query().update({ scannedAt: new Date() })
+  console.log("update happened");
   logger.success(`Notification type ${model} scanned.`)
   metrics.notificationScanned(model)
 }

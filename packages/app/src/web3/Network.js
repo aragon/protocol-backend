@@ -1,5 +1,5 @@
-import Protocol from '@aragon/protocol-backend-shared/models/Protocol'
-import Environment from '@aragon/protocol-backend-shared/models/environments/BrowserEnvironment'
+import Court from '@aragon/court-backend-shared/models/Court'
+import Environment from '@aragon/court-backend-shared/models/environments/BrowserEnvironment'
 
 const FAUCET = {
   staging: '0x19420Cf68cf6a8d18882730c8e8BAd169eeb1bdC',
@@ -29,13 +29,13 @@ const Network = {
     return provider.getBalance(address)
   },
 
-  async getProtocol(address) {
-    if (!this.protocol) {
-      const AragonProtocol = await this.environment.getArtifact('AragonProtocol', '@aragon/protocol-evm')
-      const protocol = await AragonProtocol.at(address)
-      this.protocol = new Protocol(protocol, this.environment)
+  async getCourt(address) {
+    if (!this.court) {
+      const AragonCourt = await this.environment.getArtifact('AragonCourt', '@aragon/court-evm')
+      const court = await AragonCourt.at(address)
+      this.court = new Court(court, this.environment)
     }
-    return this.protocol
+    return this.court
   },
 
   async getFaucet() {
@@ -47,9 +47,9 @@ const Network = {
     return this.faucet
   },
 
-  async isProtocolAt(address) {
+  async isCourtAt(address) {
     try {
-      await this.getProtocol(address)
+      await this.getCourt(address)
       return true
     } catch (error) {
       if (error.message.includes(`no code at address ${address}`)) return false

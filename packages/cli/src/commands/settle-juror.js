@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('settle-guardian')
+const logger = require('@aragon/court-backend-shared/helpers/logger')('settle-guardian')
 
 const command = 'settle-guardian'
 const describe = 'Settle guardian for a dispute'
@@ -9,8 +9,8 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { dispute, guardian }) => {
-  const protocol = await environment.getProtocol()
-  await protocol.settleGuardian(dispute, guardian)
+  const court = await environment.getCourt()
+  await court.settleGuardian(dispute, guardian)
   logger.success(`Settled guardian ${guardian} for dispute #${dispute}`)
 }
 

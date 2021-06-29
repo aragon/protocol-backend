@@ -10,7 +10,7 @@ export default class EmailsForm extends React.Component {
         id: 'title',
         label: 'Title',
         required: true,
-        default: 'New on Aragon Protocol',
+        default: 'New on Aragon Court',
       },
       {
         id: 'bannerHtml',
@@ -43,7 +43,7 @@ export default class EmailsForm extends React.Component {
         id: 'actionUrl',
         label: 'Action Button URL',
         required: true,
-        default: 'https://protocol.aragon.org/',
+        default: 'https://court.aragon.org/',
       },
       {
         id: 'testEmail',

@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('settle-round')
+const logger = require('@aragon/court-backend-shared/helpers/logger')('settle-round')
 
 const command = 'settle-round'
 const describe = 'Settle penalties and appeals for a dispute'
@@ -8,8 +8,8 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { dispute }) => {
-  const protocol = await environment.getProtocol()
-  await protocol.settleRound(dispute)
+  const court = await environment.getCourt()
+  await court.settleRound(dispute)
   logger.success(`Settled rounds of dispute #${dispute}`)
 }
 

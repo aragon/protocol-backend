@@ -1,4 +1,4 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('confirm-appeal')
+const logger = require('@aragon/court-backend-shared/helpers/logger')('confirm-appeal')
 
 const command = 'confirm-appeal'
 const describe = 'Confirm an existing appeal for a dispute'
@@ -9,8 +9,8 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { dispute, outcome }) => {
-  const protocol = await environment.getProtocol()
-  await protocol.confirmAppeal(dispute, outcome)
+  const court = await environment.getCourt()
+  await court.confirmAppeal(dispute, outcome)
   logger.success(`Confirmed appeal for dispute #${dispute}`)
 }
 

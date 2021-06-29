@@ -7,6 +7,6 @@ export SERVER_IMAGE="$1"
 docker-compose up -d
 docker-compose exec -T test yarn db:setup
 docker-compose exec -T test yarn test:server
-docker-compose exec -T test yarn workspace @aragon/protocol-backend-server build
+docker-compose exec -T test yarn workspace @aragon/court-backend-server build
 docker-compose exec -T test yarn test:services
 docker-compose down

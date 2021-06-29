@@ -1,5 +1,5 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('mint')
-const { bigExp } = require('@aragon/protocol-backend-shared/helpers/numbers')
+const logger = require('@aragon/court-backend-shared/helpers/logger')('mint')
+const { bigExp } = require('@aragon/court-backend-shared/helpers/numbers')
 
 const command = 'mint'
 const describe = 'Mint tokens for a certain address'
@@ -11,12 +11,12 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { recipient, token: symbol, amount }) => {
-  const protocol = await environment.getProtocol()
-  const to = recipient || await protocol.environment.getSender()
+  const court = await environment.getCourt()
+  const to = recipient || await court.environment.getSender()
 
   let token
-  if (symbol.toLowerCase() === 'ant') token = await protocol.token()
-  if (symbol.toLowerCase() === 'fee') token = await protocol.feeToken()
+  if (symbol.toLowerCase() === 'ant') token = await court.token()
+  if (symbol.toLowerCase() === 'fee') token = await court.feeToken()
   if (!token) throw new Error(`Minting ${symbol} is not supported yet`)
 
   logger.info(`Minting ${symbol} ${amount} to ${to}...`)

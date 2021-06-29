@@ -1,7 +1,7 @@
 import { Reveal } from '../models/objection'
 import Network from '../web3/Network'
 import BaseValidator from './BaseValidator'
-const { hashVote } = require('@aragon/protocol-backend-shared/helpers/voting')
+const { hashVote } = require('@aragon/court-backend-shared/helpers/voting')
 
 class RevealsValidator extends BaseValidator {
   async validateForCreate({ guardian, voteId, outcome, salt }) {
@@ -19,8 +19,8 @@ class RevealsValidator extends BaseValidator {
   async _validateVoteId(guardian, voteId) {
     if (!voteId) return this.addError({ voteId: 'A vote ID must be given' })
 
-    const protocol = await Network.getProtocol()
-    const exists = await protocol.existsVote(voteId)
+    const court = await Network.getCourt()
+    const exists = await court.existsVote(voteId)
     if (!exists) this.addError({ voteId: `Vote with ID ${voteId} does not exist` })
 
     if (guardian) {
@@ -33,8 +33,8 @@ class RevealsValidator extends BaseValidator {
     if (!outcome) return this.addError({ outcome: 'An outcome must be given' })
 
     if (voteId) {
-      const protocol = await Network.getProtocol()
-      const isValid = await protocol.isValidOutcome(voteId, outcome)
+      const court = await Network.getCourt()
+      const isValid = await court.isValidOutcome(voteId, outcome)
       if (!isValid) this.addError({ outcome: `Outcome ${outcome} is not valid for the given voteId` })
     }
   }
@@ -43,8 +43,8 @@ class RevealsValidator extends BaseValidator {
     if (!salt) return this.addError({ salt: 'A salt value must be given' })
 
     if (guardian && voteId && outcome) {
-      const protocol = await Network.getProtocol()
-      const actualCommitment = await protocol.getCommitment(voteId, guardian)
+      const court = await Network.getCourt()
+      const actualCommitment = await court.getCommitment(voteId, guardian)
       const expectedCommitment = hashVote(outcome, salt)
       if (expectedCommitment !== actualCommitment) this.addError({ salt: 'Signature does not correspond to the guardian address provided' })
     }

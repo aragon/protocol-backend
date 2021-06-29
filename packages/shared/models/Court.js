@@ -1,7 +1,7 @@
 const { sha3, fromWei, utf8ToHex, soliditySha3 } = require('web3-utils')
 const { ZERO_ADDRESS, getEventArgument, getEvents } = require('@aragon/contract-helpers-test')
 
-const logger = require('../helpers/logger')('Protocol')
+const logger = require('../helpers/logger')('Court')
 const { bn, bigExp } = require('../helpers/numbers')
 const { encodeVoteId, hashVote } = require('../helpers/voting')
 
@@ -16,8 +16,8 @@ module.exports = class {
   async token() {
     if (!this._token) {
       const registry = await this.registry()
-      const address = await registry.token()
-      const ERC20 = await this.environment.getArtifact('ERC20Mock', '@aragon/protocol-evm')
+      const address = await registry.guardiansToken()
+      const ERC20 = await this.environment.getArtifact('ERC20Mock', '@aragon/court-evm')
       this._token = await ERC20.at(address)
     }
     return this._token
@@ -26,7 +26,7 @@ module.exports = class {
   async feeToken() {
     if (!this._feeToken) {
       const { feeToken } = await this.getConfigAt()
-      const ERC20 = await this.environment.getArtifact('ERC20Mock', '@aragon/protocol-evm')
+      const ERC20 = await this.environment.getArtifact('ERC20Mock', '@aragon/court-evm')
       this._feeToken = await ERC20.at(feeToken)
     }
     return this._feeToken
@@ -35,7 +35,7 @@ module.exports = class {
   async registry() {
     if (!this._registry) {
       const { addr: address } = await this.instance.getGuardiansRegistry()
-      const GuardiansRegistry = await this.environment.getArtifact('GuardiansRegistry', '@aragon/protocol-evm')
+      const GuardiansRegistry = await this.environment.getArtifact('GuardiansRegistry', '@aragon/court-evm')
       this._registry = await GuardiansRegistry.at(address)
     }
     return this._registry
@@ -44,7 +44,7 @@ module.exports = class {
   async disputeManager() {
     if (!this._disputeManager) {
       const { addr: address } = await this.instance.getDisputeManager()
-      const DisputeManager = await this.environment.getArtifact('DisputeManager', '@aragon/protocol-evm')
+      const DisputeManager = await this.environment.getArtifact('DisputeManager', '@aragon/court-evm')
       this._disputeManager = await DisputeManager.at(address)
     }
     return this._disputeManager
@@ -53,7 +53,7 @@ module.exports = class {
   async voting() {
     if (!this._voting) {
       const { addr: address } = await this.instance.getVoting()
-      const Voting = await this.environment.getArtifact('CRVoting', '@aragon/protocol-evm')
+      const Voting = await this.environment.getArtifact('CRVoting', '@aragon/court-evm')
       this._voting = await Voting.at(address)
     }
     return this._voting
@@ -62,7 +62,7 @@ module.exports = class {
   async paymentsBook() {
     if (!this._paymentsBook) {
       const { addr: address } = await this.instance.getPaymentsBook()
-      const PaymentsBook = await this.environment.getArtifact('PaymentsBook', '@aragon/protocol-evm')
+      const PaymentsBook = await this.environment.getArtifact('PaymentsBook', '@aragon/court-evm')
       this._paymentsBook = await PaymentsBook.at(address)
     }
     return this._paymentsBook
@@ -234,19 +234,19 @@ module.exports = class {
 
   async pay(tokenAddress, amount, payer, data) {
     const paymentsBook = await this.paymentsBook()
-    const ERC20 = await this.environment.getArtifact('ERC20Mock', '@aragon/protocol-evm')
+    const ERC20 = await this.environment.getArtifact('ERC20Mock', '@aragon/court-evm')
     const token = await ERC20.at(tokenAddress)
     const symbol = await token.symbol()
 
     logger.info(`Approving ${amount} ${symbol} for payment...`)
     await this._approve(token, amount, paymentsBook.address)
-    logger.info(`Paying ${amount} ${symbol} to Aragon Protocol...`)
+    logger.info(`Paying ${amount} ${symbol} to Aragon Court...`)
     return paymentsBook.pay(tokenAddress, amount, payer, data)
   }
 
   async deployArbitrable() {
     logger.info(`Creating new Arbitrable instance...`)
-    const Arbitrable = await this.environment.getArtifact('Arbitrable', '@aragon/protocol-evm')
+    const Arbitrable = await this.environment.getArtifact('Arbitrable', '@aragon/court-evm')
     return Arbitrable.new(this.instance.address)
   }
 
@@ -258,7 +258,7 @@ module.exports = class {
     await feeToken.transfer(subject, totalFees)
 
     logger.info(`Creating new dispute for subject ${subject} ...`)
-    const Arbitrable = await this.environment.getArtifact('Arbitrable', '@aragon/protocol-evm')
+    const Arbitrable = await this.environment.getArtifact('Arbitrable', '@aragon/court-evm')
     const arbitrable = await Arbitrable.at(subject)
     const { hash } = await arbitrable.createDispute(rulings, utf8ToHex(metadata))
     const receipt = await this.environment.getTransaction(hash)
@@ -360,7 +360,7 @@ module.exports = class {
 
   async execute(disputeId) {
     logger.info(`Executing ruling of dispute #${disputeId}...`)
-    return this.instance.executeRuling(disputeId)
+    return this.instance.rule(disputeId)
   }
 
   async settle(disputeId) {

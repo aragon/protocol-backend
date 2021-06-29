@@ -4,12 +4,12 @@ const BUILDS = {
   '@aragon/erc20-faucet': {
     'ERC20Faucet': require('@aragonone/erc20-faucet/build/contracts/ERC20Faucet'),
   },
-  '@aragon/protocol-evm': {
-    'ERC20Mock': require('@aragon/protocol-evm/artifacts/ERC20Mock'),
-    'AragonProtocol': require('@aragon/protocol-evm/artifacts/AragonProtocol'),
-    'DisputeManager': require('@aragon/protocol-evm/artifacts/DisputeManager'),
-    'GuardiansRegistry': require('@aragon/protocol-evm/artifacts/GuardiansRegistry'),
-    'PaymentsBook': require('@aragon/protocol-evm/artifacts/PaymentsBook'),
+  '@aragon/court-evm': {
+    'ERC20Mock': require('@aragon/court-evm/artifacts/ERC20Mock'),
+    'AragonCourt': require('@aragon/court-evm/artifacts/AragonCourt'),
+    'DisputeManager': require('@aragon/court-evm/artifacts/DisputeManager'),
+    'GuardiansRegistry': require('@aragon/court-evm/artifacts/GuardiansRegistry'),
+    'PaymentsBook': require('@aragon/court-evm/artifacts/PaymentsBook'),
   }
 }
 

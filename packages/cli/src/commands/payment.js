@@ -1,7 +1,7 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('payment')
+const logger = require('@aragon/court-backend-shared/helpers/logger')('payment')
 
 const command = 'payment'
-const describe = 'Make Aragon Protocol payment'
+const describe = 'Make Aragon Court payment'
 
 const builder = {
   amount: { alias: 'a', describe: 'Amount to be paid', type: 'string', demand: true },
@@ -11,8 +11,8 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { token, amount, payer, data }) => {
-  const protocol = await environment.getProtocol()
-  await protocol.pay(token, amount, payer, data)
+  const court = await environment.getCourt()
+  await court.pay(token, amount, payer, data)
   logger.success(`Paid ${amount} of tokens ${token} for ${payer} (${data})`)
 }
 

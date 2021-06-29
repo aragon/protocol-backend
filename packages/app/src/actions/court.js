@@ -4,20 +4,20 @@ import * as ActionTypes from '../actions/types'
 
 const HEARTBEAT_MAX_TRANSITIONS = 20
 
-const ProtocolActions = {
-  async findProtocolAddress() {
+const CourtActions = {
+  async findCourtAddress() {
     const result = await Network.query('{ courts { id } }')
     if (result.courts.length === 0) throw Error('Missing Aragon Court deployment')
     if (result.courts.length > 1) throw Error('Found more than Aragon Court deployment')
     return result.courts[0].id
   },
 
-  findProtocol() {
+  findCourt() {
     return async function(dispatch) {
       try {
-        const protocolAddress = await ProtocolActions.findProtocolAddress()
+        const courtAddress = await CourtActions.findCourtAddress()
         const result = await Network.query(`{
-          court(id: "${protocolAddress}") {
+          court(id: "${courtAddress}") {
             id
             termDuration
             currentTerm
@@ -70,16 +70,16 @@ const ProtocolActions = {
         let neededTransitions = '(cannot fetch info)'
 
         if (await Network.isEnabled()) {
-          if (await Network.isProtocolAt(protocolAddress)) {
-            const protocol = await Network.getProtocol(protocolAddress)
-            neededTransitions = await protocol.neededTransitions()
+          if (await Network.isCourtAt(courtAddress)) {
+            const court = await Network.getCourt(courtAddress)
+            neededTransitions = await court.neededTransitions()
           } else {
-            dispatch(ErrorActions.show(new Error(`Could not find Aragon Court at ${protocolAddress}, please make sure you're in the right network`)))
+            dispatch(ErrorActions.show(new Error(`Could not find Aragon Court at ${courtAddress}, please make sure you're in the right network`)))
           }
         }
 
-        const protocol = { ...result.protocol, neededTransitions, address: protocolAddress }
-        dispatch(ProtocolActions.receiveProtocol(protocol))
+        const court = { ...result.court, neededTransitions, address: courtAddress }
+        dispatch(CourtActions.receiveCourt(court))
       } catch(error) {
         dispatch(ErrorActions.show(error))
       }
@@ -89,18 +89,18 @@ const ProtocolActions = {
   heartbeat() {
     return async function(dispatch) {
       try {
-        const protocol = await Network.getProtocol()
-        await protocol.heartbeat(HEARTBEAT_MAX_TRANSITIONS)
-        dispatch(ProtocolActions.findProtocol())
+        const court = await Network.getCourt()
+        await court.heartbeat(HEARTBEAT_MAX_TRANSITIONS)
+        dispatch(CourtActions.findCourt())
       } catch (error) {
         dispatch(ErrorActions.show(error))
       }
     }
   },
 
-  receiveProtocol(protocol) {
-    return { type: ActionTypes.RECEIVE_PROTOCOL, protocol }
+  receiveCourt(court) {
+    return { type: ActionTypes.RECEIVE_COURT, court }
   },
 }
 
-export default ProtocolActions
+export default CourtActions

@@ -1,1 +1,1 @@
-module.exports = require('@aragon/protocol-backend-shared/truffle-config')
+module.exports = require('@aragon/court-backend-shared/truffle-config')

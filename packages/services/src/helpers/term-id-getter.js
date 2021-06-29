@@ -1,10 +1,10 @@
-import Network from '@aragon/protocol-backend-server/build/web3/Network'
-import { bn } from '@aragon/protocol-backend-shared/helpers/numbers'
+import Network from '@aragon/court-backend-server/build/web3/Network'
+import { bn } from '@aragon/court-backend-shared/helpers/numbers'
 
 async function draftTermIdFor(state) {
-  const protocol = await Network.getProtocol()
-  const currentTerm = await protocol.currentTermId()
-  const { roundDurations: { commitTerms, revealTerms } } = await protocol.getConfigAt()
+  const court = await Network.getCourt()
+  const currentTerm = await court.currentTermId()
+  const { roundDurations: { commitTerms, revealTerms } } = await court.getConfigAt()
   if (state == 'revealing') {
     return currentTerm.sub(commitTerms)
   }
@@ -20,8 +20,8 @@ async function draftTermIdFor(state) {
 }
 
 async function dueDateFor(draftTermId, type) {
-  const protocol = await Network.getProtocol()
-  const { roundDurations: { commitTerms, revealTerms } } = await protocol.getConfigAt()
+  const court = await Network.getCourt()
+  const { roundDurations: { commitTerms, revealTerms } } = await court.getConfigAt()
   draftTermId = bn(parseInt(draftTermId))
   let terms
   if (type == 'commit') {
@@ -30,8 +30,8 @@ async function dueDateFor(draftTermId, type) {
   else if (type == 'reveal') {
     terms = commitTerms.add(revealTerms).add(draftTermId).sub(bn(1))
   }
-  const startTime = await protocol.startTime()
-  const termDuration = await protocol.termDuration()
+  const startTime = await court.startTime()
+  const termDuration = await court.termDuration()
   const dueDateSeconds = termDuration.mul(terms).add(startTime)
   return dueDateSeconds
 }

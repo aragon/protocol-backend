@@ -1,7 +1,7 @@
-const logger = require('@aragon/protocol-backend-shared/helpers/logger')('activate')
+const logger = require('@aragon/court-backend-shared/helpers/logger')('activate')
 
 const command = 'activate'
-const describe = 'Activate tokens to the Protocol'
+const describe = 'Activate tokens to the Court'
 
 const builder = {
   amount: { alias: 'a', describe: 'Number of tokens to activate', type: 'string', demand: true },
@@ -9,14 +9,14 @@ const builder = {
 }
 
 const handlerAsync = async (environment, { from, guardian, amount }) => {
-  const protocol = await environment.getProtocol()
+  const court = await environment.getCourt()
 
   if (!guardian || guardian === from) {
-    await protocol.activate(amount)
+    await court.activate(amount)
     logger.success(`Activated ${amount}`)
   }
   else {
-    await protocol.activateFor(guardian, amount)
+    await court.activateFor(guardian, amount)
     logger.success(`Activated ${amount} for ${guardian}`)
   }
 }

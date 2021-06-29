@@ -3,7 +3,7 @@ import error from '../reducers/errors'
 import account from '../reducers/accounts'
 import faucet from '../reducers/faucet'
 import fetching from '../reducers/fetching'
-import protocol from '../reducers/protocol'
+import court from '../reducers/court'
 import guardians from '../reducers/guardians'
 import drafts from '../reducers/drafts'
 import disputes from '../reducers/disputes'
@@ -17,7 +17,7 @@ const mainReducer = combineReducers({
   account,
   faucet,
   fetching,
-  protocol,
+  court,
   guardians,
   drafts,
   disputes,

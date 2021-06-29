@@ -1,6 +1,6 @@
 {
-  "name": "@aragon/protocol-backend-cli",
-  "version": "0.2.21",
+  "name": "@aragon/court-backend-cli",
+  "version": "1.0.0",
   "private": true,
   "author": "Aragon One",
   "license": "(GPL-3.0-or-later OR AGPL-3.0-or-later)",
@@ -25,7 +25,7 @@
     "setup": "node ./bin/setup.js"
   },
   "dependencies": {
-    "@aragon/protocol-backend-shared": "^0.2.21",
+    "@aragon/court-backend-shared": "^1.0.0",
     "yargs": "^14.0.0"
   }
 }

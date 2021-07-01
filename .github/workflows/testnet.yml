@@ -45,7 +45,6 @@ jobs:
     needs: release
     environment: Staging
     steps:
-    - uses: actions/checkout@v2
     # Setup gcloud CLI
     - uses: google-github-actions/setup-gcloud@v0.2.0
       with:

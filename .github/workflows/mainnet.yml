@@ -1,8 +1,8 @@
 name: Mainnet CI/CD
 on:
   push:
-    tags:
-    - v*
+    branches:
+    - master
 env:
   GKE_ZONE: europe-west6-a
   # This is a base repository and we use ${GITHUB_REF##*/} to set the version of the container

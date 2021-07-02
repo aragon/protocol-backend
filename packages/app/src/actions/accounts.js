@@ -13,13 +13,12 @@ const AccountActions = {
 
         if (enabled) {
           const account = await Network.getAccount()
-          const courtAddress = await CourtActions.findCourt()
+          const courtAddress = await CourtActions.findCourtAddress()
           dispatch(AccountActions.receive(account))
           dispatch(AccountActions.updateEthBalance(account))
 
           if (await Network.isCourtAt(courtAddress)) {
-            dispatch(AccountActions.updateAntBalance(account))
-            dispatch(AccountActions.updateAnjBalance(account, courtAddress))
+            dispatch(AccountActions.updateAntBalance(account, courtAddress))
             dispatch(AccountActions.updateFeeBalance(account, courtAddress))
           } else {
             dispatch(ErrorActions.show(new Error(`Could not find Court at ${courtAddress}, please make sure you're in the right network`)))
@@ -43,32 +42,15 @@ const AccountActions = {
     }
   },
 
-  updateAntBalance(account) {
-    return async function(dispatch) {
-      try {
-        const ant = await Network.getANT()
-        if (!ant) console.error('Could not find an ANT instance for the current network')
-        else {
-          const symbol = await ant.symbol()
-          const antBalance = await ant.balanceOf(account)
-          const balance = fromWei(antBalance.toString())
-          dispatch(AccountActions.receiveAntBalance({ symbol, balance, address: ant.address }))
-        }
-      } catch (error) {
-        dispatch(ErrorActions.show(error))
-      }
-    }
-  },
-
-  updateAnjBalance(account, courtAddress) {
+  updateAntBalance(account, courtAddress) {
     return async function(dispatch) {
       try {
         const court = await Network.getCourt(courtAddress)
-        const anj = await court.anj()
-        const symbol = await anj.symbol()
-        const anjBalance = await anj.balanceOf(account)
-        const balance = fromWei(anjBalance.toString())
-        dispatch(AccountActions.receiveAnjBalance({ symbol, balance, address: anj.address }))
+        const ant = await court.token()
+        const symbol = await ant.symbol()
+        const antBalance = await ant.balanceOf(account)
+        const balance = fromWei(antBalance.toString())
+        dispatch(AccountActions.receiveAntBalance({ symbol, balance, address: ant.address }))
       } catch (error) {
         dispatch(ErrorActions.show(error))
       }
@@ -104,10 +86,6 @@ const AccountActions = {
 
   receiveAntBalance({ symbol, balance, address }) {
     return { type: ActionTypes.RECEIVE_ANT_BALANCE, symbol, balance, address }
-  },
-
-  receiveAnjBalance({ symbol, balance, address }) {
-    return { type: ActionTypes.RECEIVE_ANJ_BALANCE, symbol, balance, address }
   },
 
   receiveFeeBalance({ symbol, balance, address }) {

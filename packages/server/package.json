@@ -1,6 +1,6 @@
 {
-  "name": "@aragonone/court-backend-server",
-  "version": "0.2.21",
+  "name": "@aragon/court-backend-server",
+  "version": "1.0.0",
   "private": true,
   "author": "Aragon One",
   "license": "(GPL-3.0-or-later OR AGPL-3.0-or-later)",
@@ -9,14 +9,14 @@
   },
   "scripts": {
     "build": "babel ./src --out-dir ./build --source-maps --copy-files",
-    "start": "npm run build && ./scripts/db-setup.sh && node ./build",
-    "start:dev": "./scripts/db-setup.sh && nodemon --ignore ./build --exec babel-node ./src/index.js",
+    "start": "yarn build && yarn db:setup && node ./build",
+    "start:dev": "yarn db:setup && nodemon --ignore ./build --exec babel-node ./src/index.js",
     "knex": "npx babel-node ./node_modules/.bin/knex",
-    "test": "npx mocha test --recursive --exit --require @babel/register"
+    "test": "npx mocha test --recursive --exit --require @babel/register",
+    "db:setup": "./scripts/db-setup.sh"
   },
   "dependencies": {
-    "@aragon/court": "1.1.0",
-    "@aragonone/court-backend-shared": "^0.2.21",
+    "@aragon/court-backend-shared": "^1.0.0",
     "@promster/express": "^4.0.0",
     "@promster/server": "^4.0.0",
     "bcryptjs": "^2.4.3",

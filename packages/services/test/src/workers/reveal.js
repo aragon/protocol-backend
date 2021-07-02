@@ -2,16 +2,16 @@ import chai from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
 import revealWorker from '../../../src/workers/reveal'
-import Network from '@aragonone/court-backend-server/build/web3/Network'
-import { Reveal } from '@aragonone/court-backend-server/build/models/objection'
+import Network from '@aragon/court-backend-server/build/web3/Network'
+import { Reveal } from '@aragon/court-backend-server/build/models/objection'
 
 const { expect } = chai
 chai.use(sinonChai)
 
 const REVEALS_MOCK_DATA = [
-  { juror: '0xfc3771B19123F1f0237C737e92645BA6d628e2cB', salt: 'password', outcome: '3', voteId: '5444517870735015415413993718908291383296', disputeId: '15', roundNumber: '0' },
-  { juror: '0xd5ad815503d459faf1674c72bfcc53f2cf48358c', salt: 'password', outcome: '2', voteId: '5444517870735015415413993718908291383296', disputeId: '15', roundNumber: '0' },
-  { juror: '0x61f73dfc8561c322171c774e5be0d9ae21b2da42', salt: 'password', outcome: '4', voteId: '5444517870735015415413993718908291383296', disputeId: '14', roundNumber: '1' },
+  { guardian: '0xfc3771B19123F1f0237C737e92645BA6d628e2cB', salt: 'password', outcome: '3', voteId: '5444517870735015415413993718908291383296', disputeId: '15', roundNumber: '0' },
+  { guardian: '0xd5ad815503d459faf1674c72bfcc53f2cf48358c', salt: 'password', outcome: '2', voteId: '5444517870735015415413993718908291383296', disputeId: '15', roundNumber: '0' },
+  { guardian: '0x61f73dfc8561c322171c774e5be0d9ae21b2da42', salt: 'password', outcome: '4', voteId: '5444517870735015415413993718908291383296', disputeId: '14', roundNumber: '1' },
 ]
 
 describe('Reveals worker', () => {
@@ -246,7 +246,7 @@ describe('Reveals worker', () => {
           return ({
             getRevealStatus: () => ({ canReveal: true, expired: false }),
             revealFor: () => true,
-            getOutcome: (voteId, juror) => REVEALS_MOCK_DATA.find(data => data.juror == juror).outcome
+            getOutcome: (voteId, guardian) => REVEALS_MOCK_DATA.find(data => data.guardian == guardian).outcome
           })
         }
 
@@ -284,7 +284,7 @@ describe('Reveals worker', () => {
           return ({
             getRevealStatus: disputeId => ({ canReveal: disputeId == REVEALING_DISPUTE, expired: false }),
             revealFor: () => true,
-            getOutcome: (voteId, juror) => REVEALS_MOCK_DATA.find(data => data.juror == juror).outcome
+            getOutcome: (voteId, guardian) => REVEALS_MOCK_DATA.find(data => data.guardian == guardian).outcome
           })
         }
 
@@ -330,7 +330,7 @@ describe('Reveals worker', () => {
           return ({
             getRevealStatus: disputeId => ({ canReveal: disputeId !== EXPIRED_DISPUTE, expired: disputeId === EXPIRED_DISPUTE }),
             revealFor: () => true,
-            getOutcome: (voteId, juror) => REVEALS_MOCK_DATA.find(data => data.juror == juror).outcome
+            getOutcome: (voteId, guardian) => REVEALS_MOCK_DATA.find(data => data.guardian == guardian).outcome
           })
         }
 

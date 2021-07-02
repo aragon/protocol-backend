@@ -10,9 +10,8 @@ class Environment {
   }
 
   getSubgraph() {
-    const base = this.network === 'rpc' ? SUBGRAPH_LOCAL : SUBGRAPH_REMOTE
-    const env = this.network === 'mainnet' ? '' : `-${this.network}`
-    return `${base}/subgraphs/name/aragon/aragon-court${env}`
+    const base = this.network === 'ganache' ? SUBGRAPH_LOCAL : SUBGRAPH_REMOTE
+    return `${base}/subgraphs/name/aragon/aragon-court-v2-${this.network}`
   }
 
   async query(query) {
@@ -21,7 +20,7 @@ class Environment {
   }
 
   async getCourt(address) {
-    const AragonCourt = await this.getArtifact('AragonCourt', '@aragon/court')
+    const AragonCourt = await this.getArtifact('AragonCourt', '@aragon/court-evm')
     const court = await AragonCourt.at(address)
     return new Court(court, this)
   }

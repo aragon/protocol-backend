@@ -1,5 +1,5 @@
-import sleep from '@aragonone/court-backend-shared/helpers/sleep'
-import Network from '@aragonone/court-backend-server/build/web3/Network'
+import sleep from '@aragon/court-backend-shared/helpers/sleep'
+import Network from '@aragon/court-backend-server/build/web3/Network'
 
 const HEARTBEAT_TRIES_PER_JOB = 3
 const SECONDS_BETWEEN_INTENTS = 3

@@ -9,14 +9,13 @@ const FaucetActions = {
   find() {
     return async function(dispatch) {
       try {
-        const courtAddress = await CourtActions.findCourt()
+        const courtAddress = await CourtActions.findCourtAddress()
         if (await Network.isCourtAt(courtAddress)) {
           if (await Network.isFaucetAvailable()) {
             const faucet = await Network.getFaucet()
             if (faucet) {
               dispatch(FaucetActions.receiveFaucet(faucet.address))
-              dispatch(FaucetActions.updateAntBalance(faucet))
-              dispatch(FaucetActions.updateAnjBalance(faucet, courtAddress))
+              dispatch(FaucetActions.updateAntBalance(faucet, courtAddress))
               dispatch(FaucetActions.updateFeeBalance(faucet, courtAddress))
             }
           }
@@ -27,33 +26,17 @@ const FaucetActions = {
     }
   },
 
-  updateAntBalance(faucet) {
+  updateAntBalance(faucet, courtAddress) {
     return async function(dispatch) {
       try {
-        const ant = await Network.getANT()
+        const court = await Network.getCourt(courtAddress)
+        const ant = await court.token()
         const symbol = await ant.symbol()
         const antBalance = await faucet.getTotalSupply(ant.address)
         const { period, amount } = await faucet.getQuota(ant.address)
         const quota = fromWei(amount.toString())
         const balance = fromWei(antBalance.toString())
         dispatch(FaucetActions.receiveAntBalance({ symbol, balance, address: ant.address, period, quota }))
-      } catch (error) {
-        dispatch(ErrorActions.show(error))
-      }
-    }
-  },
-
-  updateAnjBalance(faucet, courtAddress) {
-    return async function(dispatch) {
-      try {
-        const court = await Network.getCourt(courtAddress)
-        const anj = await court.anj()
-        const symbol = await anj.symbol()
-        const anjBalance = await faucet.getTotalSupply(anj.address)
-        const { period, amount } = await faucet.getQuota(anj.address)
-        const quota = fromWei(amount.toString())
-        const balance = fromWei(anjBalance.toString())
-        dispatch(FaucetActions.receiveAnjBalance({ symbol, balance, address: anj.address, period, quota }))
       } catch (error) {
         dispatch(ErrorActions.show(error))
       }
@@ -97,10 +80,6 @@ const FaucetActions = {
 
   receiveAntBalance({ symbol, balance, address, period, quota }) {
     return { type: ActionTypes.RECEIVE_FAUCET_ANT_BALANCE, symbol, balance, address, period, quota }
-  },
-
-  receiveAnjBalance({ symbol, balance, address, period, quota }) {
-    return { type: ActionTypes.RECEIVE_FAUCET_ANJ_BALANCE, symbol, balance, address, period, quota }
   },
 
   receiveFeeBalance({ symbol, balance, address, period, quota }) {

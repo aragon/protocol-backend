@@ -1,14 +1,17 @@
 const config = require('@aragon/truffle-config-v5/truffle-config')
 
 // copy rinkeby config for staging
+config.networks.ganache = Object.assign({}, { ...config.networks.rpc })
+
+// copy rpc config for ganache
 config.networks.staging = Object.assign({}, { ...config.networks.rinkeby })
 
-const { networks: { rpc, ropsten, rinkeby, staging, mainnet } } = config
+const { networks: { ganache, ropsten, rinkeby, staging, mainnet } } = config
 
-rpc.court = undefined
-staging.court = '0x52180af656a1923024d1accf1d827ab85ce48878'
-ropsten.court = '0x3b26bc496aebaed5b3E0E81cDE6B582CDe71396e'
-rinkeby.court = '0xf7970965489f4d4eafcf5fad55ca5ea57fb4bfcb'
-mainnet.court = '0xee4650cBe7a2B23701D416f58b41D8B76b617797'
+ganache.court = undefined
+staging.court = '0xD2c15eCd1751C2cE8b02ab2D95db32E662517D61'
+ropsten.court = '0x7639480251C12f8168eeEc5e815Ab96072E5fe62'
+rinkeby.court = '0xC464EB732A1D2f5BbD705727576065C91B2E9f18'
+mainnet.court = '0xFb072baA713B01cE944A0515c3e1e98170977dAF'
 
 module.exports = config

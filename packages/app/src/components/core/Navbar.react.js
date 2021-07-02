@@ -21,11 +21,9 @@ export default class Navbar extends React.Component {
         </div>
         <div className="links">
           <Link to="/disputes">Disputes</Link>
-          <Link to="/jurors">Jurors</Link>
+          <Link to="/guardians">Guardians</Link>
           <Link to="/drafts">Drafts</Link>
-          <Link to="/subscribers">Subscribers</Link>
           <Link to="/periods">Periods</Link>
-          <Link to="/anj-balances">ANJ</Link>
           { admin.id && this._buildLoggedInItems() }
         </div>
         <div className="account">

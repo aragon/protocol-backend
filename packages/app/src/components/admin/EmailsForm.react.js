@@ -47,7 +47,7 @@ export default class EmailsForm extends React.Component {
       },
       {
         id: 'testEmail',
-        label: 'Test Email (required before notifying all jurors)',
+        label: 'Test Email (required before notifying all guardians)',
         required: true,
         default: '',
       }
@@ -68,7 +68,7 @@ export default class EmailsForm extends React.Component {
           <h3>Send custom email</h3>
           {this.getFields()}
           <button onClick={this.sendTestEmail} id="submitTest">Send test email</button>
-          <button onClick={this.sendJurorEmails} id="submit" disabled={!this.state.enabled}>Notify all jurors</button>
+          <button onClick={this.sendGuardianEmails} id="submit" disabled={!this.state.enabled}>Notify all guardians</button>
           <div id="emailLogs">{this.getLogs()}</div>
         </form>
       </div>
@@ -87,7 +87,7 @@ export default class EmailsForm extends React.Component {
   }
 
   getFieldInput(field) {
-    if (field.type == 'textarea') {
+    if (field.type === 'textarea') {
       return <textarea ref={field.id} id={field.id} value={this.state[field.id]} onChange={this.updateField} required={field.required} />
     } else {
       return <input ref={field.id} id={field.id} type="text" value={this.state[field.id]} onChange={this.updateField} required={field.required} />
@@ -132,11 +132,11 @@ export default class EmailsForm extends React.Component {
     this.sendEmails(params)
   }
 
-  sendJurorEmails = e => {
+  sendGuardianEmails = e => {
     e.preventDefault()
     if (!this.state.enabled) return
     let params = {
-      notifyAllJurors: true,
+      notifyAllGuardians: true,
       TemplateModel: {},
     }
     this.sendEmails(params)

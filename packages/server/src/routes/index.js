@@ -40,7 +40,7 @@ export default app => {
 
   /*********** Reveals routes ***********/
 
-  app.get(    '/reveals/:juror/:voteId',              asyncMiddleware(reveals.show))
+  app.get(    '/reveals/:guardian/:voteId',              asyncMiddleware(reveals.show))
   app.post(   '/reveals',                             asyncMiddleware(reveals.create))
 
 

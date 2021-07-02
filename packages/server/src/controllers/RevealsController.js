@@ -1,12 +1,12 @@
 import { Reveal } from '../models/objection'
 import HttpError from '../errors/http-error'
 import RevealsValidator from '../validators/RevealsValidator'
-import { decodeVoteId } from '@aragonone/court-backend-shared/helpers/voting'
+import { decodeVoteId } from '@aragon/court-backend-shared/helpers/voting'
 
 export default {
   async show(request, response) {
-    const { params: { juror, voteId } } = request
-    const reveal = await Reveal.query().select('id', 'juror', 'voteId', 'disputeId', 'roundNumber', 'createdAt', 'updatedAt').findOne({ juror, voteId })
+    const { params: { guardian, voteId } } = request
+    const reveal = await Reveal.query().select('id', 'guardian', 'voteId', 'disputeId', 'roundNumber', 'createdAt', 'updatedAt').findOne({ guardian, voteId })
     response.status(200).send({ reveal })
   },
 
@@ -21,8 +21,8 @@ export default {
     params.roundNumber = decodedVoteId.roundId.toString()
     const reveal = await Reveal.create(params)
 
-    const { id, juror, voteId, disputeId, roundNumber, revealed, failedAttempts, createdAt, updatedAt } = reveal
-    response.status(200).send({ reveal: { id, juror, voteId, disputeId, roundNumber, revealed, failedAttempts, createdAt, updatedAt }})
+    const { id, guardian, voteId, disputeId, roundNumber, revealed, failedAttempts, createdAt, updatedAt } = reveal
+    response.status(200).send({ reveal: { id, guardian, voteId, disputeId, roundNumber, revealed, failedAttempts, createdAt, updatedAt }})
   },
 
   async all(request, response) {

@@ -1,5 +1,5 @@
 import NotificationScannerBaseModel from './NotificationScannerBaseModel'
-import Network from '@aragonone/court-backend-server/build/web3/Network'
+import Network from '@aragon/court-backend-server/build/web3/Network'
 import { draftTermIdFor } from '../../helpers/term-id-getter'
 
 class MissedReveal extends NotificationScannerBaseModel {
@@ -13,8 +13,8 @@ class MissedReveal extends NotificationScannerBaseModel {
         dispute {
           id
         }
-        jurors (where: {commitment_not: null, revealDate: null}) {
-          juror {id}
+        guardians (where: {commitment_not: null, revealDate: null}) {
+          guardian {id}
         } 
       }
     }
@@ -24,11 +24,11 @@ class MissedReveal extends NotificationScannerBaseModel {
       const {
         id: adjudicationRoundId,
         dispute: { id: disputeId },
-        jurors
+        guardians
       } = adjudicationRound
-      for (const juror of jurors) {
+      for (const guardian of guardians) {
         notifications.push({
-          address: juror.juror.id,
+          address: guardian.guardian.id,
           details: {
             emailTemplateModel: {
               disputeId,

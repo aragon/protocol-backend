@@ -1,31 +1,31 @@
 import { Reveal } from '../models/objection'
 import Network from '../web3/Network'
 import BaseValidator from './BaseValidator'
-const { hashVote } = require('@aragonone/court-backend-shared/helpers/voting')
+const { hashVote } = require('@aragon/court-backend-shared/helpers/voting')
 
 class RevealsValidator extends BaseValidator {
-  async validateForCreate({ juror, voteId, outcome, salt }) {
-    this._validateJuror(juror)
-    await this._validateVoteId(juror, voteId)
+  async validateForCreate({ guardian, voteId, outcome, salt }) {
+    this._validateGuardian(guardian)
+    await this._validateVoteId(guardian, voteId)
     await this._validateOutcome(voteId, outcome)
-    await this._validateSalt(juror, voteId, outcome, salt)
+    await this._validateSalt(guardian, voteId, outcome, salt)
     return this.resetErrors()
   }
 
-  _validateJuror(juror) {
-    if (!juror) return this.addError({ juror: 'A juror address value must be given' })
+  _validateGuardian(guardian) {
+    if (!guardian) return this.addError({ guardian: 'A guardian address value must be given' })
   }
 
-  async _validateVoteId(juror, voteId) {
+  async _validateVoteId(guardian, voteId) {
     if (!voteId) return this.addError({ voteId: 'A vote ID must be given' })
 
     const court = await Network.getCourt()
     const exists = await court.existsVote(voteId)
     if (!exists) this.addError({ voteId: `Vote with ID ${voteId} does not exist` })
 
-    if (juror) {
-      const reveal = await Reveal.findOne({ juror, voteId })
-      if (reveal) this.addError({ voteId: `Vote with ID ${voteId} was already registered to be revealed for juror ${juror}` })
+    if (guardian) {
+      const reveal = await Reveal.findOne({ guardian, voteId })
+      if (reveal) this.addError({ voteId: `Vote with ID ${voteId} was already registered to be revealed for guardian ${guardian}` })
     }
   }
 
@@ -39,14 +39,14 @@ class RevealsValidator extends BaseValidator {
     }
   }
 
-  async _validateSalt(juror, voteId, outcome, salt) {
+  async _validateSalt(guardian, voteId, outcome, salt) {
     if (!salt) return this.addError({ salt: 'A salt value must be given' })
 
-    if (juror && voteId && outcome) {
+    if (guardian && voteId && outcome) {
       const court = await Network.getCourt()
-      const actualCommitment = await court.getCommitment(voteId, juror)
+      const actualCommitment = await court.getCommitment(voteId, guardian)
       const expectedCommitment = hashVote(outcome, salt)
-      if (expectedCommitment !== actualCommitment) this.addError({ salt: 'Signature does not correspond to the juror address provided' })
+      if (expectedCommitment !== actualCommitment) this.addError({ salt: 'Signature does not correspond to the guardian address provided' })
     }
   }
 }

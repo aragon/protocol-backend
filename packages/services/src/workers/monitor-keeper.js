@@ -1,11 +1,11 @@
-import emailClient from '@aragonone/court-backend-shared/helpers/email-client'
+import emailClient from '@aragon/court-backend-shared/helpers/email-client'
 import Etherscan from '../models/Etherscan'
-import Network from '@aragonone/court-backend-server/build/web3/Network'
-import { Admin, KeeperSuspiciousTransaction } from '@aragonone/court-backend-server/build/models/objection'
+import Network from '@aragon/court-backend-server/build/web3/Network'
+import { Admin, KeeperSuspiciousTransaction } from '@aragon/court-backend-server/build/models/objection'
 
 import { fromWei } from 'web3-utils'
-import { bigExp } from '@aragonone/court-backend-shared/helpers/numbers'
-import getWalletFromPk from '@aragonone/court-backend-shared/helpers/get-wallet-from-pk'
+import { bigExp } from '@aragon/court-backend-shared/helpers/numbers'
+import getWalletFromPk from '@aragon/court-backend-shared/helpers/get-wallet-from-pk'
 
 const FROM = 'noreply@aragon.one'
 const BALANCE_THRESHOLD = bigExp(1, 17) // 0.1 ETH
@@ -90,6 +90,6 @@ async function getWhitelistedAddresses(court) {
   addresses.push(court.instance.address)                  // Controller
   addresses.push((await court.disputeManager()).address)  // Dispute Manager
   addresses.push((await court.voting()).address)          // Voting
-  addresses.push((await court.subscriptions()).address)   // Subscriptions
+  addresses.push((await court.paymentsBook()).address)
   return addresses.map(a => a.toLowerCase())
 }

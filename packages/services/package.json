@@ -1,19 +1,19 @@
 {
-  "name": "@aragonone/court-backend-services",
-  "version": "0.2.21",
+  "name": "@aragon/court-backend-services",
+  "version": "1.0.0",
   "private": true,
   "author": "Aragon One",
   "license": "(GPL-3.0-or-later OR AGPL-3.0-or-later)",
   "main": "index.js",
   "scripts": {
-    "build:server": "cd node_modules/@aragonone/court-backend-server && npm run build",
+    "build:server": "cd node_modules/@aragon/court-backend-server && npm run build",
     "start": "npm run build:server && babel-node ./bin/main.js",
     "start:dev": "npm run build:server && nodemon --ignore ./build --exec babel-node ./bin/main.js",
     "test": "npx mocha test --recursive --exit --require @babel/register"
   },
   "dependencies": {
-    "@aragonone/court-backend-server": "^0.2.21",
-    "@aragonone/court-backend-shared": "^0.2.21",
+    "@aragon/court-backend-server": "^1.0.0",
+    "@aragon/court-backend-shared": "^1.0.0",
     "@promster/metrics": "^4.1.10",
     "@promster/server": "^4.2.12",
     "axios": "^0.19.0",

@@ -1813,18 +1813,18 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "court-backend",
-          "value": "court-backend"
+          "text": "protocol-backend",
+          "value": "protocol-backend"
         },
         "datasource": "Prometheus",
-        "definition": "label_values({job=~\"(.*/)?court-backend(-.*)?\"}, service)",
+        "definition": "label_values({job=~\"(.*/)?protocol-backend(-.*)?\"}, service)",
         "hide": 0,
         "includeAll": false,
         "label": "",
         "multi": false,
         "name": "service",
         "options": [],
-        "query": "label_values({job=~\"(.*/)?court-backend(-.*)?\"}, service)",
+        "query": "label_values({job=~\"(.*/)?protocol-backend(-.*)?\"}, service)",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -1855,7 +1855,7 @@
     ]
   },
   "timezone": "",
-  "title": "Court Backend",
-  "uid": "ZxStqeuWz",
+  "title": "Protocol Backend",
+  "uid": "protocolbackend",
   "version": 1
 }

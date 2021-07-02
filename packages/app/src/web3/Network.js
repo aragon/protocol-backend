@@ -1,17 +1,10 @@
-import Court from '@aragonone/court-backend-shared/models/Court'
-import Environment from '@aragonone/court-backend-shared/models/environments/BrowserEnvironment'
+import Court from '@aragon/court-backend-shared/models/Court'
+import Environment from '@aragon/court-backend-shared/models/environments/BrowserEnvironment'
 
 const FAUCET = {
-  staging: '0x9a2F850C701b457b73c8dC8B1534Cc187B33F5FD',
-  ropsten: '0x83c1ECDC6fAAb783d9e3ac2C714C0eEce3349638',
-  rinkeby: '0x5561f73c3BBe8202F4D7E51aD2A1F22f1E056eFE',
-}
-
-const ANT = {
-  staging: '0x245B220211b7D3C6dCB001Aa2C3bf48ac4CaA03E',
-  ropsten: '0x0cb95D9537c8Fb0C947eD48FDafc66A7b72EfC86',
-  rinkeby: '0x8cf8196c14A654dc8Aceb3cbb3dDdfd16C2b652D',
-  mainnet: '0x960b236A07cf122663c4303350609A66A7B288C0'
+  staging: '0x19420Cf68cf6a8d18882730c8e8BAd169eeb1bdC',
+  ropsten: '0xeBB0e629958469f28508d13f8497f9473AAd1A49',
+  rinkeby: '0x555Fc80D37b7Cd5Bc13E27BD899539BB6280aa58',
 }
 
 const Network = {
@@ -38,20 +31,11 @@ const Network = {
 
   async getCourt(address) {
     if (!this.court) {
-      const AragonCourt = await this.environment.getArtifact('AragonCourt', '@aragon/court')
+      const AragonCourt = await this.environment.getArtifact('AragonCourt', '@aragon/court-evm')
       const court = await AragonCourt.at(address)
       this.court = new Court(court, this.environment)
     }
     return this.court
-  },
-
-  async getANT() {
-    const antAddress = ANT[this.getNetworkName()]
-    if (!this.ant && antAddress) {
-      const MiniMeToken = await this.environment.getArtifact('MiniMeToken', '@aragon/minime')
-      this.ant = await MiniMeToken.at(antAddress)
-    }
-    return this.ant
   },
 
   async getFaucet() {

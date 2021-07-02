@@ -1,7 +1,7 @@
 import NotificationScannerBaseModel from './NotificationScannerBaseModel'
-import Network from '@aragonone/court-backend-server/build/web3/Network'
+import Network from '@aragon/court-backend-server/build/web3/Network'
 
-class JurorDrafted extends NotificationScannerBaseModel {
+class GuardianDrafted extends NotificationScannerBaseModel {
   async scan() {
     let notifications = []
     const query = `
@@ -11,22 +11,24 @@ class JurorDrafted extends NotificationScannerBaseModel {
         dispute {
           id
         }
-        jurors {
-          juror {id}
+        guardians {
+          guardian {id}
         } 
       }
     }
     `
     const { adjudicationRounds } = await Network.query(query)
+    console.log(adjudicationRounds, ' adjucation rounds here');
     for (const adjudicationRound of adjudicationRounds) {
       const { 
         id: adjudicationRoundId,
         dispute: { id: disputeId },
-        jurors
+        guardians
       } = adjudicationRound
-      for (const juror of jurors) {
+      console.log(guardians, ' guardian');
+      for (const guardian of guardians) {
         notifications.push({ 
-          address: juror.juror.id,
+          address: guardian.guardian.id,
           details: {
             emailTemplateModel: {
               disputeId,
@@ -43,4 +45,4 @@ class JurorDrafted extends NotificationScannerBaseModel {
   get scanPeriod() { return this._MINUTES }
 }
 
-export default new JurorDrafted()
+export default new GuardianDrafted()

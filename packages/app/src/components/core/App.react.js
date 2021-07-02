@@ -11,19 +11,16 @@ import AdminsList from '../admin/AdminsList.react'
 import UsersList from '../admin/UsersList.react'
 import RevealsList from '../admin/RevealsList.react'
 import EmailsForm from '../admin/EmailsForm.react'
-import PeriodsList from '../subscriptions/PeriodsList.react'
-import PeriodDetail from '../subscriptions/PeriodDetail.react'
-import SubscribersList from '../subscriptions/SubscribersList.react'
-import JurorsList from '../jurors/JurorsList.react'
-import JurorDetail from '../jurors/JurorDetail.react'
-import JurorDraftsList from '../jurors/JurorDraftsList.react'
-import JurorStakingList from '../jurors/JurorStakingList.react'
-import JurorAccountingList from '../jurors/JurorAccountingList.react'
+import PeriodsList from '../payments/PeriodsList.react'
+import PeriodDetail from '../payments/PeriodDetail.react'
+import GuardiansList from '../guardians/GuardiansList.react'
+import GuardianDetail from '../guardians/GuardianDetail.react'
+import GuardianDraftsList from '../guardians/GuardianDraftsList.react'
+import GuardianStakingList from '../guardians/GuardianStakingList.react'
+import GuardianAccountingList from '../guardians/GuardianAccountingList.react'
 import DraftsList from '../drafts/DraftsList.react'
 import DisputesList from '../disputes/DisputesList.react'
 import DisputeDetail from '../disputes/DisputeDetail.react'
-import ANJBalancesList from '../anj/ANJBalancesList.react'
-import ANJTransfersList from '../anj/ANJTransfersList.react'
 import AdminActions from '../../actions/admin'
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom'
 
@@ -49,17 +46,14 @@ class App extends React.Component {
             <Route path="/" exact component={Home}/>
             <Route path="/disputes/" exact component={DisputesList}/>
             <Route path="/dispute/:id" component={DisputeDetail}/>
-            <Route path="/jurors/" exact component={JurorsList}/>
-            <Route path="/jurors/:address/detail" component={JurorDetail}/>
-            <Route path="/jurors/:address/drafts" component={JurorDraftsList}/>
-            <Route path="/jurors/:address/staking" component={JurorStakingList}/>
-            <Route path="/jurors/:address/accounting" component={JurorAccountingList}/>
+            <Route path="/guardians/" exact component={GuardiansList}/>
+            <Route path="/guardians/:address/detail" component={GuardianDetail}/>
+            <Route path="/guardians/:address/drafts" component={GuardianDraftsList}/>
+            <Route path="/guardians/:address/staking" component={GuardianStakingList}/>
+            <Route path="/guardians/:address/accounting" component={GuardianAccountingList}/>
             <Route path="/drafts/" component={DraftsList}/>
-            <Route path="/subscribers/" component={SubscribersList}/>
             <Route path="/periods/" component={PeriodsList}/>
             <Route path="/period/:id" component={PeriodDetail}/>
-            <Route path="/anj-balances/" exact component={ANJBalancesList}/>
-            <Route path="/anj-transfers/:address" component={ANJTransfersList}/>
 
             <Route path="/admin" exact render={
               props => admin.id

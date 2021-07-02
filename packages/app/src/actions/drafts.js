@@ -7,7 +7,7 @@ const DraftActions = {
     return async function(dispatch) {
       try {
         const result = await Network.query(`{
-          jurorDraft (id: "${id}") {
+          guardianDraft (id: "${id}") {
             id
             weight
             rewarded
@@ -15,7 +15,7 @@ const DraftActions = {
             outcome
             leaker
             createdAt
-            juror {
+            guardian {
               id 
             }
             round {
@@ -27,7 +27,7 @@ const DraftActions = {
             }
           }
         }`)
-        dispatch(DraftActions.receiveDraft(result.jurorDraft))
+        dispatch(DraftActions.receiveDraft(result.guardianDraft))
       } catch(error) {
         dispatch(ErrorActions.show(error))
       }
@@ -38,7 +38,7 @@ const DraftActions = {
     return async function(dispatch) {
       try {
         const result = await Network.query(`{
-          jurorDrafts (orderBy: createdAt, orderDirection: desc) {
+          guardianDrafts (orderBy: createdAt, orderDirection: desc) {
             id
             weight
             rewarded
@@ -46,7 +46,7 @@ const DraftActions = {
             outcome
             leaker
             createdAt
-            juror {
+            guardian {
               id 
             }
             round {
@@ -58,7 +58,7 @@ const DraftActions = {
             }
           }
         }`)
-        dispatch(DraftActions.receiveAll(result.jurorDrafts))
+        dispatch(DraftActions.receiveAll(result.guardianDrafts))
       } catch(error) {
         dispatch(ErrorActions.show(error))
       }

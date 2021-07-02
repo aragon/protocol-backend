@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  court_server_db:
+  postgres:
     image: postgres:11-alpine
     environment:
     - POSTGRES_DB:${DB_NAME}
@@ -10,19 +10,19 @@ services:
     ports:
     - "5432:5432" # for debugging db
 
-  court_server:
+  server:
     build: .
-    image: aragon/court-backend
+    image: aragon/protocol-backend
     command: npm run start:server:dev
     depends_on:
-    - court_server_db
+    - postgres
     - loki
     ports:
     - "${SERVER_PORT}:${SERVER_PORT}"
     - "${SERVER_METRICS_PORT}:${SERVER_METRICS_PORT}" # for debugging metrics
     volumes:
-    - ./packages/server/src:/court-backend/packages/server/src
-    - ./packages/server/test:/court-backend/packages/server/test
+    - ./packages/server/src:/app/packages/server/src
+    - ./packages/server/test:/app/packages/server/test
     env_file:
     - .env
     logging: &loki
@@ -30,39 +30,59 @@ services:
       options:
         loki-url: http://localhost:3100/loki/api/v1/push
         # required to be compatible with k8s metrics
-        loki-external-labels: container={{.Name}},app=court-backend
+        loki-external-labels: container={{.Name}},app=protocol-backend
 
-  court_services:
+  services:
     build: .
-    image: aragon/court-backend
+    image: aragon/protocol-backend
     command: npm run start:services:dev
     depends_on:
-    - court_server
+    - server
     - loki
     volumes:
-    - ./packages/services/bin:/court-backend/packages/services/bin
-    - ./packages/services/src:/court-backend/packages/services/src
-    - ./packages/services/test:/court-backend/packages/services/test
+    - ./packages/services/bin:/app/packages/services/bin
+    - ./packages/services/src:/app/packages/services/src
+    - ./packages/services/test:/app/packages/services/test
     env_file:
     - .env
     logging: *loki
 
-  court_backoffice:
+  backoffice:
     build: .
-    image: aragon/court-backend
+    image: aragon/protocol-backend
     command: npm run start:app
     depends_on:
-    - court_server
+    - server
     - loki
     ports:
     - "3000:3000"
     - "35729:35729"  # port used for hot-reloading
     volumes:
-    - ./packages/app/src:/court-backend/packages/app/src
-    - ./packages/app/public:/court-backend/packages/app/public
+    - ./packages/app/src:/app/packages/app/src
+    - ./packages/app/public:/app/packages/app/public
     env_file:
     - .env
     logging: *loki
+
+  # for running test commands
+  test: 
+    build: .
+    image: aragon/protocol-backend
+    command: sleep infinity
+    depends_on:
+    - postgres
+    volumes:
+    # speed up development by mounting some local directories with hot reload
+    - ./packages/server/src:/app/packages/server/src
+    - ./packages/server/test:/app/packages/server/test
+    - ./packages/services/bin:/app/packages/services/bin
+    - ./packages/services/src:/app/packages/services/src
+    - ./packages/services/test:/app/packages/services/test
+    - ./packages/shared/src:/app/packages/shared/src
+    - ./packages/shared/build:/app/packages/shared/build
+    env_file:
+    - .env
+
 
 
 ## Monitoring containers below
@@ -70,8 +90,8 @@ services:
   prometheus:
     image: prom/prometheus
     depends_on:
-    - court_server
-    - court_services
+    - server
+    - services
     volumes:
     - ./monitoring/prometheus:/etc/prometheus
 

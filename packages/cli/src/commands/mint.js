@@ -1,12 +1,12 @@
-const logger = require('@aragonone/court-backend-shared/helpers/logger')('mint')
-const { bigExp } = require('@aragonone/court-backend-shared/helpers/numbers')
+const logger = require('@aragon/court-backend-shared/helpers/logger')('mint')
+const { bigExp } = require('@aragon/court-backend-shared/helpers/numbers')
 
 const command = 'mint'
 const describe = 'Mint tokens for a certain address'
 
 const builder = {
-  token: { alias: 't', describe: 'Token symbol (ANJ or FEE)', type: 'string', demand: true },
-  amount: { alias: 'a', describe: 'Amount to mint (without decimals)', type: 'string', demand: true },
+  token: { alias: 't', describe: 'Token symbol', type: 'string', demand: true },
+  amount: { alias: 'a', describe: 'Amount to mint', type: 'string', demand: true },
   recipient: { alias: 'r', describe: 'Recipient address (will use default address if missing)', type: 'string' },
 }
 
@@ -15,7 +15,7 @@ const handlerAsync = async (environment, { recipient, token: symbol, amount }) =
   const to = recipient || await court.environment.getSender()
 
   let token
-  if (symbol.toLowerCase() === 'anj') token = await court.anj()
+  if (symbol.toLowerCase() === 'ant') token = await court.token()
   if (symbol.toLowerCase() === 'fee') token = await court.feeToken()
   if (!token) throw new Error(`Minting ${symbol} is not supported yet`)
 

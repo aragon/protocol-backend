@@ -10,7 +10,7 @@ const postmarkClient = new ServerClient(POSTMARK_SERVER_API_TOKEN)
 
 class EmailClient {
   async sendMagicLink({ email, address, token }) {
-    const verifyEmailUrl = `${CLIENT_URL}?preferences=notifications&address=${address}&token=${token}`
+    const verifyEmailUrl = `${CLIENT_URL}#/?preferences=notifications&address=${address}&token=${token}`
     const message = {
       To: email,
       TemplateAlias: POSTMARK_TEMPLATE_ALIAS_VERIFY,

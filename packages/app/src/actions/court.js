@@ -5,35 +5,35 @@ import * as ActionTypes from '../actions/types'
 const HEARTBEAT_MAX_TRANSITIONS = 20
 
 const CourtActions = {
-  async findCourt() {
-    const result = await Network.query('{ courtConfigs { id } }')
-    if (result.courtConfigs.length === 0) throw Error('Missing Aragon Court deployment')
-    if (result.courtConfigs.length > 1) throw Error('Found more than Aragon Court deployment')
-    return result.courtConfigs[0].id
+  async findCourtAddress() {
+    const result = await Network.query('{ courts { id } }')
+    if (result.courts.length === 0) throw Error('Missing Aragon Court deployment')
+    if (result.courts.length > 1) throw Error('Found more than Aragon Court deployment')
+    return result.courts[0].id
   },
 
-  findConfig() {
+  findCourt() {
     return async function(dispatch) {
       try {
-        const courtAddress = await CourtActions.findCourt()
+        const courtAddress = await CourtActions.findCourtAddress()
         const result = await Network.query(`{
-          courtConfig(id: "${courtAddress}") {
+          court(id: "${courtAddress}") {
             id
             termDuration
             currentTerm
+            token {
+              id
+              symbol
+              name
+              decimals 
+            }
             feeToken {
               id 
               symbol
               name
               decimals
             }
-            anjToken {
-              id
-              symbol
-              name
-              decimals 
-            }
-            jurorFee
+            guardianFee
             draftFee
             settleFee
             evidenceTerms
@@ -43,7 +43,7 @@ const CourtActions = {
             appealConfirmationTerms
             penaltyPct
             finalRoundReduction
-            firstRoundJurorsNumber
+            firstRoundGuardiansNumber
             appealStepFactor
             maxRegularAppealRounds
             finalRoundLockTerms
@@ -53,21 +53,16 @@ const CourtActions = {
             fundsGovernor
             configGovernor
             modulesGovernor
-            subscriptions {
+            paymentsBook {
               id
               currentPeriod
-              feeAmount
-              feeToken
               periodDuration
-              prePaymentPeriods
-              resumePrePaidPeriods
-              latePaymentPenaltyPct
               governorSharePct
             }
             modules {
               id
-              address
               type
+              moduleId
             }
           }
         }`)
@@ -79,12 +74,12 @@ const CourtActions = {
             const court = await Network.getCourt(courtAddress)
             neededTransitions = await court.neededTransitions()
           } else {
-            dispatch(ErrorActions.show(new Error(`Could not find Court at ${courtAddress}, please make sure you're in the right network`)))
+            dispatch(ErrorActions.show(new Error(`Could not find Aragon Court at ${courtAddress}, please make sure you're in the right network`)))
           }
         }
 
-        const config = { ...result.courtConfig, neededTransitions, address: courtAddress }
-        dispatch(CourtActions.receiveConfig(config))
+        const court = { ...result.court, neededTransitions, address: courtAddress }
+        dispatch(CourtActions.receiveCourt(court))
       } catch(error) {
         dispatch(ErrorActions.show(error))
       }
@@ -96,15 +91,15 @@ const CourtActions = {
       try {
         const court = await Network.getCourt()
         await court.heartbeat(HEARTBEAT_MAX_TRANSITIONS)
-        dispatch(CourtActions.findConfig())
+        dispatch(CourtActions.findCourt())
       } catch (error) {
         dispatch(ErrorActions.show(error))
       }
     }
   },
 
-  receiveConfig(config) {
-    return { type: ActionTypes.RECEIVE_COURT_CONFIG, config }
+  receiveCourt(court) {
+    return { type: ActionTypes.RECEIVE_COURT, court }
   },
 }
 

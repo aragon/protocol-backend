@@ -1,5 +1,5 @@
 import NotificationScannerBaseModel from './NotificationScannerBaseModel'
-import { User } from '@aragonone/court-backend-server/build/models/objection'
+import { User } from '@aragon/court-backend-server/build/models/objection'
 
 class SubscriptionReminder extends NotificationScannerBaseModel {
   async scan() {

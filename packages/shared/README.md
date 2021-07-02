@@ -1,4 +1,4 @@
-# Court Backend shared
+# Aragon Court Backend shared
 
 This repo provides a set of JavaScript components shared by all of the repos contained in this mono-repo.
 
@@ -15,7 +15,7 @@ The difference is that the dynamic one will load the contract schemas lazily, wh
 #### Court
 
 This JS class is intended to be a JS wrapper exposing all the functionality required to interact with an Aragon Court instance. It basically encapsulates all the complexity behind its different smart contracts, exposing a single interface.
-This class is used by all the projects of the Aragon Court back-office to interact with a court instance.  
+This class is used by all the projects of the Aragon Court backoffice to interact with a court instance.  
 
 #### Environments
 

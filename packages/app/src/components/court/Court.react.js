@@ -3,9 +3,9 @@ import Store from '../../store/store'
 import Network from '../../web3/Network'
 import CourtActions from '../../actions/court'
 import { fromWei } from 'web3-utils'
-import { bn } from '@aragonone/court-backend-shared/helpers/numbers'
+import { bn } from '@aragon/court-backend-shared/helpers/numbers'
 
-export default class CourtConfig extends React.Component {
+export default class Court extends React.Component {
 
   constructor(props){
     super(props)
@@ -14,13 +14,13 @@ export default class CourtConfig extends React.Component {
 
   componentDidMount() {
     Store.subscribe(() => this._onChange())
-    Store.dispatch(CourtActions.findConfig())
+    Store.dispatch(CourtActions.findCourt())
   }
 
   render() {
 
     return (
-      <div ref="courtConfig" className="config">
+      <div ref="court" className="config">
         <h3>Config</h3>
         <p>Network: {Network.getNetworkName()}</p>
         { (!this.state.termDuration) ? 'Loading...' : this._renderConfig() }
@@ -34,9 +34,9 @@ export default class CourtConfig extends React.Component {
       currentTerm,
       termDuration,
       neededTransitions,
-      anjToken,
+      token,
       feeToken,
-      jurorFee,
+      guardianFee,
       draftFee,
       settleFee,
       evidenceTerms,
@@ -46,7 +46,7 @@ export default class CourtConfig extends React.Component {
       appealConfirmationTerms,
       penaltyPct,
       finalRoundReduction,
-      firstRoundJurorsNumber,
+      firstRoundGuardiansNumber,
       appealStepFactor,
       maxRegularAppealRounds,
       finalRoundLockTerms,
@@ -57,12 +57,12 @@ export default class CourtConfig extends React.Component {
       configGovernor,
       modulesGovernor,
       modules,
-      subscriptions
+      paymentsBook
     } = this.state
 
     return (
       <div>
-        <p>Court: {address}</p>
+        <p>court: {address}</p>
         <p>Term duration: {bn(termDuration).div(bn(60)).toString()} minutes</p>
         <p>Current term: #{currentTerm}</p>
         <p>Needed transitions: {neededTransitions.toString()} (<a onClick={() => this._heartbeat()} href="#">heartbeat</a>)</p>
@@ -73,12 +73,12 @@ export default class CourtConfig extends React.Component {
         <p>Modules governor: {modulesGovernor}</p>
 
         <h3>Registry</h3>
-        <p>ANJ token: {anjToken.id}</p>
+        <p>Token: {token.id}</p>
         <p>Min active balance: {fromWei(minActiveBalance.toString())}</p>
 
         <h3>Disputes</h3>
         <p>Fee token: {feeToken.id}</p>
-        <p>Juror fee: {fromWei(jurorFee.toString())}</p>
+        <p>Guardian fee: {fromWei(guardianFee.toString())}</p>
         <p>Draft fee: {fromWei(draftFee.toString())}</p>
         <p>Settle fee: {fromWei(settleFee.toString())}</p>
         <p>Evidence terms: {evidenceTerms}</p>
@@ -88,22 +88,17 @@ export default class CourtConfig extends React.Component {
         <p>Appeal confirmation terms: {appealConfirmationTerms}</p>
         <p>Penalty permyriad: ‱ {penaltyPct} (1/10,000)</p>
         <p>Final round reduction: ‱ {finalRoundReduction} (1/10,000)</p>
-        <p>First round jurors number: {firstRoundJurorsNumber}</p>
+        <p>First round guardians number: {firstRoundGuardiansNumber}</p>
         <p>Appeal step factor: {appealStepFactor}</p>
         <p>Max regular appeal rounds: {maxRegularAppealRounds}</p>
         <p>Final round lock terms: {finalRoundLockTerms}</p>
         <p>Appeal collateral factor: ‱ {appealCollateralFactor} (1/10,000)</p>
         <p>Appeal confirmation collateral factor: ‱ {appealConfirmCollateralFactor} (1/10,000)</p>
 
-        <h3>Subscriptions</h3>
-        <p>Current period: {subscriptions.currentPeriod}</p>
-        <p>Period duration: {subscriptions.periodDuration} court terms</p>
-        <p>Fee amount: {fromWei(subscriptions.feeAmount.toString())}</p>
-        <p>Fee token: {subscriptions.feeToken}</p>
-        <p>Pre payment periods: {subscriptions.prePaymentPeriods}</p>
-        <p>Resume pre paid periods: {subscriptions.resumePrePaidPeriods}</p>
-        <p>Late payment penalty pct: % {subscriptions.latePaymentPenaltyPct}</p>
-        <p>Governor share pct: % {subscriptions.governorSharePct}</p>
+        <h3>Payments Book</h3>
+        <p>Current period: {paymentsBook.currentPeriod}</p>
+        <p>Period duration: {paymentsBook.periodDuration} terms</p>
+        <p>Governor share pct: % {paymentsBook.governorSharePct}</p>
 
         <h3>Modules</h3>
           {modules.map((module, index) => {
@@ -111,7 +106,7 @@ export default class CourtConfig extends React.Component {
             if (subdomain === 'mainnet') subdomain = 'www'
             if (subdomain === 'staging') subdomain = 'rinkeby'
             const url = `https://${subdomain}.etherscan.io/address/`
-            return <p key={index}>{module.type}: <a href={`${url}${module.address}`} target="blank">{module.address}</a> <br/>ID {module.id}</p>
+            return <p key={index}>{module.type}: <a href={`${url}${module.id}`} target="blank">{module.id}</a> <br/>ID {module.moduleId}</p>
           })}
       </div>
     )
@@ -122,9 +117,9 @@ export default class CourtConfig extends React.Component {
   }
 
   _onChange() {
-    if(this.refs.courtConfig) {
-      const { config } = Store.getState().court
-      this.setState({ ...config })
+    if(this.refs.court) {
+      const { court } = Store.getState().court
+      this.setState({ ...court })
     }
   }
 }

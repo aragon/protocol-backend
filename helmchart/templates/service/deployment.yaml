@@ -1,0 +1,103 @@
+{{- if .Values.service.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "chart.fullname" . }}-service"
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.service.autoscaling.enabled }}
+  replicas: {{ .Values.service.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.service.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "chart.selectorLabels" . | nindent 8 }}
+        aragon.org/court-backend-application: service
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: "hot-reloading"
+              containerPort: 35729
+          env:
+            - name: SERVICE_PORT_HEARTBEAT
+              value: "9081"
+            - name: SERVICE_PORT_REVEAL
+              value: "9082"
+            - name: SERVICE_PORT_SETTLEMENTS
+              value: "9083"
+            - name: SERVICE_PORT_MONITOR_KEEPER
+              value: "9084"
+            - name: SERVICE_PORT_NOTIFICATION_SCANNER
+              value: "9085"
+            - name: SERVICE_PORT_NOTIFICATION_SENDER
+              value: "9086"
+            - name: SERVICE_PORT_CONTRACT_MONITOR
+              value: "9087"
+            - name: CLIENT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "chart.serviceConfigName" . }}
+                  key: clientUrl
+            - name: POSTMARK_SERVER_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "chart.serviceSecretName" . }}
+                  key: postmarkApiToken                  
+            - name: EMAIL_FROM_DEFAULT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "chart.serviceConfigName" . }}
+                  key: emailFromDefault
+            - name: POSTMARK_TEMPLATE_ALIAS_VERIFY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "chart.serviceConfigName" . }}
+                  key: postmarkTemplateAliasVerify
+            - name: ETHERSCAN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "chart.serviceSecretName" . }}
+                  key: etherscanApiKey
+            - name: PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "chart.serviceSecretName" . }}
+                  key: privateKey
+          args:
+            - "npm"
+            - "run"
+            - "start:services"
+          resources:
+            {{- toYaml .Values.service.resources | nindent 12 }}
+      {{- with .Values.service.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.service.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.service.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end -}}

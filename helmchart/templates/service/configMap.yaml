@@ -1,0 +1,10 @@
+{{- if and (not .Values.service.config.existingConfigMap) .Values.service.enabled -}}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: "{{ include "chart.fullname" . }}-service-config"
+data:
+  clientUrl: {{ .Values.service.config.clientUrl | default "" | quote }}
+  emailFromDefault: {{ .Values.service.config.emailFromDefault | default "" | quote }}
+  postmarkTemplateAliasVerify: {{ .Values.service.config.postmarkTemplateAliasVerify | default "" | quote }}
+{{- end -}}

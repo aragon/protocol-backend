@@ -1,0 +1,176 @@
+# Default values for chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  appHost: "app"
+  serverHost: "server"
+  serviceHost: "service"
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+
+imagePullSecrets: []
+image:
+  repository: aragon/protocol-backend
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+
+# nameOverride: ""
+# fullnameOverride: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+# Default values for the app deployment
+app:
+  enabled: true
+  replicaCount: 1
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  config:
+    # existingConfigMap: ""
+    network: "mainnet"
+
+# Default values for the server deployment
+server:
+  enabled: true
+  replicaCount: 1
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  config:
+    # existingConfigMap: ""
+    corsWhitelist: ""
+    gas: "1"
+    gasPrice: "1"
+    web3PollingInterval: "1"
+    network: "mainnet"
+    rpc: ""
+    clientUrl: ""
+    emailFromDefault: ""
+    postmarkTemplateAliasVerify: ""
+
+  secret:
+    # existingSecret: ""
+    dbName: ""
+    dbHost: ""
+    dbPort: ""
+    dbUser: ""
+    dbPass: ""
+    adminEmail: ""
+    adminPass: ""
+    etherscanApiKey: ""
+    courtAddress: ""
+    emailJwtPrivate: ""
+    postmarkApiToken: ""
+    privateKey: ""
+    sessionSecret: ""
+    sessionSecure: ""
+    
+# Default values for the server deployment
+service:
+  enabled: true
+  replicaCount: 1
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  config:
+    # existingConfigMap: ""
+    clientUrl: ""
+    emailFromDefault: ""
+    postmarkTemplateAliasVerify: ""
+
+  secret:
+    # existingSecret: ""
+    postmarkApiToken: ""
+    etherscanApiKey: ""
+    privateKey: ""

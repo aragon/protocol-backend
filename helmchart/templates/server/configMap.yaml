@@ -1,0 +1,16 @@
+{{- if and (not .Values.server.config.existingConfigMap) .Values.server.enabled -}}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: "{{ include "chart.fullname" . }}-server-config"
+data:
+  corsWhitelist:  {{ .Values.server.config.corsWhitelist  | default "" | quote }}
+  gas: {{ .Values.server.config.gas  | default "" | quote }}
+  gasPrice: {{ .Values.server.config.gasPrice  | default "" | quote }}
+  web3PollingInterval: {{ .Values.server.config.web3PollingInterval  | default "" | quote }}
+  network: {{ .Values.server.config.network  | default "" | quote }}
+  rpc: {{ .Values.server.config.rpc  | default "" | quote }}
+  clientUrl: {{ .Values.server.config.clientUrl  | default "" | quote }}
+  emailFromDefault: {{ .Values.server.config.emailFromDefault  | default "" | quote }}
+  postmarkTemplateAliasVerify: {{ .Values.server.config.postmarkTemplateAliasVerify  | default "" | quote }}
+{{- end -}}

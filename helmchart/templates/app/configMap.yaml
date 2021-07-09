@@ -1,0 +1,8 @@
+{{- if and (not .Values.app.config.existingConfigMap) .Values.app.enabled -}}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: "{{ include "chart.fullname" . }}-app-config"
+data:
+  network: {{ .Values.app.config.network | default "" | quote }}
+{{- end -}}

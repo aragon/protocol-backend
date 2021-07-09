@@ -1,0 +1,71 @@
+{{- if .Values.app.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "chart.fullname" . }}-app"
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.app.autoscaling.enabled }}
+  replicas: {{ .Values.app.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.app.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "chart.selectorLabels" . | nindent 8 }}
+        aragon.org/court-backend-application: app
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: "app"
+              containerPort: 3000
+            - name: "hot-reloading"
+              containerPort: 35729
+          env:
+            - name: REACT_APP_NETWORK
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "chart.appConfigName" . }}
+                  key: network
+            - name: REACT_APP_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "chart.serverConfigName" . }}
+                  key: url
+          args:
+            - "npm"
+            - "run"
+            - "start:app"
+          resources:
+            {{- toYaml .Values.app.resources | nindent 12 }}
+      {{- with .Values.app.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.app.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.app.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end -}}

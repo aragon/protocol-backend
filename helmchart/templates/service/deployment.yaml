@@ -35,8 +35,6 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: "app"
-              containerPort: 3000
             - name: "hot-reloading"
               containerPort: 35729
           env:

@@ -111,7 +111,7 @@ server:
     gasPrice: "1"
     web3PollingInterval: "1"
     network: "mainnet"
-    rpc: "https://mainnet.infura.io/v3/0448ca5ac9ba483f93f8cf245e77b8d8"
+    rpc: ""
     clientUrl: ""
     emailFromDefault: ""
     postmarkTemplateAliasVerify: ""

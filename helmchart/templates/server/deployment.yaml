@@ -36,7 +36,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: "app"
-              containerPort: 3000
+              containerPort: 8000
             - name: "hot-reloading"
               containerPort: 35729
           env:

@@ -86,6 +86,7 @@ module.exports = class {
   }
 
   async neededTransitions() {
+    console.log("Here is the instance ", this.instance);
     return this.instance.getNeededTermTransitions()
   }
 

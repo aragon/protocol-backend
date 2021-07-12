@@ -13,6 +13,13 @@ module.exports = class {
     this.environment = environment
   }
 
+//   deploying "GovernRegistry" (tx: 0x07243cdb37f1f95bed17da71975dbfcbf82c766c31279d29773db40029c57ac9)...: deployed at 0x4e87d3Ef8285fAE290BdEe7435328cD85675204f with 384845 gas
+// deploying "GovernFactory" (tx: 0xb16dd24a5f34f799b73aeae88f4225ff270d2d4dcabbc3ea639ef67e317085fd)...: deployed at 0x74270f90D5ccCB1aDC8C9ad7E39e510Bb499bEE5 with 5674034 gas
+// deploying "GovernQueueFactory" (tx: 0x2c22dbbc2694b14e381482fbfdc4dad222936fb2684a51e3d3c1904f61cc1a2c)...: deployed at 0xb64c34370030c5Ef457173315dB43Bf5FAe449bf with 7986068 gas
+// deploying "GovernTokenFactory" (tx: 0xe6eb9bd6a64fca2339a4c6151c4f421b3e283471f1182715b9b0dba9fe79ab36)...: deployed at 0xb487acDcd9c015322f2Cc6D310dDE518D91F7d65 with 9443681 gas
+// deploying "GovernBaseFactory" (tx: 0xc78f67704d63b0ba0f12bb591b2fb83ca84559f196d5222091bb106c4a7b3155)...: deployed at 0x83778a785eA7d286995Db0D59724BAdc3bb1b206 with 1498108 gas
+
+
   async token() {
     if (!this._token) {
       const registry = await this.registry()
@@ -87,6 +94,7 @@ module.exports = class {
 
   async neededTransitions() {
     console.log("Here is the instance ", this.instance);
+    console.log(this.instance.address, ' instance address here');
     return this.instance.getNeededTermTransitions()
   }
 

@@ -14,7 +14,6 @@ export default async function (ctx) {
 async function heartbeat(logger, court, attempt = 1) {
   try {
     console.log("Coming Here Giorgi");
-    console.log(court, ' big huge court');
     logger.info(`Transitioning up-to ${MAX_TRANSITIONS_PER_CALL} terms, try #${attempt}`)
     const transitions = await court.heartbeat(MAX_TRANSITIONS_PER_CALL)
     logger.success(`Transitioned ${transitions} Court terms 11111`)

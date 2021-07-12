@@ -95,6 +95,7 @@ module.exports = class {
   async neededTransitions() {
     console.log("Here is the instance ", this.instance);
     console.log(this.instance.address, ' instance address here');
+    console.log(await this.instance.getNeededTermTransitions(), ' haime 123');
     return this.instance.getNeededTermTransitions()
   }
 

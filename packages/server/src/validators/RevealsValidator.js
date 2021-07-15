@@ -45,8 +45,18 @@ class RevealsValidator extends BaseValidator {
     if (guardian && voteId && outcome) {
       const court = await Network.getCourt()
       const actualCommitment = await court.getCommitment(voteId, guardian)
+      console.log("Actual commitment ", actualCommitment);
+      console.log("outcome ", outcome)
+      console.log('salt ', salt);
       const expectedCommitment = hashVote(outcome, salt)
-      if (expectedCommitment !== actualCommitment) this.addError({ salt: 'Signature does not correspond to the guardian address provided' })
+      console.log("Expected commitment ", actualCommitment);
+      if (expectedCommitment !== actualCommitment) this.addError({ 
+        salt: 'Signature does not correspond to the guardian address provided',
+        expectedCommitment,
+        actualCommitment,
+        voteId,
+        guardian
+      })
     }
   }
 }

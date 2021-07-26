@@ -1,5 +1,10 @@
 const ONE_MINUTE = 60
 
+// on the staging network, run all the jobs every one minute.
+const repeat = (time) => {
+  return process.env.NETWORK === 'staging' ? ONE_MINUTE : time;
+}
+
 const workers = [
   {
     name: 'heartbeat',
@@ -7,7 +12,7 @@ const workers = [
     path: './src/workers/heartbeat',
     processes: 1,
     times: 0,
-    repeat: ONE_MINUTE * 10,
+    repeat: repeat(ONE_MINUTE * 10),
     metricsPort: process.env.SERVICE_PORT_HEARTBEAT
   },
   {
@@ -16,7 +21,7 @@ const workers = [
     path: './src/workers/reveal',
     processes: 1,
     times: 0,
-    repeat: ONE_MINUTE,
+    repeat: repeat(ONE_MINUTE),
     metricsPort: process.env.SERVICE_PORT_REVEAL
   },
   {
@@ -25,7 +30,7 @@ const workers = [
     path: './src/workers/settlements',
     processes: 1,
     times: 0,
-    repeat: ONE_MINUTE * 5,
+    repeat: repeat(ONE_MINUTE * 5),
     metricsPort: process.env.SERVICE_PORT_SETTLEMENTS
   },
   {
@@ -34,7 +39,7 @@ const workers = [
     path: './src/workers/monitor-keeper',
     processes: 1,
     times: 0,
-    repeat: ONE_MINUTE * 30,
+    repeat: repeat(ONE_MINUTE * 30),
     metricsPort: process.env.SERVICE_PORT_MONITOR_KEEPER
   },
   {
@@ -43,7 +48,7 @@ const workers = [
     path: './src/workers/notification-scanner',
     processes: 1,
     times: 0,
-    repeat: ONE_MINUTE,
+    repeat: repeat(ONE_MINUTE),
     metricsPort: process.env.SERVICE_PORT_NOTIFICATION_SCANNER
   },
   {
@@ -52,7 +57,7 @@ const workers = [
     path: './src/workers/notification-sender',
     processes: 1,
     times: 0,
-    repeat: ONE_MINUTE * 5,
+    repeat: repeat(ONE_MINUTE * 5),
     metricsPort: process.env.SERVICE_PORT_NOTIFICATION_SENDER
   },
   {
@@ -60,7 +65,7 @@ const workers = [
     path: './src/workers/contract-monitor',
     processes: 1,
     times: 0,
-    repeat: ONE_MINUTE * 5,
+    repeat: repeat(ONE_MINUTE * 5),
     metricsPort: process.env.SERVICE_PORT_CONTRACT_MONITOR
   },
 ]

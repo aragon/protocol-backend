@@ -4,3 +4,5 @@
 monitoring
 docker-compose.yml
 README.md
+.env.sample
+Dockerfile

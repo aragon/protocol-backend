@@ -2,7 +2,7 @@ name: Email templates/assets sync
 on:
   push:
     branches:
-    - development
+    - Disabled
     paths:
     - 'emails/**'
 

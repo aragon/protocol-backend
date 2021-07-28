@@ -1,0 +1,40 @@
+name: build push check
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build_push:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v3
+      with:
+        images: ghcr.io/aragon/protocol-backend
+        flavor: |
+          latest=${{ github.ref == 'refs/heads/master' }}
+        tags: |
+          type=ref,event=branch
+          type=sha,event=branch,prefix={{branch}}-,format=short
+          type=semver,pattern={{version}}
+    - name: Build
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        push: false
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+    - uses: Azure/container-scan@v0
+      id: scan
+      continue-on-error: true
+      with:
+        run-quality-checks: true
+        image-name: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+    - uses: actions/upload-artifact@v2
+      with:
+        name: docker-security-report
+        path: ${{ steps.scan.outputs.report_path }}
+        if-no-files-found: ignore

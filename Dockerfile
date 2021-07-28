@@ -1,33 +1,19 @@
 FROM node:12.14.0-alpine
-RUN apk add --no-cache git
+
+# create folder structure
+RUN mkdir -p /app/packages/app && mkdir -p /app/packages/server && mkdir -p /app/packages/services && mkdir -p /app/packages/shared
 
 WORKDIR /app
 
-# copy root package and lerna json files
-COPY ./package.json /app/package.json
-COPY ./lerna.json /app/lerna.json
+# copy build files
+COPY . .
 
-# copy app package json
-RUN mkdir -p /packages/app
-COPY ./packages/app/package.json /app/packages/app/package.json
+# Create non-root user and use it as the default user
+RUN addgroup -S app && adduser -S app -G app -s /sbin/nologin && chown -R app:app /app
+USER app
 
-# copy server package json
-RUN mkdir -p /packages/server
-COPY ./packages/server/package.json /app/packages/server/package.json
-
-# copy services package json
-RUN mkdir -p /packages/services
-COPY ./packages/services/package.json /app/packages/services/package.json
-
-# copy shared package json
-RUN mkdir -p /packages/shared
-COPY ./packages/shared/package.json /app/packages/shared/package.json
-
-# install dependencies
-COPY ./yarn.lock /app/yarn.lock
 RUN yarn install
 RUN yarn lerna link
 
-COPY . .
 
-CMD echo specify one of the package.json scripts in command line
+CMD [ "yarn", "start:server"]

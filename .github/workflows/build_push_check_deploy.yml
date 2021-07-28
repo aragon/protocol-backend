@@ -38,4 +38,3 @@ jobs:
         name: docker-security-report
         path: ${{ steps.scan.outputs.report_path }}
         if-no-files-found: ignore
-        

@@ -1,4 +1,4 @@
-FROM node:12.14.0-alpine
+FROM node:12-alpine
 
 # create folder structure
 RUN mkdir -p /app/packages/app && mkdir -p /app/packages/server && mkdir -p /app/packages/services && mkdir -p /app/packages/shared

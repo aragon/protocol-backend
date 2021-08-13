@@ -1,0 +1,15 @@
+{
+  "site": {
+    "id": "10584bd6-7f12-42b1-937c-1b21097feaa2",
+    "team": "aragonone-team",
+    "platform": "ipfs",
+    "source": "github",
+    "name": "broken-band-8498"
+  },
+  "build": {
+    "baseDir": "packages/app/",
+    "publicDir": "build",
+    "command": "yarn && yarn build",
+    "rootDir": ""
+  }
+}

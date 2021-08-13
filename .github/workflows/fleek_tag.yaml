@@ -1,0 +1,19 @@
+name: fleek tag
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  tag-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy fleek
+        id: deploy
+        uses: fleekhq/action-deploy@v1
+        with:
+          apiKey: ${{ secrets.FLEEK_API_KEY }}
+          commitHash: ${{ github.sha }}
+      - name: Get the output url
+        run: echo "Deploy url is ${{ steps.deploy.outputs.deployUrl }}"
